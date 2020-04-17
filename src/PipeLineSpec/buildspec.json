@@ -1,0 +1,24 @@
+{
+    "version": "0.2",
+    "phases": {
+      "install": {
+        "runtime-versions": {
+          "nodejs": 10
+        }
+      },
+      "pre_build": {
+        "commands": ["cd src/PipeLineSpec", "yarn install"],
+      },
+      "build": {
+        "commands": [
+          "yarn run build", 
+          "yarn run test -u", 
+          "yarn run cdk deploy '*' --require-approval never"
+        ]
+      }
+    },
+    "cache": {
+      "paths": ["node_modules/**/*"]
+  }
+}
+  
