@@ -39,9 +39,9 @@ export class TriggerStack extends cdk.Stack {
 
     // this is the source code to get github specs
     const gitHubSource = codebuild.Source.gitHub({
-      owner: "AbdoNile",
+      owner: "stage-tech",
       repo: "Pipleliner",
-      branchOrRef : "iniitial",
+      branchOrRef : "initial",
       webhook: false,
     });
 
