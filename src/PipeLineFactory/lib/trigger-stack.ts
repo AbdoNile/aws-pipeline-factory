@@ -41,7 +41,7 @@ export class TriggerStack extends cdk.Stack {
     const gitHubSource = codebuild.Source.gitHub({
       owner: "AbdoNile",
       repo: "Pipleliner",
-      branchOrRef : "initail",
+      branchOrRef : "iniitial",
       webhook: false,
     });
 
