@@ -82,7 +82,14 @@ export class TriggerStack extends cdk.Stack {
     );
 
     lambdaRole.addManagedPolicy( iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"))
-
+    lambdaRole.attachInlinePolicy(new iam.Policy(this, "LambdaCanStartFactoryCodeBuild" , {
+      policyName :`${this.stackName}-LambdaStartCodeBuild`,
+      statements : [ new iam.PolicyStatement({
+        resources: [cdkCodeBuilder.projectArn],
+        actions: ['codebuild:StartBuild']
+      })]
+    }));
+    
     const triggeringLambda = new lambda.Function(
       this, "Lambda_TriggerPipelineCreation",
       {
@@ -91,7 +98,7 @@ export class TriggerStack extends cdk.Stack {
         role: lambdaRole,
         code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
         environment: {
-          PipeLineCreatorCodeBuildARN: cdkCodeBuilder.projectArn,
+          "FactoryCodeBuildProjectName" : cdkCodeBuilder.projectName,
         },
       }
     );
