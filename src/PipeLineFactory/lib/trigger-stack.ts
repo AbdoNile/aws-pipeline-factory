@@ -9,15 +9,15 @@ export class TriggerStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    const githubChangesTopic: sns.Topic = new sns.Topic(
-      this,
-      "SNS_GitHubChange",
+    // create topic to receive github notifications
+    const githubChangesTopic: sns.Topic = new sns.Topic(this,"SNS_GitHubChange",
       {
-        displayName: "GitHub Branch Tracker",
-        topicName: "GitHubBranchTracker",
+        displayName: `${this.stackName} GitHub Branch Tracker`,
+        topicName: `${this.stackName}-GitHubUpdates`,
       }
     );
 
+    // iam policy that can publish to the topic
     const policy = new iam.Policy(this, "Policy_CanPublishinGitHubEvents", {
       policyName: `${this.stackName}-PublishGithubChanges`,
       statements: [
@@ -28,26 +28,38 @@ export class TriggerStack extends cdk.Stack {
         }),
       ],
     });
-
+    
+    // IAM user for github actions to use
     const user = new iam.User(this, "GithubPublisherUser", {
-      userName : "GitHubPublishingService",
-
+      userName : `${this.stackName}-GitHubPublishingService`,
     })
 
+    // attach the sns publishing policy to the new user
     policy.attachToUser(user);
 
+    // this is the source code to get github specs
     const gitHubSource = codebuild.Source.gitHub({
       owner: "AbdoNile",
       repo: "Pipleliner",
       webhook: false,
     });
 
-    const codebuildRole = new iam.Role(this, "Role_CodebuildRunAs", {
+    // create a role to use with codebuild
+    const codebuildRole = new iam.Role(this, "Role_Codebuild", {
       roleName: `${this.stackName}-CodebuildRunner`,
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
 
+    // asumption about where the buildspec is located
     const buildSpecFile = "src/PipeLineSpec/buildspec.json";
+    
+    /* 
+      this is the codeuild projec that will really create the pipeline
+      it will be triggered by the lambda function , which will be triggered by the sns topic
+      the folow is
+        github actions => SNS Topic => Lambda Function ( Extract branch data ) => trigger codebuid => Pipeline created  
+     */
+
     const cdkCodeBuilder = new codebuild.Project(
       this,
       "CodeBuild_CreatePipeline",
@@ -59,19 +71,15 @@ export class TriggerStack extends cdk.Stack {
     );
 
    
-    
+    // role to run the lambda function
     const lambdaRole = new iam.Role(
       this,
-      "Role_LambdaTriggerPipelineCreation",
+      "Role_LambdaFunction",
       {
-        roleName: `${this.stackName}-LambdaTriggerPipelineCreation`,
+        roleName: `${this.stackName}-Lambda`,
         assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
-      
       }
     );
-
-   
-
 
     lambdaRole.addManagedPolicy( iam.ManagedPolicy.fromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole"))
 
@@ -81,7 +89,7 @@ export class TriggerStack extends cdk.Stack {
         runtime: lambda.Runtime.NODEJS_10_X,
         handler: "branchMonitor.handleGitHubMessage",
         role: lambdaRole,
-        code: lambda.Code.fromAsset("schedulingLambdaSrc"),
+        code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
         environment: {
           PipeLineCreatorCodeBuildARN: cdkCodeBuilder.projectArn,
         },
@@ -91,6 +99,7 @@ export class TriggerStack extends cdk.Stack {
     const lambdaSubscription = new subscriptions.LambdaSubscription(
       triggeringLambda
     );
+    
     githubChangesTopic.addSubscription(lambdaSubscription);
   }
 }
