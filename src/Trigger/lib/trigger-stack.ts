@@ -5,7 +5,6 @@ import * as iam from "@aws-cdk/aws-iam";
 import * as codebuild from "@aws-cdk/aws-codebuild";
 import * as lambda from "@aws-cdk/aws-lambda";
 
-
 export class TriggerStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -89,8 +88,6 @@ export class TriggerStack extends cdk.Stack {
       }
     );
 
-
-    
     const lambdaSubscription = new subscriptions.LambdaSubscription(
       triggeringLambda
     );
