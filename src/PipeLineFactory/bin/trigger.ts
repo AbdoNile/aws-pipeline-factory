@@ -4,4 +4,4 @@ import * as cdk from '@aws-cdk/core';
 import { TriggerStack } from '../lib/trigger-stack';
 
 const app = new cdk.App();
-new TriggerStack(app, 'TriggerStack');
+new TriggerStack(app, 'PipeLine-Factory');
