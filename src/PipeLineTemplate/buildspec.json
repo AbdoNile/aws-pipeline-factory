@@ -7,13 +7,13 @@
         }
       },
       "pre_build": {
-        "commands": ["cd src/PipeLineTemplate", "yarn install"],
+        "commands": ["cd src/PipeLineTemplate", "npm install"],
       },
       "build": {
         "commands": [
-          "yarn run build", 
-          "yarn run test -u", 
-          "yarn run cdk deploy '*' --require-approval never"
+          "npm run build", 
+          "npm run test -u", 
+          "npm run cdk deploy '*' --require-approval never"
         ]
       }
     },
