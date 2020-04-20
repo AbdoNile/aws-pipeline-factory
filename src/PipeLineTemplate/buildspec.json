@@ -12,7 +12,7 @@
       "build": {
         "commands": [
           "npm run build", 
-          "npm run test -u", 
+        
           "npm run cdk deploy '*' --require-approval never"
         ]
       }
