@@ -10,7 +10,7 @@ export class TriggerStack extends cdk.Stack {
     super(scope, id, props);
 
     // create topic to receive github notifications
-    const githubChangesTopic: sns.Topic = new sns.Topic(this,"SNS_GitHubChange",
+    const githubChangesTopic: sns.Topic = new sns.Topic(this,"SNS_GitHubChanges",
       {
         displayName: `${this.stackName} GitHub Branch Tracker`,
         topicName: `${this.stackName}-GitHubUpdates`,
@@ -99,7 +99,7 @@ export class TriggerStack extends cdk.Stack {
     const lambdaSubscription = new subscriptions.LambdaSubscription(
       triggeringLambda
     );
-    
+
     githubChangesTopic.addSubscription(lambdaSubscription);
   }
 }
