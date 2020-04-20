@@ -41,6 +41,7 @@ export class TriggerStack extends cdk.Stack {
     const gitHubSource = codebuild.Source.gitHub({
       owner: "AbdoNile",
       repo: "Pipleliner",
+      branchOrRef : "initail",
       webhook: false,
     });
 
@@ -51,7 +52,7 @@ export class TriggerStack extends cdk.Stack {
     });
 
     // asumption about where the buildspec is located
-    const buildSpecFile = "src/PipeLineSpec/buildspec.json";
+    const buildSpecFile = "src/PipeLineTemplate/buildspec.json";
     
     /* 
       this is the codeuild projec that will really create the pipeline

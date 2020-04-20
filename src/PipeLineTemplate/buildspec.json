@@ -7,7 +7,7 @@
         }
       },
       "pre_build": {
-        "commands": ["cd src/PipeLineSpec", "yarn install"],
+        "commands": ["cd src/PipeLineTemplate", "yarn install"],
       },
       "build": {
         "commands": [
