@@ -29,14 +29,14 @@ export class CodeBuilder extends cdk.Construct {
       buildSpec: codebuild.BuildSpec.fromSourceFilename(buildSpecFile),
       role : buildAsRole,
       source: gitHubSource,
-      
+      projectName : props.projectName,
       artifacts : codebuild.Artifacts.s3({
           bucket: artifactsBucket,
           path :  `${props.projectName}\\${props.githubRepositoryBranch}`,
           name: `${props.projectName}.zip`
       })
-      
     });
+ 
     this.buildProjectArn = frontendCodeBuild.projectArn;
   }
 }
