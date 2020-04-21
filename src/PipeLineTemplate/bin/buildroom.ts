@@ -16,5 +16,5 @@ const  buildOperationsDetails : BuildOperationsDetails = {
     "gitHubTokenSecretName" :  "githubtoken"
 }
 
-const stackName = `${buildOperationsDetails.projectName}`
+const stackName = `LPF-${buildOperationsDetails.projectName}`
 new BuildroomStack(app, stackName, buildOperationsDetails);
