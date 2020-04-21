@@ -69,6 +69,11 @@ export class TriggerStack extends cdk.Stack {
       new iam.PolicyStatement({
         resources: ['*'],
         actions: ['codepipeline:*']
+      }),
+      ,
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['secretsmanager:*']
       })
     ]
     }));
