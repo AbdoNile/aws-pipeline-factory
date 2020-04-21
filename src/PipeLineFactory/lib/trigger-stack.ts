@@ -53,10 +53,18 @@ export class TriggerStack extends cdk.Stack {
 
     codebuildRole.attachInlinePolicy(new iam.Policy(this, "CodeBuildCloudFormationAccess" , {
       policyName :`${this.stackName}-CloudFormationAccess`,
-      statements : [ new iam.PolicyStatement({
+      statements : [ 
+        new iam.PolicyStatement({
         resources: ['*'],
         actions: ['cloudformation:*']
-      })]
+      },
+      ),
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['iam:CreateRole']
+      },
+      )
+    ]
     }));
 
     // asumption about where the buildspec is located
