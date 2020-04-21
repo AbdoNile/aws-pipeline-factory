@@ -13,7 +13,7 @@
         "commands": [
           "npm run build", 
         
-          "npm run cdk diff"
+          "npm run cdk deply --require-approval=never"
         ]
       }
     },
