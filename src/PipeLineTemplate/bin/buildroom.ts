@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('dotenv').config();
 import * as cdk from '@aws-cdk/core';
 import { BuildroomStack } from '../lib/buildroom-stack';
 import { BuildOperationsDetails } from '../lib/buildOperationsDetails';
@@ -11,9 +12,10 @@ const  buildOperationsDetails : BuildOperationsDetails = {
     "projectName" : `${process.env.githubRepositoryName}-${process.env.githubRepositoryBranch}`,
     "buildSpecFileRelativeLocation" : "frontend/build/codebuild.spec.yml",
     "artifactsBucket" : "salt-sandbox-abdo-artifacts",
-    "buildAsRole" : "arn:aws:iam::101584550521:role/service-role/codebuild-AngleRunner-service-role",
+    "buildAsRole" : "arn:aws:iam::928065939415:role/PipeLine-Factory-CodebuildRunner",
     "gitHubTokenSecretName" :  "githubtoken"
 }
 
 const stackName = `${buildOperationsDetails.projectName}`
 new BuildroomStack(app, stackName, buildOperationsDetails);
+app.synth();

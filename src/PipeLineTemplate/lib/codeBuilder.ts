@@ -22,12 +22,15 @@ export class CodeBuilder extends cdk.Construct {
     });
 
     const artifactsBucket = s3.Bucket.fromBucketName(this, 'ArtifactsBucket', props.artifactsBucket);
-    
+    /*
     const buildAsRole = new iam.Role(this , "CodeBuilderIamRole" , {
       assumedBy : new iam.ServicePrincipal('codebulid.amazonaws.com')
-      
     });
-    /// iam.Role.fromRoleArn(this , 'BuildAsROle', props.buildAsRole);
+
+    buildAsRole.addManagedPolicy(new iam.ManagedPolicy(this, ""))
+    */
+    
+    const buildAsRole = iam.Role.fromRoleArn(this , 'BuildAsROle', props.buildAsRole);
     
     const codeBuildProject = new codebuild.Project(this, props.projectName, {
       buildSpec: codebuild.BuildSpec.fromSourceFilename(buildSpecFile),
