@@ -1,6 +1,7 @@
 import * as cdk from "@aws-cdk/core";
 import * as iam from "@aws-cdk/aws-iam";
 import {BuildOperationsDetails} from "./buildOperationsDetails"
+import { Effect } from "@aws-cdk/aws-iam";
 
 export class BuildRunnerIamRole extends cdk.Construct {
   public readonly role : iam.IRole  ;
@@ -11,6 +12,19 @@ export class BuildRunnerIamRole extends cdk.Construct {
       roleName: `PLF-${props.projectName}-CodebuildRunner`,
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
+
+    
+    
+    if ( codebuildRole.assumeRolePolicy ) {
+      codebuildRole.assumeRolePolicy.addStatements(
+          new iam.PolicyStatement({
+        actions : ["sts:AssumeRole"],
+        effect : Effect.ALLOW,
+        principals : [new iam.ServicePrincipal("codepipeline.amazonaws.com")]
+      }))
+    }
+
+    codebuildRole.grant(new iam.ServicePrincipal("codepipeline.amazonaws.com"))
 
     codebuildRole.attachInlinePolicy(new iam.Policy(this, "CodeBuildCloudFormationAccess" , {
       policyName :`PLF-${props.projectName}-CloudFormationAccess`,
