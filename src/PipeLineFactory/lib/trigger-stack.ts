@@ -61,7 +61,7 @@ export class TriggerStack extends cdk.Stack {
       ),
       new iam.PolicyStatement({
         resources: ['*'],
-        actions: ['iam:CreateRole']
+        actions: ['iam:CreateRole','iam:DeleteRole']
       },
       )
     ]
