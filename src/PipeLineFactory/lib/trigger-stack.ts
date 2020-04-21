@@ -28,15 +28,15 @@ export class TriggerStack extends cdk.Stack {
         }),
       ],
     });
-    
-    // IAM user for github actions to use
+
+     // IAM user for github actions to use
     const user = new iam.User(this, "GithubPublisherUser", {
       userName : `${this.stackName}-GitHubPublishingService`,
     })
 
     // attach the sns publishing policy to the new user
     policy.attachToUser(user);
-
+    
     // this is the source code to get github specs
     const gitHubSource = codebuild.Source.gitHub({
       owner: "stage-tech",
@@ -50,6 +50,14 @@ export class TriggerStack extends cdk.Stack {
       roleName: `${this.stackName}-CodebuildRunner`,
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
+
+    codebuildRole.attachInlinePolicy(new iam.Policy(this, "CodeBuildCloudFormationAccess" , {
+      policyName :`${this.stackName}-CloudFormationAccess`,
+      statements : [ new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['cloudformation:*']
+      })]
+    }));
 
     // asumption about where the buildspec is located
     const buildSpecFile = "src/PipeLineTemplate/buildspec.json";
@@ -68,9 +76,9 @@ export class TriggerStack extends cdk.Stack {
         buildSpec: codebuild.BuildSpec.fromSourceFilename(buildSpecFile),
         source: gitHubSource,
         role: codebuildRole,
+        projectName : `${this.stackName}-CodeBuild`
       }
     );
-
    
     // role to run the lambda function
     const lambdaRole = new iam.Role(
