@@ -1,7 +1,7 @@
 import * as cdk from "@aws-cdk/core";
 import * as codeBuilder from './codeBuilder';
 import * as codePiplineer from './codePipeline';
-import * as buildIamRole from './buildIAmRole';
+import * as buildIamRole from './buildIamRole';
 import {BuildOperationsDetails} from "./buildOperationsDetails"
 
 
