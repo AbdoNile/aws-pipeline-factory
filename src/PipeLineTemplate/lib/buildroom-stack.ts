@@ -11,7 +11,7 @@ export class BuildroomStack extends cdk.Stack {
     const buildIamROle = new buildRunnerIamRole.BuildRunnerIamRole(this, "IAMRole" , props )
  
     const builder = new codeBuilder.CodeBuilder(this, "CodeBuilder" , props,buildIamROle.role )
-    const pipLine = new codePiplineer.CodePipeline(this, "CodePipeLine", props, builder.buildProjectArn, buildIamROle.role)
+    //const pipLine = new codePiplineer.CodePipeline(this, "CodePipeLine", props, builder.buildProjectArn, buildIamROle.role)
   }
 
 }
