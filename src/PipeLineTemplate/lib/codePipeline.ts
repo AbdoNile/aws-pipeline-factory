@@ -7,12 +7,12 @@ import * as iam from "@aws-cdk/aws-iam";
 import {BuildOperationsDetails} from "./buildOperationsDetails"
 
 export class CodePipeline extends cdk.Construct {
-  constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails, buildProjectArn: string  ) {
+  constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails,
+            buildProjectArn: string, buildAsRole : iam.IRole  ) {
     super(scope, id);
 
     const artifactsBucket = s3.Bucket.fromBucketName(this, 'ArtifactsBucket', props.artifactsBucket);
-    const buildAsRole = iam.Role.fromRoleArn(this , 'BuildAsROle', props.buildAsRole);
-  
+   
     var pipeline = new codePipeline.Pipeline(this, "PipeLine" ,  {
       pipelineName : `${props.projectName}-${props.githubRepositoryBranch}`,
       artifactBucket :  artifactsBucket,
