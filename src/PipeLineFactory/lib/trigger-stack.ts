@@ -47,12 +47,12 @@ export class TriggerStack extends cdk.Stack {
 
     // create a role to use with codebuild
     const codebuildRole = new iam.Role(this, "Role_Codebuild", {
-      roleName: `${this.stackName}-CodebuildRunner`,
+      roleName: `PLF-${this.stackName}-CodebuildRunner`,
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
 
     codebuildRole.attachInlinePolicy(new iam.Policy(this, "CodeBuildCloudFormationAccess" , {
-      policyName :`${this.stackName}-CloudFormationAccess`,
+      policyName :`PLF-${this.stackName}-CloudFormationAccess`,
       statements : [ 
         new iam.PolicyStatement({
         resources: ['*'],
@@ -93,7 +93,7 @@ export class TriggerStack extends cdk.Stack {
       this,
       "Role_LambdaFunction",
       {
-        roleName: `${this.stackName}-Lambda`,
+        roleName: `PLF-${this.stackName}-Lambda`,
         assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
       }
     );
