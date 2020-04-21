@@ -57,13 +57,19 @@ export class TriggerStack extends cdk.Stack {
         new iam.PolicyStatement({
         resources: ['*'],
         actions: ['cloudformation:*']
-      },
-      ),
+      }),
       new iam.PolicyStatement({
         resources: ['*'],
-        actions: ['iam:CreateRole','iam:DeleteRole']
-      },
-      )
+        actions: ['iam:*']
+      }),
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['codebuild:*']
+      }),
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['codepipeline:*']
+      })
     ]
     }));
 
