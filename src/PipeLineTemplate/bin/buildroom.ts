@@ -10,7 +10,7 @@ const  buildOperationsDetails : BuildOperationsDetails = {
     "githubRepositoryBranch" :`${process.env.githubRepositoryBranch}`,
     "projectName" : `${process.env.githubRepositoryName}-${process.env.githubRepositoryBranch}`,
     "buildSpecFileRelativeLocation" : "frontend/build/codebuild.spec.yml",
-    "artifactsBucket" : "anglerunner-artifacts",
+    "artifactsBucket" : "salt-sandbox-abdo-artifacts",
     "buildAsRole" : "arn:aws:iam::101584550521:role/service-role/codebuild-AngleRunner-service-role",
     "gitHubTokenSecretName" :  "githubtoken"
 }
