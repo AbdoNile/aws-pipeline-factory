@@ -2,7 +2,7 @@ import * as cdk from "@aws-cdk/core";
 import * as iam from "@aws-cdk/aws-iam";
 import {BuildOperationsDetails} from "./buildOperationsDetails"
 
-export class BuildIamRole extends cdk.Construct {
+export class BuildRunnerIamRole extends cdk.Construct {
   public readonly role : iam.IRole  ;
   constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails) {
     super(scope, id);
