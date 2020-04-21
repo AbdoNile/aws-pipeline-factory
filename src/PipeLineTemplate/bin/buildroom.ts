@@ -18,4 +18,3 @@ const  buildOperationsDetails : BuildOperationsDetails = {
 
 const stackName = `${buildOperationsDetails.projectName}`
 new BuildroomStack(app, stackName, buildOperationsDetails);
-app.synth();
