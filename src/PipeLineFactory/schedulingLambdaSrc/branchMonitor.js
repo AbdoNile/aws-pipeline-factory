@@ -26,7 +26,7 @@ exports.handleGitHubMessage =  function(event) {
       changeset : githubContext.after,
      repository : {
           name:  githubContext.repository.name,
-          owner: githubContext.repository.owner.name,
+          owner: githubContext.repository.owner.login,
           branch : getBranchNamefromRef(githubContext.ref)
       }
     }
@@ -70,7 +70,7 @@ exports.handleGitHubMessage =  function(event) {
           name: 'GITHUB_TOKEN_SECRETNAME', 
           value: "GitHubToken", 
           type: "PLAINTEXT" 
-        }
+        } 
       ]
     };
     console.debug(params);  
