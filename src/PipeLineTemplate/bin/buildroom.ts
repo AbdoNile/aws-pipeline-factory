@@ -10,10 +10,10 @@ const  buildOperationsDetails : BuildOperationsDetails = {
     "githubRepositoryOwner" :`${process.env.githubRepositoryOwner}`,
     "githubRepositoryBranch" :`${process.env.githubRepositoryBranch}`,
     "projectName" : `${process.env.githubRepositoryName}-${process.env.githubRepositoryBranch}`,
-    "buildSpecFileRelativeLocation" : "frontend/build/codebuild.spec.yml",
-    "artifactsBucket" : "salt-sandbox-abdo-artifacts",
+    "buildSpecFileRelativeLocation" : `${process.env.buildSpecFileRelativeLocation}`,
+    "artifactsBucket" : `${process.env.artifactsBucket}` ,
     "buildAsRole" : "arn:aws:iam::928065939415:role/PipeLine-Factory-CodebuildRunner",
-    "gitHubTokenSecretName" :  "GitHubToken",
+    "gitHubTokenSecretName" :  `${process.env.gitHubTokenSecretName}`,
     "env" : {
         "account": "928065939415",
          "region": "eu-west-1"

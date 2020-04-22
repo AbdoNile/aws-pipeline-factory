@@ -16,7 +16,6 @@ export class CodePipeline extends cdk.Construct {
     var pipeline = new codePipeline.Pipeline(this, "PipeLine" ,  {
       pipelineName : `${props.projectName}`,
       artifactBucket :  artifactsBucket,
-
       role : buildAsRole
     });
 
