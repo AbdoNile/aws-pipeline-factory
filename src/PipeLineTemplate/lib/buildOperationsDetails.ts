@@ -18,12 +18,11 @@ export class BuildOperationsDetails implements cdk.StackProps {
   
   readonly stackName?: string;
   
-  readonly tags?: {
-        [key: string]: string;
-  };
+  readonly tags?: {[key: string]: string; };
   
   readonly buildAsRole: string;
   readonly gitHubTokenSecretName: string;
   readonly env?: cdk.Environment;
   
+  readonly artifactsPrefix : string;
 }

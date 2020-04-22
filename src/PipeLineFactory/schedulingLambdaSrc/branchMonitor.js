@@ -70,7 +70,12 @@ exports.handleGitHubMessage =  function(event) {
           name: 'GITHUB_TOKEN_SECRETNAME', 
           value: "GitHubToken", 
           type: "PLAINTEXT" 
-        } 
+        },
+        {
+          name: 'ARTIFACTS_PREFIX', 
+          value: `/react/release/door/${buildParameter.repository.name}`, 
+          type: "PLAINTEXTARTIFACTS_PREFIX" 
+        }  
       ]
     };
     console.debug(params);  

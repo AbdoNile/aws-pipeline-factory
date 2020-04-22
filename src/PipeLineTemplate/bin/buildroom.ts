@@ -14,6 +14,7 @@ const  buildOperationsDetails : BuildOperationsDetails = {
     "artifactsBucket" : `${process.env.ARTIFACTS_BUCKET}` ,
     "buildAsRole" : "arn:aws:iam::928065939415:role/PipeLine-Factory-CodebuildRunner",
     "gitHubTokenSecretName" :  `${process.env.GITHUB_TOKEN_SECRETNAME}`,
+    "artifactsPrefix" : `${process.env.ARTIFACTS_PREFIX}`,
     "env" : {
         "account": "928065939415",
          "region": "eu-west-1"
