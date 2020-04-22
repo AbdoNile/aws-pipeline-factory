@@ -6,7 +6,7 @@ import {BuildOperationsDetails} from "./buildOperationsDetails"
 
 export class CodeBuilder extends cdk.Construct {
   public readonly buildProjectArn : string  ;
-  constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails) {
+  constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails, buildAsRole : iam.IRole ) {
     super(scope, id);
     var buildSpecFile = props.buildSpecFileRelativeLocation || "buildspec.yml"
 
@@ -22,21 +22,20 @@ export class CodeBuilder extends cdk.Construct {
     });
 
     const artifactsBucket = s3.Bucket.fromBucketName(this, 'ArtifactsBucket', props.artifactsBucket);
-    
-    const buildAsRole = iam.Role.fromRoleArn(this , 'BuildAsROle', props.buildAsRole);
-    
-    const frontendCodeBuild = new codebuild.Project(this, props.projectName, {
+     
+    const codeBuildProject = new codebuild.Project(this, props.projectName, {
       buildSpec: codebuild.BuildSpec.fromSourceFilename(buildSpecFile),
       role : buildAsRole,
       source: gitHubSource,
-      
+      projectName : props.projectName,
       artifacts : codebuild.Artifacts.s3({
           bucket: artifactsBucket,
           path :  `${props.projectName}\\${props.githubRepositoryBranch}`,
           name: `${props.projectName}.zip`
       })
-      
     });
-    this.buildProjectArn = frontendCodeBuild.projectArn;
+ 
+    this.buildProjectArn = codeBuildProject.projectArn;
+
   }
 }

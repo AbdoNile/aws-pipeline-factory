@@ -7,14 +7,14 @@ import * as iam from "@aws-cdk/aws-iam";
 import {BuildOperationsDetails} from "./buildOperationsDetails"
 
 export class CodePipeline extends cdk.Construct {
-  constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails, buildProjectArn: string  ) {
+  constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails,
+            buildProjectArn: string, buildAsRole : iam.IRole  ) {
     super(scope, id);
 
     const artifactsBucket = s3.Bucket.fromBucketName(this, 'ArtifactsBucket', props.artifactsBucket);
-    const buildAsRole = iam.Role.fromRoleArn(this , 'BuildAsROle', props.buildAsRole);
-  
+   
     var pipeline = new codePipeline.Pipeline(this, "PipeLine" ,  {
-      pipelineName : `${props.projectName}-${props.githubRepositoryBranch}`,
+      pipelineName : `${props.projectName}`,
       artifactBucket :  artifactsBucket,
 
       role : buildAsRole
@@ -24,7 +24,7 @@ export class CodePipeline extends cdk.Construct {
     var githubToken = cdk.SecretValue.secretsManager(props.gitHubTokenSecretName)
     const sourceCodeOutput = new codePipeline.Artifact("SourceCode",)
     const fetchSourceAction = new codePipelineActions.GitHubSourceAction( {
-     actionName : `GitHub-${props.githubRepositoryName}-${props.githubRepositoryBranch}`,
+     actionName : `GitHub-${props.projectName}`,
      repo : props.githubRepositoryName,
      owner : props.githubRepositoryOwner,
      branch : props.githubRepositoryBranch,
@@ -35,7 +35,7 @@ export class CodePipeline extends cdk.Construct {
     })
 
     pipeline.addStage({
-      stageName : "FectchSource" ,
+      stageName : "FetchSource" ,
       actions : [  fetchSourceAction ]
     })
 
@@ -50,7 +50,7 @@ export class CodePipeline extends cdk.Construct {
     })
 
     pipeline.addStage({
-      stageName : "BuildCode" ,
+      stageName : "RunBuildSpec" ,
       actions : [  buildAction ]
     })
      
