@@ -6,14 +6,14 @@ import { BuildOperationsDetails } from '../lib/buildOperationsDetails';
 const stageDev = { account: '928065939415', region: 'eu-west-1' };
 const app = new cdk.App();
 const  buildOperationsDetails : BuildOperationsDetails = {
-    "githubRepositoryName" : `${process.env.githubRepositoryName}`,
-    "githubRepositoryOwner" :`${process.env.githubRepositoryOwner}`,
-    "githubRepositoryBranch" :`${process.env.githubRepositoryBranch}`,
-    "projectName" : `${process.env.githubRepositoryName}-${process.env.githubRepositoryBranch}`,
-    "buildSpecFileRelativeLocation" : `${process.env.buildSpecFileRelativeLocation}`,
-    "artifactsBucket" : `${process.env.artifactsBucket}` ,
+    "githubRepositoryName" : `${process.env.GITHUB_REPOSITORY_NAME}`,
+    "githubRepositoryOwner" :`${process.env.GITHUB_REPOSITORY_OWNER}`,
+    "githubRepositoryBranch" :`${process.env.GITHUB_REPOSITORY_BRANCH}`,
+    "projectName" : `${process.env.GITHUB_REPOSITORY_NAME}-${process.env.GITHUB_REPOSITORY_BRANCH}`,
+    "buildSpecFileRelativeLocation" : `${process.env.BUILD_SPEC_RELATIVE_LOCATION}`,
+    "artifactsBucket" : `${process.env.ARTIFACTS_BUCKET}` ,
     "buildAsRole" : "arn:aws:iam::928065939415:role/PipeLine-Factory-CodebuildRunner",
-    "gitHubTokenSecretName" :  `${process.env.gitHubTokenSecretName}`,
+    "gitHubTokenSecretName" :  `${process.env.GITHUB_TOKEN_SECRETNAME}`,
     "env" : {
         "account": "928065939415",
          "region": "eu-west-1"
