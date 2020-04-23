@@ -63,7 +63,7 @@ exports.handleGitHubMessage =  function(event) {
         },
         {
           name: 'ARTIFACTS_BUCKET', 
-          value: "salt-sandbox-abdo-artifacts", 
+          value: "salt-deployment-packages", 
           type: "PLAINTEXT" 
         },
         {
