@@ -13,12 +13,12 @@ export class CodeBuilder extends cdk.Construct {
     const gitHubSource = codebuild.Source.gitHub( {
       owner: props.githubRepositoryOwner,
       repo: props.githubRepositoryName,
-      webhook: true,
+      webhook: false/*,
       webhookFilters: [
         codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(
           props.githubRepositoryBranch
         ),
-      ],
+      ]*/
     });
 
     const artifactsBucket = s3.Bucket.fromBucketName(this, 'ArtifactsBucket', props.artifactsBucket);
@@ -27,13 +27,27 @@ export class CodeBuilder extends cdk.Construct {
       buildSpec: codebuild.BuildSpec.fromSourceFilename(buildSpecFile),
       role : buildAsRole,
       source: gitHubSource,
-      projectName : props.projectName,
+      projectName : `PLF-${props.projectName}`,
+      environmentVariables :  {
+        "STAGE_ENV_NAME" : {
+          value : props.githubRepositoryBranch.toLowerCase(),
+          type : codebuild.BuildEnvironmentVariableType.PLAINTEXT
+        },
+        "STAGE_PACKAGE_BUCKET_NAME" : {
+          value : props.artifactsBucket,
+          type : codebuild.BuildEnvironmentVariableType.PLAINTEXT
+        },
+
+      },
       artifacts : codebuild.Artifacts.s3({
           bucket: artifactsBucket,
           path :  `${props.artifactsPrefix}`,
-          name: `${props.projectName}.zip`
+          includeBuildId : true,
+          name: `${props.githubRepositoryName}`,
+          packageZip : true
       })
     });
+    
  
     this.buildProjectArn = codeBuildProject.projectArn;
 
