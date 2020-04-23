@@ -1,5 +1,6 @@
 export class Utility {
     public static    sanitizeStackName  (rawName :string ): string {
-        return rawName.replace("_", "-");
+        return rawName.replace(new RegExp('_', 'g'), '-');
+
     }
 }
