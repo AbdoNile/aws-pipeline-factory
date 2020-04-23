@@ -5,17 +5,16 @@ import * as codePipelineActions from "@aws-cdk/aws-codepipeline-actions";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as iam from "@aws-cdk/aws-iam";
 import {BuildOperationsDetails} from "./buildOperationsDetails"
+import { GlobalVariables } from "@aws-cdk/aws-codepipeline";
 
 export class CodePipeline extends cdk.Construct {
   constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails,
             buildProjectArn: string, buildAsRole : iam.IRole  ) {
     super(scope, id);
 
-    const artifactsBucket = s3.Bucket.fromBucketName(this, 'ArtifactsBucket', props.artifactsBucket);
-   
+    
     var pipeline = new codePipeline.Pipeline(this, "PipeLine" ,  {
       pipelineName : `${props.projectName}`,
-      artifactBucket :  artifactsBucket,
       role : buildAsRole
     });
 
@@ -34,7 +33,7 @@ export class CodePipeline extends cdk.Construct {
     })
 
     pipeline.addStage({
-      stageName : "FetchSource" ,
+      stageName : "Fetch" ,
       actions : [  fetchSourceAction ]
     })
 
@@ -49,10 +48,24 @@ export class CodePipeline extends cdk.Construct {
     })
 
     pipeline.addStage({
-      stageName : "RunBuildSpec" ,
+      stageName : "Build" ,
       actions : [  buildAction ]
     })
      
+    const artifactsBucket = s3.Bucket.fromBucketName(this, 'ArtifactsBucket', props.artifactsBucket);
    
+    const publishAction = new codePipelineActions.S3DeployAction({
+      actionName: 'S3Deploy',
+       bucket: artifactsBucket,
+      input: buildOutput,
+      objectKey: `${props.artifactsPrefix}/${props.githubRepositoryName}`,
+     
+    });
+
+      pipeline.addStage({
+      stageName: 'Deploy',
+      actions: [publishAction],
+    });
+
   }
 }
