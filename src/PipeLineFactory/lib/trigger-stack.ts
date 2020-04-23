@@ -80,13 +80,7 @@ export class TriggerStack extends cdk.Stack {
     // asumption about where the buildspec is located
     const buildSpecFile = "src/PipeLineTemplate/buildspec.json";
     
-    /* 
-      this is the codeuild projec that will really create the pipeline
-      it will be triggered by the lambda function , which will be triggered by the sns topic
-      the folow is
-        github actions => SNS Topic => Lambda Function ( Extract branch data ) => trigger codebuid => Pipeline created  
-     */
-
+  
     const cdkCodeBuilder = new codebuild.Project(
       this,
       "CodeBuild_CreatePipeline",
