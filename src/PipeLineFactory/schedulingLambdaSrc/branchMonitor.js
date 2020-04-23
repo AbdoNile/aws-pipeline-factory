@@ -74,7 +74,7 @@ exports.handleGitHubMessage =  function(event) {
         {
           name: 'ARTIFACTS_PREFIX', 
           value: `/react/release/door/${buildParameter.repository.name}`, 
-          type: "PLAINTEXTARTIFACTS_PREFIX" 
+          type: "PLAINTEXT" 
         }  
       ]
     };
