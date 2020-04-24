@@ -5,7 +5,6 @@ import * as codePipelineActions from "@aws-cdk/aws-codepipeline-actions";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as iam from "@aws-cdk/aws-iam";
 import {BuildOperationsDetails} from "./buildOperationsDetails"
-import { GlobalVariables } from "@aws-cdk/aws-codepipeline";
 
 export class CodePipeline extends cdk.Construct {
   constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails,
