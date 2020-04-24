@@ -49,7 +49,6 @@ export class BuildRunnerIamRole extends cdk.Construct {
         resources: ['*'],
         actions: ['s3:*']
       }),
-      ,
       new iam.PolicyStatement({
         resources: ['*'],
         actions: ['s3:*']

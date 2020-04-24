@@ -20,7 +20,6 @@ export class BuildOperationsDetails implements cdk.StackProps {
   
   readonly tags?: {[key: string]: string; };
   
-  readonly buildAsRole: string;
   readonly gitHubTokenSecretName: string;
   readonly env?: cdk.Environment;
   

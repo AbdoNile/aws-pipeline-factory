@@ -45,12 +45,12 @@ export class CodePipeline extends cdk.Construct {
      input : sourceCodeOutput,
      project : buildProject,
      outputs : [buildOutput],
-    })
+    });
 
     pipeline.addStage({
       stageName : "Build" ,
       actions : [  buildAction ]
-    })
+    });
      
     const artifactsBucket = s3.Bucket.fromBucketName(this, 'PipeLineDeploymentArtifactsBucket', props.artifactsBucket);
    

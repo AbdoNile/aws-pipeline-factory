@@ -13,7 +13,6 @@ const  buildOperationsDetails : BuildOperationsDetails = {
     "projectName" :  Utility.sanitizeStackName(`${process.env.GITHUB_REPOSITORY_NAME}-${process.env.GITHUB_REPOSITORY_BRANCH}`),
     "buildSpecFileRelativeLocation" : `${process.env.BUILD_SPEC_RELATIVE_LOCATION}`,
     "artifactsBucket" : `${process.env.ARTIFACTS_BUCKET}` ,
-    "buildAsRole" : "arn:aws:iam::928065939415:role/PipeLine-Factory-CodebuildRunner",
     "gitHubTokenSecretName" :  `${process.env.GITHUB_TOKEN_SECRETNAME}`,
     "artifactsPrefix" : `${process.env.ARTIFACTS_PREFIX}`,
     "env" : {
