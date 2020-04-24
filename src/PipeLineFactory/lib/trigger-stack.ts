@@ -77,6 +77,10 @@ export class TriggerStack extends cdk.Stack {
       new iam.PolicyStatement({
         resources: ['*'],
         actions: ['kms:*']
+      }),
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['s3:*']
       })
     ]
     }));
