@@ -52,7 +52,7 @@ export class CodePipeline extends cdk.Construct {
       actions : [  buildAction ]
     })
      
-    const artifactsBucket = s3.Bucket.fromBucketName(this, 'ArtifactsBucket', props.artifactsBucket);
+    const artifactsBucket = s3.Bucket.fromBucketName(this, 'PipeLineDeploymentArtifactsBucket', props.artifactsBucket);
    
     const publishAction = new codePipelineActions.S3DeployAction({
       actionName: 'S3Deploy',

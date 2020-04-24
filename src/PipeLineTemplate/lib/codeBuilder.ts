@@ -21,7 +21,7 @@ export class CodeBuilder extends cdk.Construct {
       ]*/
     });
 
-    const artifactsBucket = s3.Bucket.fromBucketName(this, 'ArtifactsBucket', props.artifactsBucket);
+    const artifactsBucket = s3.Bucket.fromBucketName(this, 'CodeBuildArtifactsBucket', props.artifactsBucket);
      
     const codeBuildProject = new codebuild.Project(this, props.projectName, {
       buildSpec: codebuild.BuildSpec.fromSourceFilename(buildSpecFile),
