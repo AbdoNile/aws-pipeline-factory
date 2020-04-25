@@ -13,41 +13,27 @@ export class CodeBuilder extends cdk.Construct {
     const gitHubSource = codebuild.Source.gitHub( {
       owner: props.githubRepositoryOwner,
       repo: props.githubRepositoryName,
-      webhook: false/*,
+      webhook: true,
       webhookFilters: [
         codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(
           props.githubRepositoryBranch
         ),
-      ]*/
+      ],
     });
 
-    const artifactsBucket = s3.Bucket.fromBucketName(this, 'CodeBuildArtifactsBucket', props.artifactsBucket);
+    const artifactsBucket = s3.Bucket.fromBucketName(this, 'ArtifactsBucket', props.artifactsBucket);
      
     const codeBuildProject = new codebuild.Project(this, props.projectName, {
       buildSpec: codebuild.BuildSpec.fromSourceFilename(buildSpecFile),
       role : buildAsRole,
       source: gitHubSource,
-      projectName : `PLF-${props.projectName}`,
-      environmentVariables :  {
-        "STAGE_ENV_NAME" : {
-          value : props.githubRepositoryBranch.toLowerCase(),
-          type : codebuild.BuildEnvironmentVariableType.PLAINTEXT
-        },
-        "STAGE_PACKAGE_BUCKET_NAME" : {
-          value : props.artifactsBucket,
-          type : codebuild.BuildEnvironmentVariableType.PLAINTEXT
-        },
-
-      },
+      projectName : props.projectName,
       artifacts : codebuild.Artifacts.s3({
           bucket: artifactsBucket,
-          path :  `${props.artifactsPrefix}`,
-          includeBuildId : true,
-          name: `${props.githubRepositoryName}`,
-          packageZip : true
+          path :  `${props.projectName}\\${props.githubRepositoryBranch}`,
+          name: `${props.projectName}.zip`
       })
     });
-    
  
     this.buildProjectArn = codeBuildProject.projectArn;
 

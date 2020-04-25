@@ -26,7 +26,7 @@ exports.handleGitHubMessage =  function(event) {
       changeset : githubContext.after,
      repository : {
           name:  githubContext.repository.name,
-          owner: githubContext.repository.owner.login,
+          owner: githubContext.repository.owner.name,
           branch : getBranchNamefromRef(githubContext.ref)
       }
     }
@@ -42,40 +42,20 @@ exports.handleGitHubMessage =  function(event) {
       projectName: buildProjectName,
       environmentVariablesOverride: [
         {
-          name: 'GITHUB_REPOSITORY_NAME', 
+          name: 'githubRepositoryName', 
           value: buildParameter.repository.name, 
           type: "PLAINTEXT" 
         },
         {
-          name: 'GITHUB_REPOSITORY_BRANCH', 
+          name: 'githubRepositoryBranch', 
           value: buildParameter.repository.branch, 
           type: "PLAINTEXT" 
         },
         {
-          name: 'GITHUB_REPOSITORY_OWNER', 
+          name: 'githubRepositoryOwner', 
           value: buildParameter.repository.owner, 
           type: "PLAINTEXT" 
-        },
-        {
-          name: 'BUILD_SPEC_RELATIVE_LOCATION', 
-          value: "buildspec.yml", 
-          type: "PLAINTEXT" 
-        },
-        {
-          name: 'ARTIFACTS_BUCKET', 
-          value: "salt-deployment-packages", 
-          type: "PLAINTEXT" 
-        },
-        {
-          name: 'GITHUB_TOKEN_SECRETNAME', 
-          value: "GitHubToken", 
-          type: "PLAINTEXT" 
-        },
-        {
-          name: 'ARTIFACTS_PREFIX', 
-          value: `react/release/door`, 
-          type: "PLAINTEXT" 
-        }  
+        }
       ]
     };
     console.debug(params);  

@@ -11,9 +11,12 @@ export class CodePipeline extends cdk.Construct {
             buildProjectArn: string, buildAsRole : iam.IRole  ) {
     super(scope, id);
 
-    
+    const artifactsBucket = s3.Bucket.fromBucketName(this, 'ArtifactsBucket', props.artifactsBucket);
+   
     var pipeline = new codePipeline.Pipeline(this, "PipeLine" ,  {
       pipelineName : `${props.projectName}`,
+      artifactBucket :  artifactsBucket,
+
       role : buildAsRole
     });
 
@@ -32,7 +35,7 @@ export class CodePipeline extends cdk.Construct {
     })
 
     pipeline.addStage({
-      stageName : "Fetch" ,
+      stageName : "FetchSource" ,
       actions : [  fetchSourceAction ]
     })
 
@@ -44,27 +47,13 @@ export class CodePipeline extends cdk.Construct {
      input : sourceCodeOutput,
      project : buildProject,
      outputs : [buildOutput],
-    });
+    })
 
     pipeline.addStage({
-      stageName : "Build" ,
+      stageName : "RunBuildSpec" ,
       actions : [  buildAction ]
-    });
+    })
      
-    const artifactsBucket = s3.Bucket.fromBucketName(this, 'PipeLineDeploymentArtifactsBucket', props.artifactsBucket);
    
-    const publishAction = new codePipelineActions.S3DeployAction({
-      actionName: 'S3Deploy',
-       bucket: artifactsBucket,
-      input: buildOutput,
-      objectKey: `${props.artifactsPrefix}/${props.githubRepositoryName}`,
-     
-    });
-
-      pipeline.addStage({
-      stageName: 'Deploy',
-      actions: [publishAction],
-    });
-
   }
 }
