@@ -2,7 +2,7 @@ const AWS = require("aws-sdk");
   
 
 function getBranchNamefromRef(refvalue){
-  return refvalue.split('/').pop();
+  return refvalue;
 
 }
 
@@ -26,7 +26,7 @@ exports.handleGitHubMessage =  function(event) {
       changeset : githubContext.after,
      repository : {
           name:  githubContext.repository.name,
-          owner: githubContext.repository.owner.name,
+          owner: githubContext.repository.owner.login,
           branch : getBranchNamefromRef(githubContext.ref)
       }
     }
@@ -42,20 +42,40 @@ exports.handleGitHubMessage =  function(event) {
       projectName: buildProjectName,
       environmentVariablesOverride: [
         {
-          name: 'githubRepositoryName', 
+          name: 'GITHUB_REPOSITORY_NAME', 
           value: buildParameter.repository.name, 
           type: "PLAINTEXT" 
         },
         {
-          name: 'githubRepositoryBranch', 
+          name: 'GITHUB_REPOSITORY_BRANCH', 
           value: buildParameter.repository.branch, 
           type: "PLAINTEXT" 
         },
         {
-          name: 'githubRepositoryOwner', 
+          name: 'GITHUB_REPOSITORY_OWNER', 
           value: buildParameter.repository.owner, 
           type: "PLAINTEXT" 
-        }
+        },
+        {
+          name: 'BUILD_SPEC_RELATIVE_LOCATION', 
+          value: "buildspec.yml", 
+          type: "PLAINTEXT" 
+        },
+        {
+          name: 'ARTIFACTS_BUCKET', 
+          value: "salt-deployment-packages", 
+          type: "PLAINTEXT" 
+        },
+        {
+          name: 'GITHUB_TOKEN_SECRETNAME', 
+          value: "GitHubToken", 
+          type: "PLAINTEXT" 
+        },
+        {
+          name: 'ARTIFACTS_PREFIX', 
+          value: ``, 
+          type: "PLAINTEXT" 
+        }  
       ]
     };
     console.debug(params);  

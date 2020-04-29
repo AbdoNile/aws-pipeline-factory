@@ -40,8 +40,8 @@ export class TriggerStack extends cdk.Stack {
     // this is the source code to get github specs
     const gitHubSource = codebuild.Source.gitHub({
       owner: "stage-tech",
-      repo: "Pipleliner",
-      branchOrRef : "initial",
+      repo: "pipeline-factory",
+      branchOrRef : "master",
       webhook: false,
     });
 
@@ -70,10 +70,17 @@ export class TriggerStack extends cdk.Stack {
         resources: ['*'],
         actions: ['codepipeline:*']
       }),
-      ,
       new iam.PolicyStatement({
         resources: ['*'],
         actions: ['secretsmanager:*']
+      }),
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['kms:*']
+      }),
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['s3:*']
       })
     ]
     }));
@@ -81,13 +88,7 @@ export class TriggerStack extends cdk.Stack {
     // asumption about where the buildspec is located
     const buildSpecFile = "src/PipeLineTemplate/buildspec.json";
     
-    /* 
-      this is the codeuild projec that will really create the pipeline
-      it will be triggered by the lambda function , which will be triggered by the sns topic
-      the folow is
-        github actions => SNS Topic => Lambda Function ( Extract branch data ) => trigger codebuid => Pipeline created  
-     */
-
+  
     const cdkCodeBuilder = new codebuild.Project(
       this,
       "CodeBuild_CreatePipeline",
