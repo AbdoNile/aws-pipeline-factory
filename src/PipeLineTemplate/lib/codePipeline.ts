@@ -52,12 +52,18 @@ export class CodePipeline extends cdk.Construct {
     });
      
     const artifactsBucket = s3.Bucket.fromBucketName(this, 'PipeLineDeploymentArtifactsBucket', props.artifactsBucket);
-   
+
+    let objectPrefix = `${props.githubRepositoryName}/${props.githubRepositoryBranch}`
+    
+    if(props.artifactsPrefix){
+      objectPrefix = `${props.artifactsPrefix}/${objectPrefix}`
+    }
+
     const publishAction = new codePipelineActions.S3DeployAction({
       actionName: 'S3Deploy',
        bucket: artifactsBucket,
       input: buildOutput,
-      objectKey: `${props.artifactsPrefix}/${props.githubRepositoryName}`,
+      objectKey: objectPrefix
      
     });
 

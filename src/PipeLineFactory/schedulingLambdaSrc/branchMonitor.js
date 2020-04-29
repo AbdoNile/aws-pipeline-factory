@@ -2,7 +2,7 @@ const AWS = require("aws-sdk");
   
 
 function getBranchNamefromRef(refvalue){
-  return refvalue.split('/').pop();
+  return refvalue;
 
 }
 
@@ -73,7 +73,7 @@ exports.handleGitHubMessage =  function(event) {
         },
         {
           name: 'ARTIFACTS_PREFIX', 
-          value: `react/release/door`, 
+          value: ``, 
           type: "PLAINTEXT" 
         }  
       ]

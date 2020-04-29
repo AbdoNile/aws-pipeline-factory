@@ -27,6 +27,10 @@ export class CodeBuilder extends cdk.Construct {
       buildSpec: codebuild.BuildSpec.fromSourceFilename(buildSpecFile),
       role : buildAsRole,
       source: gitHubSource,
+      environment: {
+       buildImage: codebuild.LinuxBuildImage.STANDARD_3_0
+      
+      },
       projectName : `PLF-${props.projectName}`,
       environmentVariables :  {
         "STAGE_ENV_NAME" : {

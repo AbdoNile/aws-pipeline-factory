@@ -9,7 +9,7 @@ export class BuildRunnerIamRole extends cdk.Construct {
     super(scope, id);
    
      const codebuildRole = new iam.Role(this, "Role_Codebuild", {
-      roleName: `PLF-${props.projectName}-CodebuildRunner`,
+      roleName: `PLF-${props.projectName}`,
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
 
@@ -27,11 +27,11 @@ export class BuildRunnerIamRole extends cdk.Construct {
     codebuildRole.grant(new iam.ServicePrincipal("codepipeline.amazonaws.com"))
 
     codebuildRole.attachInlinePolicy(new iam.Policy(this, "CodeBuildCloudFormationAccess" , {
-      policyName :`PLF-${props.projectName}-CloudFormationAccess`,
+      policyName :`PLF-${props.projectName}`,
       statements : [ 
         new iam.PolicyStatement({
         resources: ['*'],
-        actions: ['cloudformation:*']
+        actions: ['*']
       }),
       new iam.PolicyStatement({
         resources: ['*'],
