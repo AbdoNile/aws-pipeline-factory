@@ -24,6 +24,7 @@ export default class SnsEntryPoint extends cdk.Construct {
       this, "Lambda_TriggerPipelineCreation",
       {
         runtime: lambda.Runtime.NODEJS_10_X,
+        functionName : `${props.projectName}-SNS-Handler`,
         handler: "branchMonitor.handleGitHubMessage",
         role: props.lambdaRole,
         code: lambda.Code.fromAsset("schedulingLambdaSrc"), 

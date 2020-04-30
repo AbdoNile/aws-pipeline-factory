@@ -96,7 +96,18 @@ TriggerProject = function(buildParameter){
         name: 'ARTIFACTS_PREFIX', 
         value: ``, 
         type: "PLAINTEXT" 
-      }  
+      },
+      {
+        name: 'TRANSIENT_ARTIFACTS_BUCKET_NAME', 
+        value: `${process.env.TRANSIENT_ARTIFACTS_BUCKET_NAME}`, 
+        type: "PLAINTEXT" 
+      },
+      ,
+      {
+        name: 'BUILD_AS_ROLE_ARN', 
+        value: `${process.env.BUILD_AS_ROLE_ARN}`, 
+        type: "PLAINTEXT" 
+      }   
     ]
   };
   console.debug(params);  

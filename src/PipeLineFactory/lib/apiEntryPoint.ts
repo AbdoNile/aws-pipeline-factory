@@ -13,6 +13,7 @@ export default class ApiEntryPoint extends cdk.Construct {
         this, "Lambda_TriggerPipelineCreation",
         {
           runtime: lambda.Runtime.NODEJS_10_X,
+          functionName : `${props.projectName}-API-Handler`,
           handler: "branchMonitor.handleApiRequest",
           role: props.lambdaRole,
           code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
