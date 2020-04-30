@@ -24,4 +24,5 @@ export class BuildOperationsDetails implements cdk.StackProps {
   readonly env?: cdk.Environment;
   
   readonly artifactsPrefix : string;
+  readonly transientArtifactsBucketName : string;
 }

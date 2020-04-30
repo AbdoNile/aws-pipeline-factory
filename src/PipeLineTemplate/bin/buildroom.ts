@@ -15,6 +15,7 @@ const  buildOperationsDetails : BuildOperationsDetails = {
     "artifactsBucket" : `${process.env.ARTIFACTS_BUCKET}` ,
     "gitHubTokenSecretName" :  `${process.env.GITHUB_TOKEN_SECRETNAME}`,
     "artifactsPrefix" : `${process.env.ARTIFACTS_PREFIX}`,
+    "transientArtifactsBucketName" : `${process.env.TRANSIENT_ARTIFACTS_BUCKET_NAME}`,
     "env" : {
         "account": "928065939415",
          "region": "eu-west-1"
