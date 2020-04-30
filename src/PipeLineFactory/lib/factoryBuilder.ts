@@ -12,9 +12,9 @@ export default class FactoryBuilder extends cdk.Construct {
     
     // this is the source code to get github specs
     const gitHubSource = codebuild.Source.gitHub({
-      owner: "stage-tech",
-      repo: "pipeline-factory",
-      branchOrRef : "master",
+      owner: props.githubRepositoryOwner,
+      repo: props.githubRepositoryName,
+      branchOrRef : props.githubRepositoryBranch,
       webhook: false,
     });
 

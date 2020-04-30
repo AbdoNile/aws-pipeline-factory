@@ -8,7 +8,7 @@ const stageDev = { account: '928065939415', region: 'eu-west-1' };
 
 const projectName : string = "PipeLine-Factory"
 const factoryProperties : FactoryProperties = {
-    githubRepositoryBranch : "master",
+    githubRepositoryBranch : "api-gateway",
     githubRepositoryName : "pipeline-factory",
     githubRepositoryOwner : "stage-tech",
     projectName : projectName,
