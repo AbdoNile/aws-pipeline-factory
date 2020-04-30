@@ -4,11 +4,15 @@ import FactoryProperties from './factoryProperties'
 import FactoryBuilder from './factoryBuilder'
 import SnsEntryPoint from './snsEntryPoint'
 import ApiEntryPoint from './apiEntryPoint'
+import  PipelineDependencies from './pipelineDependencies'
+
+import TriggeringLambdaProperties from './triggeringLambdaProperties'
+
 export class TriggerStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props: FactoryProperties) {
     super(scope, id, props);
     
-    const factoryBuilder = new FactoryBuilder(this, "factoryBuilder",props )
+    const factoryBuilder = new FactoryBuilder(this, "factoryBuilder", props )
     
     // role to run the lambda function
     const lambdaRole = new iam.Role(
@@ -29,9 +33,18 @@ export class TriggerStack extends cdk.Stack {
       })]
     }));
     
+    const pipelineDependencies = new PipelineDependencies(this , "ApplicationDependencies" , props);
 
-    const snsEntryPoint = new SnsEntryPoint(this , "snsEntryPoint", lambdaRole, factoryBuilder.BuildProjectArn, props )
+    const triggeringLambdaProperties : TriggeringLambdaProperties = {
+      buildAsRoleArn : pipelineDependencies.role.roleArn,
+      factoryBuilderProjectName : factoryBuilder.BuildProjectArn,
+      projectName : props.projectName,
+      transientArtifactsBucketName : pipelineDependencies.ArtifactsBucket.bucketName,
+      lambdaRole : lambdaRole
+    }
 
-    const apiEntryPiint = new ApiEntryPoint(this , "snsEntryPoint", lambdaRole, factoryBuilder.BuildProjectArn, props )
+    const snsEntryPoint = new SnsEntryPoint(this , "snsEntryPoint", triggeringLambdaProperties )
+ 
+    const apiEntryPoint = new ApiEntryPoint(this , "apiEntryPoint", triggeringLambdaProperties)
   }
 }
