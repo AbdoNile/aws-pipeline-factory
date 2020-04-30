@@ -25,4 +25,5 @@ export class BuildOperationsDetails implements cdk.StackProps {
   
   readonly artifactsPrefix : string;
   readonly transientArtifactsBucketName : string;
+  readonly buildAsRoleArn : cdk.Arn
 }
