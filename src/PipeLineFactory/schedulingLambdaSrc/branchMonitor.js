@@ -102,7 +102,6 @@ TriggerProject = function(buildParameter){
         value: `${process.env.TRANSIENT_ARTIFACTS_BUCKET_NAME}`, 
         type: "PLAINTEXT" 
       },
-      ,
       {
         name: 'BUILD_AS_ROLE_ARN', 
         value: `${process.env.BUILD_AS_ROLE_ARN}`, 
