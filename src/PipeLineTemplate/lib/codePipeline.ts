@@ -29,7 +29,6 @@ export class CodePipeline extends cdk.Construct {
      output  : sourceCodeOutput,
      oauthToken : githubToken,
      trigger : codePipelineActions.GitHubTrigger.WEBHOOK
-
     })
 
     pipeline.addStage({
@@ -43,6 +42,7 @@ export class CodePipeline extends cdk.Construct {
     var buildAction = new codePipelineActions.CodeBuildAction({
      actionName : "RunBuildSpec" ,
      input : sourceCodeOutput,
+     role: buildAsRole,
      project : buildProject,
      outputs : [buildOutput],
     });
@@ -62,6 +62,7 @@ export class CodePipeline extends cdk.Construct {
 
     const publishAction = new codePipelineActions.S3DeployAction({
       actionName: 'S3Deploy',
+      role : buildAsRole,
        bucket: artifactsBucket,
       input: buildOutput,
       objectKey: objectPrefix

@@ -8,7 +8,6 @@ export class BuildOperationsDetails implements cdk.StackProps {
   readonly githubRepositoryBranch: string;
   
   readonly projectName: string;
-  //TODO: Remove and use repo name instead.
   
   readonly buildSpecFileRelativeLocation?: string;
   
@@ -16,14 +15,15 @@ export class BuildOperationsDetails implements cdk.StackProps {
   
   readonly description?: string;
   
-  readonly stackName?: string;
-  
   readonly tags?: {[key: string]: string; };
   
   readonly gitHubTokenSecretName: string;
+
   readonly env?: cdk.Environment;
   
   readonly artifactsPrefix : string;
+
   readonly transientArtifactsBucketName : string;
-  readonly buildAsRoleArn : cdk.Arn
+
+  readonly buildAsRoleArn : string
 }
