@@ -31,7 +31,9 @@ export default class SnsEntryPoint extends cdk.Construct {
         environment: {
           "FactoryCodeBuildProjectName" : props.factoryBuilderProjectName,
           "BUILD_AS_ROLE_ARN" : props.buildAsRoleArn,
-          "TRANSIENT_ARTIFACTS_BUCKET_NAME" : props.transientArtifactsBucketName
+          "DEFAULT_TRANSIENT_ARTIFACTS_BUCKET_NAME" : props.transientArtifactsBucketName,
+          "DEFAULT_ARTIFACTS_BUCKET_NAME" : props.defaultBuildArtifactsBucketName || '',
+          "DEFAULT_GITHUB_TOKEN_SECRET_NAME" : ''
         },
       }
     );

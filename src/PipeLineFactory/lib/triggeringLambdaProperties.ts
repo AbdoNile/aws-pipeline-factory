@@ -6,4 +6,5 @@ export default class TriggeringLambdaProperties {
   public readonly buildAsRoleArn: string;
   public readonly transientArtifactsBucketName: string;
   public readonly lambdaRole: iam.IRole
+  public readonly defaultBuildArtifactsBucketName?: string;
 }
