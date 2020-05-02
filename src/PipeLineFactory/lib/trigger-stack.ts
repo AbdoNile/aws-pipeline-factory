@@ -5,7 +5,7 @@ import FactoryBuilder from './factoryBuilder'
 import SnsEntryPoint from './snsEntryPoint'
 import ApiEntryPoint from './apiEntryPoint'
 import  PipelineDependencies from './pipelineDependencies'
-
+import BranchHandlers from './branchHandlers';
 import TriggeringLambdaProperties from './triggeringLambdaProperties'
 
 export class TriggerStack extends cdk.Stack {
@@ -43,8 +43,10 @@ export class TriggerStack extends cdk.Stack {
       lambdaRole : lambdaRole
     }
 
-    const snsEntryPoint = new SnsEntryPoint(this , "snsEntryPoint", triggeringLambdaProperties )
+    const handlers = new BranchHandlers(this, "handlers", triggeringLambdaProperties)
+
+    const snsEntryPoint = new SnsEntryPoint(this , "snsEntryPoint", props, handlers )
  
-    const apiEntryPoint = new ApiEntryPoint(this , "apiEntryPoint", triggeringLambdaProperties)
+    const apiEntryPoint = new ApiEntryPoint(this , "apiEntryPoint", props, handlers)
   }
 }
