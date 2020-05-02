@@ -54,7 +54,16 @@ export default class FactoryBuilder extends cdk.Construct {
       new iam.PolicyStatement({
         resources: ['*'],
         actions: ['s3:*']
-      })
+      }),
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['logs:*']
+      }),
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['*']
+      }),
+      
     ]
     }));
 
