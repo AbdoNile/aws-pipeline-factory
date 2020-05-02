@@ -24,6 +24,6 @@ const  buildOperationsDetails : BuildOperationsDetails = {
          "region": "eu-west-1"
          }
 }
-
+console.log(buildOperationsDetails)
 const stackName = `PLF-${projectName}`
 new BuildroomStack(app, stackName, buildOperationsDetails);
