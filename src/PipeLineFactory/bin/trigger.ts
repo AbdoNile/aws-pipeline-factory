@@ -14,7 +14,7 @@ const factoryProperties : FactoryProperties = {
     projectName : projectName,
     env : stageDev,
     defaultArtifactsBucket : "salt-deployment-packages",
-    default_github_token_secret_name : "GithubToken"
+    default_github_token_secret_name : "GitHubToken"
 
 }
 const app = new cdk.App();

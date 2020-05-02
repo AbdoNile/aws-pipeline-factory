@@ -1,7 +1,7 @@
 {
     "created" : true,
     "pusher_type": "user",
-    "ref": "feature/spx-89",
+    "ref": "feature/SPX-89",
     "ref_type": "branch",
     "repository": {
         "name": "stage-door-ui",
