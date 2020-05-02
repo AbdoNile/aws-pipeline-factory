@@ -23,30 +23,25 @@ exports.handleApiRequest =  function(event) {
   TriggerProject(buildParameter)
 }
 
-exports.handleGitHubMessage =  function(event) {
+exports.branchCreated =  function(event) {
     var payload = event.Records[0].Sns.Message;
     console.debug(payload);
-    var githubContext = JSON.parse(payload);
-    console.debug(githubContext);  
-    var action = null;
-
-    if(githubContext.created){
-        action = "deploy"
-    }
-    else if(githubContext.deleted){
-       action = "destroy"
-    }
-
-    var buildParameter = {
-     branchaction : action,
-     changeset : githubContext.after,
-     repository : {
-          name:  githubContext.repository.name,
-          owner: githubContext.repository.owner.login,
-          branch : getBranchNamefromRef(githubContext.ref)
-      }
-    }
-
+    var buildParameter = JSON.parse(payload);
+   
     TriggerProject(buildParameter)
 }
 
+exports.githubEventRecieved =  function(event) {
+  var payload = event.Records[0].Sns.Message;
+  console.debug(payload);
+  var githubContext = JSON.parse(payload);
+  console.debug(githubContext);  
+ 
+  var buildParameter = {
+    "repository_name" : githubContext.repository.name,
+    "repository_owner" : githubContext.repository.owner.login,
+    "branch" : getBranchNamefromRef(githubContext.ref)
+  };
+
+  TriggerProject(buildParameter)
+}

@@ -6,12 +6,12 @@ exports.TriggerProject = function(buildParameter){
     
     
     var buildProjectName = process.env.FactoryCodeBuildProjectName;
-    var transientArtifactsBucket = buildParameter.transientArtifactsBucket || process.env.DEFAULT_TRANSIENT_ARTIFACTS_BUCKET_NAME;
-    var artifactsBucketName = buildParameter.artifactsBucketName || process.env.DEFAULT_ARTIFACTS_BUCKET_NAME;
-    var githHubTokenSecretName = buildParameter.githubTokenSecretName || process.env.DEFAULT_GITHUB_TOKEN_SECRET_NAME;
-    var buildAsRoleArn = buildParameter.buildAsRoleArn || process.env.BUILD_AS_ROLE_ARN;
-    var buildSpecLoction = buildParameter.buildSpecLoction || "buildspec.yml";
-    var artifactsPrefix = buildParameter.artifactsPrefix || "";
+    var transientArtifactsBucket = buildParameter.transient_artifacts_bucket || process.env.DEFAULT_TRANSIENT_ARTIFACTS_BUCKET_NAME;
+    var artifactsBucketName = buildParameter.artifacts_bucket_name || process.env.DEFAULT_ARTIFACTS_BUCKET_NAME;
+    var githHubTokenSecretName = buildParameter.github_token_secret_name || process.env.DEFAULT_GITHUB_TOKEN_SECRET_NAME;
+    var buildAsRoleArn = buildParameter.build_as_role_arn || process.env.BUILD_AS_ROLE_ARN;
+    var buildSpecLoction = buildParameter.buildspec_loction || "buildspec.yml";
+    var artifactsPrefix = buildParameter.artifacts_prefix || "";
     
     
     var params =
@@ -20,17 +20,17 @@ exports.TriggerProject = function(buildParameter){
       environmentVariablesOverride: [
         {
           name: 'GITHUB_REPOSITORY_NAME', 
-          value: buildParameter.repository.name, 
+          value: buildParameter.repository_name, 
           type: "PLAINTEXT" 
         },
         {
           name: 'GITHUB_REPOSITORY_BRANCH', 
-          value: buildParameter.repository.branch, 
+          value: buildParameter.branch, 
           type: "PLAINTEXT" 
         },
         {
           name: 'GITHUB_REPOSITORY_OWNER', 
-          value: buildParameter.repository.owner, 
+          value: buildParameter.repository_owner, 
           type: "PLAINTEXT" 
         },
         {
