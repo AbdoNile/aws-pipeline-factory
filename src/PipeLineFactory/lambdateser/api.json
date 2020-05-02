@@ -1,0 +1,19 @@
+{
+    "repository_name" : "stage-door-ui",
+
+    "repository_owner" : "stage-tech",
+
+    "branch" : "feature/spx-91",
+
+    "build_as_role_arn" : "my_iam_role",
+
+    "github_token_secret_name" : "mytoken",
+
+    "buildspec_loction" : "buildspeclocation",
+
+    "artifacts_prefix" : "my prefix",
+
+    "artifacts_bucket_name" : "my bucket",
+
+    "transient_artifacts_bucket" : "lskdlskd"
+}
