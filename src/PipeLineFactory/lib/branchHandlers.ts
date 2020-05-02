@@ -20,7 +20,7 @@ export default class BranchHandlers extends cdk.Construct {
       "BUILD_AS_ROLE_ARN" : props.buildAsRoleArn,
       "DEFAULT_TRANSIENT_ARTIFACTS_BUCKET_NAME" : props.transientArtifactsBucketName,
       "DEFAULT_ARTIFACTS_BUCKET_NAME" : props.defaultBuildArtifactsBucketName || '' ,
-      "DEFAULT_GITHUB_TOKEN_SECRET_NAME" : ''
+      "DEFAULT_GITHUB_TOKEN_SECRET_NAME" : props.default_github_token_secret_name
     };
 
     const creationLambda = new lambda.Function(
@@ -31,10 +31,10 @@ export default class BranchHandlers extends cdk.Construct {
           handler: "branchMonitor.branchCreated",
           role: props.lambdaRole,
           code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
-          environment: environmentVariables
+          environment: environmentVariables,
+          timeout : cdk.Duration.seconds(10)
         }
       );
-
       this.BranchCreationHandler = creationLambda;
 
       const deletionLambda = new lambda.Function(
@@ -45,7 +45,8 @@ export default class BranchHandlers extends cdk.Construct {
           handler: "branchMonitor.branchDeleted",
           role: props.lambdaRole,
           code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
-          environment: environmentVariables
+          environment: environmentVariables,
+          timeout : cdk.Duration.seconds(10)
         }
       );
 
@@ -59,7 +60,8 @@ export default class BranchHandlers extends cdk.Construct {
           handler: "branchMonitor.githubEventRecieved",
           role: props.lambdaRole,
           code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
-          environment: environmentVariables
+          environment: environmentVariables,
+          timeout : cdk.Duration.seconds(10)
         }
       );
 

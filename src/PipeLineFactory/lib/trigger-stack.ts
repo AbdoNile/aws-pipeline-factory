@@ -40,7 +40,9 @@ export class TriggerStack extends cdk.Stack {
       factoryBuilderProjectName : factoryBuilder.BuildProjectArn,
       projectName : props.projectName,
       transientArtifactsBucketName : pipelineDependencies.ArtifactsBucket.bucketName,
-      lambdaRole : lambdaRole
+      lambdaRole : lambdaRole,
+      default_github_token_secret_name : props.default_github_token_secret_name,
+      defaultBuildArtifactsBucketName : props.defaultArtifactsBucket
     }
 
     const handlers = new BranchHandlers(this, "handlers", triggeringLambdaProperties)

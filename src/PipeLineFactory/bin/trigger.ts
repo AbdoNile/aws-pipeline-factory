@@ -12,7 +12,9 @@ const factoryProperties : FactoryProperties = {
     githubRepositoryName : "pipeline-factory",
     githubRepositoryOwner : "stage-tech",
     projectName : projectName,
-    env : stageDev
+    env : stageDev,
+    defaultArtifactsBucket : "salt-deployment-packages",
+    default_github_token_secret_name : "GithubToken"
 
 }
 const app = new cdk.App();

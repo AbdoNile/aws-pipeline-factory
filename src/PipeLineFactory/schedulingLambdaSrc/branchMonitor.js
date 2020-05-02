@@ -1,4 +1,3 @@
-const AWS = require("aws-sdk");
 const { TriggerProject} = require('./triggerBuild')  ;
 
 function getBranchNamefromRef(refvalue){
@@ -6,7 +5,7 @@ function getBranchNamefromRef(refvalue){
 
 }
 
-exports.handleApiRequest =  function(event) {
+exports.handleApiRequest = async function(event) {
   var payload = event;
   console.debug(payload);
  
@@ -23,15 +22,15 @@ exports.handleApiRequest =  function(event) {
   TriggerProject(buildParameter)
 }
 
-exports.branchCreated =  function(event) {
+exports.branchCreated = async function(event) {
     var payload = event.Records[0].Sns.Message;
     console.debug(payload);
     var buildParameter = JSON.parse(payload);
    
-    TriggerProject(buildParameter)
+   TriggerProject(buildParameter)
 }
 
-exports.githubEventRecieved =  function(event) {
+exports.githubEventRecieved = function(event) {
   var payload = event.Records[0].Sns.Message;
   console.debug(payload);
   var githubContext = JSON.parse(payload);

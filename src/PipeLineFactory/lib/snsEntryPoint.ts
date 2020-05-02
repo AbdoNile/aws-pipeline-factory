@@ -15,7 +15,7 @@ export default class SnsEntryPoint extends cdk.Construct {
       "SNS_BranchCreated",
       {
         displayName: `${props.projectName} GitHub Branch Tracker`,
-        topicName: `${props.projectName}-Branch-Created`,
+        topicName: `${props.projectName}-branch-created`,
       }
     );
 
