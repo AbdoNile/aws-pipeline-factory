@@ -66,8 +66,9 @@ exports.TriggerProject =  function(buildParameter, requestedAction){
     ]
   };
   
+  console.debug(`requested action ${requestedAction}`);
   if(requestedAction == "destroy"){
-    params.buildspecOverride = 'teardown.json';
+    params.buildspecOverride = 'src/PipeLineTemplate/teardown.json';
   }
 
   console.debug(params);  

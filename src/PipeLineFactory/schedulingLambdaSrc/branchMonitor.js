@@ -27,7 +27,22 @@ exports.branchCreated = async function(event) {
     console.debug(payload);
     var buildParameter = JSON.parse(payload);
    
-   TriggerProject(buildParameter, "destroy")
+   TriggerProject(buildParameter, "create")
+}
+
+exports.branchDeleted = function(event) {
+  var payload = event.Records[0].Sns.Message;
+  console.debug(payload);
+  var githubContext = JSON.parse(payload);
+  console.debug(githubContext);  
+ 
+  var buildParameter = {
+    "repository_name" : githubContext.repository.name,
+    "repository_owner" : githubContext.repository.owner.login,
+    "branch" : getBranchNamefromRef(githubContext.ref)
+  };
+
+  TriggerProject(buildParameter, "destroy")
 }
 
 exports.githubEventRecieved = function(event) {

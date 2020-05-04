@@ -13,7 +13,7 @@
         "commands": [
           "npm run build", 
         
-          "npm cdk diff"
+          "npm run cdk destroy"
         ]
       }
     },
