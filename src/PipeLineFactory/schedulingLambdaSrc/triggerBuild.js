@@ -1,6 +1,6 @@
 
 
-exports.TriggerProject =  function(buildParameter){
+exports.TriggerProject =  function(buildParameter, requestedAction){
 
   console.debug(buildParameter);  
   
@@ -66,6 +66,10 @@ exports.TriggerProject =  function(buildParameter){
     ]
   };
   
+  if(requestedAction == "destroy"){
+    params.buildspecOverride = 'teardown.json';
+  }
+
   console.debug(params);  
   //return;
   const AWS = require("aws-sdk");
