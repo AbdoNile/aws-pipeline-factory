@@ -13,7 +13,7 @@
         "commands": [
           "npm run build", 
         
-          "npm run cdk destroy --require-approval never"
+          "npm run cdk destroy --force"
         ]
       }
     },
