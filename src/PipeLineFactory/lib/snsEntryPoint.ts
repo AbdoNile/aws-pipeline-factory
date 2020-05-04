@@ -7,9 +7,31 @@ import FactoryProperties from "./factoryProperties";
 
 export default class SnsEntryPoint extends cdk.Construct {
   public readonly buildProjectArn: string;
-  constructor(scope: cdk.Construct, id: string, props: FactoryProperties, handler: BranchHandlers){
+  constructor(
+    scope: cdk.Construct,
+    id: string,
+    props: FactoryProperties,
+    handler: BranchHandlers
+  ) {
     super(scope, id);
 
+    //#region branch deleted
+    const branchDeletedTopic: sns.Topic = new sns.Topic(
+      this,
+      "SNS_BranchDeleted",
+      {
+        displayName: `${props.projectName} GitHub Branch Tracker`,
+        topicName: `${props.projectName}-branch-deleted`,
+      }
+    );
+
+    const bracnhDeletionSubscription = new subscriptions.LambdaSubscription(
+      handler.BranchDeletionHandler
+    );
+    branchDeletedTopic.addSubscription(bracnhDeletionSubscription);
+    //#endregion
+
+    //#region branch created
     const branchCreatedTopic: sns.Topic = new sns.Topic(
       this,
       "SNS_BranchCreated",
@@ -22,8 +44,10 @@ export default class SnsEntryPoint extends cdk.Construct {
     const bracnCreationSubscription = new subscriptions.LambdaSubscription(
       handler.BranchCreationHandler
     );
-
     branchCreatedTopic.addSubscription(bracnCreationSubscription);
+    //#endregion
+
+    //#region legacy github events
 
     const githubChangesTopic: sns.Topic = new sns.Topic(
       this,
@@ -39,10 +63,7 @@ export default class SnsEntryPoint extends cdk.Construct {
     );
 
     githubChangesTopic.addSubscription(githubSubscription);
-
-
-
-
+    //#endregion
 
     // iam policy that can publish to the topic
     const policy = new iam.Policy(this, "Policy_CanPublishinGitHubEvents", {
@@ -50,7 +71,7 @@ export default class SnsEntryPoint extends cdk.Construct {
       statements: [
         new iam.PolicyStatement({
           actions: ["sns:publish"],
-          resources: [githubChangesTopic.topicArn,branchCreatedTopic.topicArn],
+          resources: [githubChangesTopic.topicArn, branchCreatedTopic.topicArn, branchDeletedTopic.topicArn],
           effect: iam.Effect.ALLOW,
         }),
       ],

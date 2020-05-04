@@ -1,6 +1,6 @@
 
 
-exports.TriggerProject =  function(buildParameter){
+exports.TriggerProject =  function(buildParameter, requestedAction){
 
   console.debug(buildParameter);  
   
@@ -66,6 +66,11 @@ exports.TriggerProject =  function(buildParameter){
     ]
   };
   
+  console.debug(`requested action ${requestedAction}`);
+  if(requestedAction == "destroy"){
+    params.buildspecOverride = 'src/PipeLineTemplate/teardown.json';
+  }
+
   console.debug(params);  
   //return;
   const AWS = require("aws-sdk");
