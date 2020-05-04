@@ -13,7 +13,7 @@
         "commands": [
           "npm run build", 
         
-          "Yes | npm run cdk destroy"
+          "yes | npm run cdk destroy"
         ]
       }
     },
