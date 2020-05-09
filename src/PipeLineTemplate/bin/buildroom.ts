@@ -18,11 +18,8 @@ const  buildOperationsDetails : BuildOperationsDetails = {
     "gitHubTokenSecretName" :  `${process.env.GITHUB_TOKEN_SECRETNAME}`,
     "artifactsPrefix" : `${process.env.ARTIFACTS_PREFIX}`,
     "transientArtifactsBucketName" : `${process.env.TRANSIENT_ARTIFACTS_BUCKET_NAME}`,
-    "buildAsRoleArn" : `${process.env.BUILD_AS_ROLE_ARN}`,
-    "env" : {
-        "account": "928065939415",
-         "region": "eu-west-1"
-         }
+    "buildAsRoleArn" : `${process.env.BUILD_AS_ROLE_ARN}`
+    
 }
 console.log(buildOperationsDetails)
 const stackName = `PLF-${projectName}`

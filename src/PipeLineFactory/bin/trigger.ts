@@ -4,16 +4,14 @@ import * as cdk from '@aws-cdk/core';
 import { TriggerStack } from '../lib/trigger-stack';
 import FactoryProperties from  '../lib/factoryProperties'
 
-const stageDev = { account: '928065939415', region: 'eu-west-1' };
 
-const projectName : string = "PipeLine-Factory"
+const projectName : string = "AXTY-PipeLine-Factory"
 const factoryProperties : FactoryProperties = {
-    githubRepositoryBranch : "api-gateway",
-    githubRepositoryName : "pipeline-factory",
-    githubRepositoryOwner : "stage-tech",
+    githubRepositoryBranch : "master",
+    githubRepositoryName : "aws-pipeline-factory",
+    githubRepositoryOwner : "AbdoNile",
     projectName : projectName,
-    env : stageDev,
-    defaultArtifactsBucket : "salt-deployment-packages",
+    defaultArtifactsBucket : "anglerunner-artifacts",
     default_github_token_secret_name : "GitHubToken"
 
 }
