@@ -12,7 +12,7 @@ const factoryProperties : FactoryProperties = {
     githubRepositoryOwner : "AbdoNile",
     projectName : projectName,
     defaultArtifactsBucket : "anglerunner-artifacts",
-    default_github_token_secret_name : "GitHubToken"
+    default_github_token_secret_name : "githubtoken"
 
 }
 const app = new cdk.App();

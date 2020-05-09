@@ -1,12 +1,10 @@
 {
     "created" : true,
-    "pusher_type": "user",
-    "ref": "feature/SPX-89",
-    "ref_type": "branch",
+    "ref": "dev",
     "repository": {
-        "name": "stage-door-ui",
+        "name": "AngleRunners",
         "owner": {
-            "login": "stage-tech"
+            "login": "AbdoNile"
         }
     }
 }
