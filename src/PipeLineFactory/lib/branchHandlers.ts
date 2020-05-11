@@ -5,12 +5,13 @@ import { IFunction } from "@aws-cdk/aws-lambda";
 
 export default class BranchHandlers extends cdk.Construct {
  
-  public readonly BranchCreationHandler : IFunction  ;
+  public readonly apiBranchCreated : IFunction  ;
  
-  public readonly BranchDeletionHandler : IFunction  ;
+  public readonly apiBranchDeleted : IFunction  ;
 
-  public readonly GitHubContextHandler : IFunction  ;
+  public readonly snsBranchCreated : IFunction  ;
  
+  public readonly snsBranchDeleted : IFunction  ;
  
   constructor(scope: cdk.Construct, id: string, props : TriggeringLambdaProperties ) {
     super(scope, id);
@@ -23,26 +24,12 @@ export default class BranchHandlers extends cdk.Construct {
       "DEFAULT_GITHUB_TOKEN_SECRET_NAME" : props.default_github_token_secret_name
     };
 
-    const creationLambda = new lambda.Function(
-        this, "Lambda_BranchCreation",
+      this.apiBranchCreated = new lambda.Function(
+        this, "Lambda_API_BranchCreation",
         {
           runtime: lambda.Runtime.NODEJS_10_X,
-          functionName : `${props.projectName}-BranchCreatedHandler`,
-          handler: "branchMonitor.branchCreated",
-          role: props.lambdaRole,
-          code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
-          environment: environmentVariables,
-          timeout : cdk.Duration.seconds(10)
-        }
-      );
-      this.BranchCreationHandler = creationLambda;
-
-      const deletionLambda = new lambda.Function(
-        this, "Lambda_BranchDeletion",
-        {
-          runtime: lambda.Runtime.NODEJS_10_X,
-          functionName : `${props.projectName}-BranchDeletedHandler`,
-          handler: "branchMonitor.branchDeleted",
+          functionName : `${props.projectName}-API-BranchCreatedHandler`,
+          handler: "branchMonitor.apiBranchCreated",
           role: props.lambdaRole,
           code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
           environment: environmentVariables,
@@ -50,14 +37,25 @@ export default class BranchHandlers extends cdk.Construct {
         }
       );
 
-      this.BranchDeletionHandler = deletionLambda;
-
-      const gitHubEventsHandler = new lambda.Function(
-        this, "Lambda_GitHubEvents",
+      this.apiBranchDeleted = new lambda.Function(
+        this, "Lambda_API_BranchDeletion",
         {
           runtime: lambda.Runtime.NODEJS_10_X,
-          functionName : `${props.projectName}-GitHubContext`,
-          handler: "branchMonitor.githubEventRecieved",
+          functionName : `${props.projectName}-API-BranchDeletedHandler`,
+          handler: "branchMonitor.apiBranchDeleted",
+          role: props.lambdaRole,
+          code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
+          environment: environmentVariables,
+          timeout : cdk.Duration.seconds(10)
+        }
+      );
+     
+      this.snsBranchDeleted  = new lambda.Function(
+        this, "Lambda_SNS_BranchDeletion",
+        {
+          runtime: lambda.Runtime.NODEJS_10_X,
+          functionName : `${props.projectName}-SNS-BranchDeletedHandler`,
+          handler: "branchMonitor.snsBranchDeleted",
           role: props.lambdaRole,
           code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
           environment: environmentVariables,
@@ -65,6 +63,17 @@ export default class BranchHandlers extends cdk.Construct {
         }
       );
 
-      this.GitHubContextHandler = gitHubEventsHandler;
+      this.snsBranchCreated = new lambda.Function(
+        this, "Lambda_SNS_BranchCreation",
+        {
+          runtime: lambda.Runtime.NODEJS_10_X,
+          functionName : `${props.projectName}-SNS-BranchCreatedHandler`,
+          handler: "branchMonitor.snsBracnhCreated",
+          role: props.lambdaRole,
+          code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
+          environment: environmentVariables,
+          timeout : cdk.Duration.seconds(10)
+        }
+      );
   }
 }

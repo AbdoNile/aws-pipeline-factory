@@ -17,4 +17,8 @@ export default class FactoryProperties implements cdk.StackProps {
 
   readonly default_github_token_secret_name: string
   
+  readonly apiDomainName: string;
+  
+  readonly apiDomainCertificateArn: string;
+  
 }
