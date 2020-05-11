@@ -20,49 +20,34 @@ export default class SnsEntryPoint extends cdk.Construct {
       this,
       "SNS_BranchDeleted",
       {
-        displayName: `${props.projectName} GitHub Branch Tracker`,
+        displayName: `${props.projectName} Github Event Branch Deleted`,
         topicName: `${props.projectName}-branch-deleted`,
       }
     );
 
     const bracnhDeletionSubscription = new subscriptions.LambdaSubscription(
-      handler.BranchDeletionHandler
+      handler.snsBranchDeleted
     );
     branchDeletedTopic.addSubscription(bracnhDeletionSubscription);
     //#endregion
 
-    //#region branch created
-    const branchCreatedTopic: sns.Topic = new sns.Topic(
-      this,
-      "SNS_BranchCreated",
-      {
-        displayName: `${props.projectName} GitHub Branch Tracker`,
-        topicName: `${props.projectName}-branch-created`,
-      }
-    );
-
-    const bracnCreationSubscription = new subscriptions.LambdaSubscription(
-      handler.BranchCreationHandler
-    );
-    branchCreatedTopic.addSubscription(bracnCreationSubscription);
-    //#endregion
 
     //#region legacy github events
 
-    const githubChangesTopic: sns.Topic = new sns.Topic(
+    const branchCreatedTopic: sns.Topic = new sns.Topic(
       this,
       "SNS_GitHubChanges",
       {
-        displayName: `${props.projectName} GitHub Branch Tracker`,
+        displayName: `${props.projectName} Github Event Branch Created`,
         topicName: `${props.projectName}-GitHubUpdates`,
       }
     );
 
-    const githubSubscription = new subscriptions.LambdaSubscription(
-      handler.GitHubContextHandler
+    const branchCreationSubscription = new subscriptions.LambdaSubscription(
+      handler.snsBranchCreated
     );
 
-    githubChangesTopic.addSubscription(githubSubscription);
+    branchCreatedTopic.addSubscription(branchCreationSubscription);
     //#endregion
 
     // iam policy that can publish to the topic
@@ -71,7 +56,7 @@ export default class SnsEntryPoint extends cdk.Construct {
       statements: [
         new iam.PolicyStatement({
           actions: ["sns:publish"],
-          resources: [githubChangesTopic.topicArn, branchCreatedTopic.topicArn, branchDeletedTopic.topicArn],
+          resources: [branchCreatedTopic.topicArn, branchDeletedTopic.topicArn],
           effect: iam.Effect.ALLOW,
         }),
       ],
