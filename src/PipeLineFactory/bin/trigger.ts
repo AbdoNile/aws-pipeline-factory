@@ -7,7 +7,7 @@ import FactoryProperties from  '../lib/factoryProperties'
 
 const projectName : string = "AXTY-PipeLine-Factory"
 const factoryProperties : FactoryProperties = {
-    githubRepositoryBranch : "master",
+    githubRepositoryBranch : "anglerunner",
     githubRepositoryName : "aws-pipeline-factory",
     githubRepositoryOwner : "AbdoNile",
     projectName : projectName,
