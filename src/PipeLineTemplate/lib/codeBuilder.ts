@@ -28,8 +28,9 @@ export class CodeBuilder extends cdk.Construct {
       role : buildAsRole,
       source: gitHubSource,
       environment: {
-       buildImage: codebuild.LinuxBuildImage.STANDARD_3_0
-      
+       buildImage: codebuild.LinuxBuildImage.STANDARD_3_0,
+       privileged : true
+        
       },
       projectName : `PLF-${props.projectName}`,
       environmentVariables :  {

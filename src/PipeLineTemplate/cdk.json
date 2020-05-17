@@ -5,7 +5,7 @@
     "buildOperationsDetails":{
       "githubRepositoryName" : "AngleRunner",
       "githubRepositoryOwner" : "AbdoNile",
-      "githubRepositoryBranch" : "dev",
+      "githubRepositoryBranch" : "abdullah",
       "projectName" : "AngleRunnerViaCDK",
       "buildSpecFileRelativeLocation" : "frontend/build/codebuild.spec.yml",
       "artifactsBucket" : "anglerunner-artifacts"
