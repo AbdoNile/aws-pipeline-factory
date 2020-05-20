@@ -5,8 +5,10 @@ import * as codePipelineActions from "@aws-cdk/aws-codepipeline-actions";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as iam from "@aws-cdk/aws-iam";
 import {BuildOperationsDetails} from "./buildOperationsDetails"
+import { IPipeline } from "@aws-cdk/aws-codepipeline";
 
 export class CodePipeline extends cdk.Construct {
+  public readonly pipeline: IPipeline;
   constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails,
             buildProjectArn: string, buildAsRole : iam.IRole  ) {
     super(scope, id);
@@ -73,6 +75,8 @@ export class CodePipeline extends cdk.Construct {
       stageName: 'Deploy',
       actions: [publishAction],
     });
+
+    this.pipeline = pipeline;
 
   }
 }

@@ -108,6 +108,13 @@
     "@aws-cdk/core" "1.38.0"
     constructs "^3.0.2"
 
+"@aws-cdk/aws-chatbot@^1.38.0":
+  version "1.38.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-chatbot/-/aws-chatbot-1.38.0.tgz#977e94128df5219ce4b6092011748105cdb69a94"
+  integrity sha512-aWJMC9zLDUrVtTecKunO72U5zc787RkvGZfKbYDYp23NKQQ9HNZg0aV2Ole29eTmaYRKVb1LfgOgw4rnt4UqTA==
+  dependencies:
+    "@aws-cdk/core" "1.38.0"
+
 "@aws-cdk/aws-cloudformation@1.38.0":
   version "1.38.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-cloudformation/-/aws-cloudformation-1.38.0.tgz#d5ca59b9464e31c14c64282c74739bd9bc875ba2"
@@ -344,7 +351,7 @@
     "@aws-cdk/core" "1.38.0"
     constructs "^3.0.2"
 
-"@aws-cdk/aws-events-targets@1.38.0":
+"@aws-cdk/aws-events-targets@1.38.0", "@aws-cdk/aws-events-targets@^1.38.0":
   version "1.38.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-events-targets/-/aws-events-targets-1.38.0.tgz#c3a652b4a16bbf03f2c8d8349d5dc8a985fb5365"
   integrity sha512-vEYTVhMWixXpLfe9lllmn7t+Fl2B+k54z59wEIi8F33kKOMEwEyccvVqqxwCaDW8EZCAkBe0zTUo6S+JGpfRiA==

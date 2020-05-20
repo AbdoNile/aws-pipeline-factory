@@ -25,5 +25,9 @@ export class BuildOperationsDetails implements cdk.StackProps {
 
   readonly transientArtifactsBucketName : string;
 
-  readonly buildAsRoleArn : string
+  readonly buildAsRoleArn : string;
+
+  readonly slackWorkspaceId: string;
+
+  readonly slackChannelNamePrefix: string;
 }
