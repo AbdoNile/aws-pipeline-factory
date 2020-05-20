@@ -21,7 +21,9 @@ export default class BranchHandlers extends cdk.Construct {
       "BUILD_AS_ROLE_ARN" : props.buildAsRoleArn,
       "DEFAULT_TRANSIENT_ARTIFACTS_BUCKET_NAME" : props.transientArtifactsBucketName,
       "DEFAULT_ARTIFACTS_BUCKET_NAME" : props.defaultBuildArtifactsBucketName || '' ,
-      "DEFAULT_GITHUB_TOKEN_SECRET_NAME" : props.default_github_token_secret_name
+      "DEFAULT_GITHUB_TOKEN_SECRET_NAME" : props.default_github_token_secret_name,
+      "SLACK_WORKSPACE_ID" : props.slackWorkspaceId,
+      "SLACK_CHANNEL_NAME_PREFIX" : props.slackChannelNamePrefix,
     };
 
       this.apiBranchCreated = new lambda.Function(

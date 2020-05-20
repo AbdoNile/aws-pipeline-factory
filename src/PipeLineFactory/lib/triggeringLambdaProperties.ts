@@ -8,4 +8,6 @@ export default class TriggeringLambdaProperties {
   public readonly lambdaRole: iam.IRole
   public readonly defaultBuildArtifactsBucketName: string;
   public readonly default_github_token_secret_name: string
+  public readonly slackWorkspaceId: string;
+  public readonly slackChannelNamePrefix: string;
 }

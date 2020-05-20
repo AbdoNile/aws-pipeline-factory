@@ -20,5 +20,9 @@ export default class FactoryProperties implements cdk.StackProps {
   readonly apiDomainName: string;
   
   readonly apiDomainCertificateArn: string;
+
+  readonly slackWorkspaceId: string;
+
+  readonly slackChannelNamePrefix: string;
   
 }

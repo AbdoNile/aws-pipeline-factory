@@ -16,8 +16,9 @@ const factoryProperties : FactoryProperties = {
     defaultArtifactsBucket : "salt-deployment-packages",
     default_github_token_secret_name : "GitHubToken",
     apiDomainCertificateArn : "arn:aws:acm:eu-west-1:928065939415:certificate/257976ea-e9ff-4a05-8dba-a034f2228326",
-    apiDomainName : "pipeline-factory.tools.salt-dev.ws"
-
+    apiDomainName : "pipeline-factory.tools.salt-dev.ws",
+    slackWorkspaceId: "T5J1W20JV",
+    slackChannelNamePrefix: "sphinx-env-"
 }
 const app = new cdk.App();
 new TriggerStack(app,projectName , factoryProperties);

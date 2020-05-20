@@ -42,7 +42,9 @@ export class TriggerStack extends cdk.Stack {
       transientArtifactsBucketName : pipelineDependencies.ArtifactsBucket.bucketName,
       lambdaRole : lambdaRole,
       default_github_token_secret_name : props.default_github_token_secret_name,
-      defaultBuildArtifactsBucketName : props.defaultArtifactsBucket
+      defaultBuildArtifactsBucketName : props.defaultArtifactsBucket,
+      slackWorkspaceId: props.slackWorkspaceId,
+      slackChannelNamePrefix: props.slackChannelNamePrefix,
     }
 
     const handlers = new BranchHandlers(this, "handlers", triggeringLambdaProperties)
