@@ -15,7 +15,7 @@ export class Notification extends cdk.Construct {
             slackChannelName += 'other';
         }
 
-        let slackChannelId = ssm.StringParameter.valueForSecureStringParameter(scope, slackChannelName, 1);
+        let slackChannelId = ssm.StringParameter.valueFromLookup(scope, slackChannelName);
 
         new chatbot.CfnSlackChannelConfiguration(this, props.projectName + 'SlackChannelConfiguration', {
             loggingLevel: 'INFO',
