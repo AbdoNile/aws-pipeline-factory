@@ -14,12 +14,11 @@ export class Notification extends cdk.Construct {
         } else {
             slackChannelName += 'other';
         }
-
         let slackChannelId = ssm.StringParameter.valueFromLookup(scope, slackChannelName);
 
-        new chatbot.CfnSlackChannelConfiguration(this, props.projectName + 'SlackChannelConfiguration', {
+        new chatbot.CfnSlackChannelConfiguration(this, props.projectName + '-slack-configuration', {
             loggingLevel: 'INFO',
-            configurationName: props.projectName + 'CodePipelineStateChangesConfiguration',
+            configurationName: props.projectName + '-code-pipeline-state-changes-configuration',
             iamRoleArn: props.buildAsRoleArn,
             slackChannelId: slackChannelId,
             slackWorkspaceId: props.slackWorkspaceId,
