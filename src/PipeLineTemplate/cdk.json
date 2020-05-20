@@ -8,7 +8,9 @@
       "githubRepositoryBranch" : "dev",
       "projectName" : "AngleRunnerViaCDK",
       "buildSpecFileRelativeLocation" : "frontend/build/codebuild.spec.yml",
-      "artifactsBucket" : "anglerunner-artifacts"
+      "artifactsBucket" : "anglerunner-artifacts",
+      "slackWorkspaceId": "T5J1W20JV",
+      "slackChannelNamePrefix": "sphinx-env-"
     }
   }
 }
