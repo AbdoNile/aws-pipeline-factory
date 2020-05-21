@@ -12,8 +12,8 @@ exports.TriggerProject = function (buildParameter, requestedAction) {
   var buildAsRoleArn = buildParameter.build_as_role_arn || process.env.BUILD_AS_ROLE_ARN;
   var buildSpecLoction = buildParameter.buildspec_loction || "buildspec.yml";
   var artifactsPrefix = buildParameter.artifacts_prefix || "";
-  var slackWorkspaceId = buildParameter.slackWorkspaceId || "";
-  var slackChannelNamePrefix = buildParameter.slackChannelNamePrefix || "";
+  var slackWorkspaceId = buildParameter.slackWorkspaceId || process.env.SLACK_WORKSPACE_ID;
+  var slackChannelNamePrefix = buildParameter.slackChannelNamePrefix || process.env.SLACK_CHANNEL_NAME_PREFIX;
 
 
   var params =
