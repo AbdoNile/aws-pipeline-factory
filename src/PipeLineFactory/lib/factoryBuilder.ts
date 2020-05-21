@@ -58,8 +58,15 @@ export default class FactoryBuilder extends cdk.Construct {
       new iam.PolicyStatement({
         resources: ['*'],
         actions: ['logs:*']
+      }),
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['ssm:GetParameter']
+      }),
+      new iam.PolicyStatement({
+        resources: ['*'],
+        actions: ['chatbot:CreateSlackChannelConfiguration']
       })
-      
     ]
     }));
 
