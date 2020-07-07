@@ -14,7 +14,7 @@ const factoryProperties : FactoryProperties = {
     projectName : projectName,
     env : stageDev,
     defaultArtifactsBucket : "salt-deployment-packages",
-    default_github_token_secret_name : "GitHubToken",
+    default_github_token_secret_name : "/global/GitHubToken",
     apiDomainCertificateArn : "arn:aws:acm:eu-west-1:928065939415:certificate/257976ea-e9ff-4a05-8dba-a034f2228326",
     apiDomainName : "pipeline-factory.tools.salt-dev.ws",
     slackWorkspaceId: "T5J1W20JV",
