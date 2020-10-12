@@ -4,75 +4,99 @@ import * as codePipeline from "@aws-cdk/aws-codepipeline";
 import * as codePipelineActions from "@aws-cdk/aws-codepipeline-actions";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as iam from "@aws-cdk/aws-iam";
-import {BuildOperationsDetails} from "./buildOperationsDetails"
+import { BuildOperationsDetails } from "./buildOperationsDetails";
 
 export class CodePipeline extends cdk.Construct {
-  constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails,
-            buildProjectArn: string, buildAsRole : iam.IRole  ) {
+  constructor(
+    scope: cdk.Construct,
+    id: string,
+    props: BuildOperationsDetails,
+    buildProjectArn: string,
+    buildAsRole: iam.IRole
+  ) {
     super(scope, id);
 
-    
-    var pipeline = new codePipeline.Pipeline(this, "PipeLine" ,  {
-      pipelineName : `${props.projectName}`,
-      role : buildAsRole,
-      artifactBucket : s3.Bucket.fromBucketName(this, "TransientBucket" , props.transientArtifactsBucketName)
+    var pipeline = new codePipeline.Pipeline(this, "PipeLine", {
+      pipelineName: `${props.projectName}`,
+      role: buildAsRole,
+      artifactBucket: s3.Bucket.fromBucketName(
+        this,
+        "TransientBucket",
+        props.transientArtifactsBucketName
+      ),
     });
 
-
-    var githubToken = cdk.SecretValue.secretsManager(props.gitHubTokenSecretName)
-    const sourceCodeOutput = new codePipeline.Artifact("SourceCode",)
-    const fetchSourceAction = new codePipelineActions.GitHubSourceAction( {
-     actionName : `GitHub-${props.projectName}`,
-     repo : props.githubRepositoryName,
-     owner : props.githubRepositoryOwner,
-     branch : props.githubRepositoryBranch,
-     output  : sourceCodeOutput,
-     oauthToken : githubToken,
-     trigger : codePipelineActions.GitHubTrigger.WEBHOOK
-    })
+    var githubToken = cdk.SecretValue.secretsManager(
+      props.gitHubTokenSecretName
+    );
+    const sourceCodeOutput = new codePipeline.Artifact("SourceCode");
+    const fetchSourceAction = new codePipelineActions.GitHubSourceAction({
+      actionName: `GitHub-${props.projectName}`,
+      repo: props.githubRepositoryName,
+      owner: props.githubRepositoryOwner,
+      branch: props.githubRepositoryBranch,
+      output: sourceCodeOutput,
+      oauthToken: githubToken,
+      trigger: codePipelineActions.GitHubTrigger.WEBHOOK,
+    });
 
     pipeline.addStage({
-      stageName : "Fetch" ,
-      actions : [  fetchSourceAction ]
-    })
+      stageName: "Fetch",
+      actions: [fetchSourceAction],
+    });
 
-    var buildProject = codebuild.Project.fromProjectArn(this, "BuildProject", buildProjectArn)
-    const buildOutput = new codePipeline.Artifact("BuildOutput")
-  
+    var buildProject = codebuild.Project.fromProjectArn(
+      this,
+      "BuildProject",
+      buildProjectArn
+    );
+    const buildOutput = new codePipeline.Artifact("BuildOutput");
+
     var buildAction = new codePipelineActions.CodeBuildAction({
-     actionName : "RunBuildSpec" ,
-     input : sourceCodeOutput,
-     role: buildAsRole,
-     project : buildProject,
-     outputs : [buildOutput],
+      actionName: "RunBuildSpec",
+      input: sourceCodeOutput,
+      role: buildAsRole,
+      project: buildProject,
+      outputs: [buildOutput],
     });
 
     pipeline.addStage({
-      stageName : "Build" ,
-      actions : [  buildAction ]
+      stageName: "Build",
+      actions: [buildAction],
     });
-     
-    const artifactsBucket = s3.Bucket.fromBucketName(this, 'PipeLineDeploymentArtifactsBucket', props.artifactsBucket);
 
-    let objectPrefix = `${props.githubRepositoryName}/${props.githubRepositoryBranch}`
-    
-    if(props.artifactsPrefix){
-      objectPrefix = `${props.artifactsPrefix}/${objectPrefix}`
+    const artifactsBucket = s3.Bucket.fromBucketName(
+      this,
+      "PipeLineDeploymentArtifactsBucket",
+      props.artifactsBucket
+    );
+
+    let objectPrefix = `${props.githubRepositoryName}/${props.githubRepositoryBranch}`;
+
+    if (props.artifactsPrefix) {
+      objectPrefix = `${props.artifactsPrefix}/${objectPrefix}`;
     }
 
     const publishAction = new codePipelineActions.S3DeployAction({
-      actionName: 'S3Deploy',
-      role : buildAsRole,
-       bucket: artifactsBucket,
+      actionName: "S3Deploy",
+      role: buildAsRole,
+      bucket: artifactsBucket,
       input: buildOutput,
-      objectKey: objectPrefix
-     
+      objectKey: objectPrefix,
     });
 
-      pipeline.addStage({
-      stageName: 'Deploy',
+    pipeline.addStage({
+      stageName: "Deploy",
       actions: [publishAction],
     });
 
+    const deployAction = new codePipelineActions.CodeBuildAction({
+      actionName: "Deploy",
+      role : buildAsRole,
+      input : sourceCodeOutput,
+      project : deployProject,
+      type : codePipelineActions.CodeBuildActionType.BUILD
+      
+    })
   }
 }
