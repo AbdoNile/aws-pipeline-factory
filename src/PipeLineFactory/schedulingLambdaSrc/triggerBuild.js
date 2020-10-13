@@ -1,19 +1,41 @@
 
+function mergeRepositorySettings(payLoad) {
+  var mergedParameters = payLoad 
+  mergedParameters.settings = null;
 
-exports.TriggerProject = function (buildParameter, requestedAction) {
+  const repositorySettings = payLoad.settings;
+  Object.keys(repositorySettings).forEach(function (key) {
+    mergedParameters[key] = repositorySettings[key];
+  });
 
-  console.debug(buildParameter);
+  return mergedParameters;
+}
 
+exports.TriggerProject = function (payLoad, requestedAction) {
+
+  console.debug(payLoad);
+
+  const buildParameters = mergeRepositorySettings(payLoad);
+
+  console.debug(buildParameters);
 
   var buildProjectName = process.env.FactoryCodeBuildProjectName;
-  var transientArtifactsBucket = buildParameter.transient_artifacts_bucket || process.env.DEFAULT_TRANSIENT_ARTIFACTS_BUCKET_NAME;
-  var artifactsBucketName = buildParameter.artifacts_bucket_name || process.env.DEFAULT_ARTIFACTS_BUCKET_NAME;
-  var githHubTokenSecretName = buildParameter.github_token_secret_name || process.env.DEFAULT_GITHUB_TOKEN_SECRET_NAME;
-  var buildAsRoleArn = buildParameter.build_as_role_arn || process.env.BUILD_AS_ROLE_ARN;
-  var buildSpecLoction = buildParameter.buildspec_loction || "buildspec.yml";
-  var artifactsPrefix = buildParameter.artifacts_prefix || "";
-  var slackWorkspaceId = buildParameter.slackWorkspaceId || process.env.SLACK_WORKSPACE_ID;
-  var slackChannelNamePrefix = buildParameter.slackChannelNamePrefix || process.env.SLACK_CHANNEL_NAME_PREFIX;
+
+  var transientArtifactsBucket = buildParameters.transient_artifacts_bucket || process.env.DEFAULT_TRANSIENT_ARTIFACTS_BUCKET_NAME;
+  
+  var artifactsBucketName = buildParameters.artifactsBucketName || process.env.DEFAULT_ARTIFACTS_BUCKET_NAME;
+ 
+  var gitHubTokenSecretName = buildParameters.github_token_secret_name || process.env.DEFAULT_GITHUB_TOKEN_SECRET_NAME;
+  
+  var buildAsRoleArn = buildParameters.buildAsRoleArn || process.env.BUILD_AS_ROLE_ARN;
+  
+  var buildSpecLocation = buildParameters.buildspecFileLocation || "buildspec.yml";
+  
+  var artifactsPrefix = buildParameters.artifacts_prefix || "";
+  
+  var slackWorkspaceId = buildParameters.slackWorkspaceId || process.env.SLACK_WORKSPACE_ID;
+  
+  var slackChannelNamePrefix = buildParameters.slackChannelNamePrefix || process.env.SLACK_CHANNEL_NAME_PREFIX;
 
 
   var params =
@@ -22,22 +44,22 @@ exports.TriggerProject = function (buildParameter, requestedAction) {
     environmentVariablesOverride: [
       {
         name: 'GITHUB_REPOSITORY_NAME',
-        value: buildParameter.repository_name,
+        value: buildParameters.repository_name,
         type: "PLAINTEXT"
       },
       {
         name: 'GITHUB_REPOSITORY_BRANCH',
-        value: buildParameter.branch,
+        value: buildParameters.branch,
         type: "PLAINTEXT"
       },
       {
         name: 'GITHUB_REPOSITORY_OWNER',
-        value: buildParameter.repository_owner,
+        value: buildParameters.repository_owner,
         type: "PLAINTEXT"
       },
       {
         name: 'BUILD_SPEC_RELATIVE_LOCATION',
-        value: buildSpecLoction,
+        value: buildSpecLocation,
         type: "PLAINTEXT"
       },
       {
@@ -47,7 +69,7 @@ exports.TriggerProject = function (buildParameter, requestedAction) {
       },
       {
         name: 'GITHUB_TOKEN_SECRETNAME',
-        value: githHubTokenSecretName,
+        value: gitHubTokenSecretName,
         type: "PLAINTEXT"
       },
       {
