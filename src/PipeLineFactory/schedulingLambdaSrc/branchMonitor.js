@@ -1,21 +1,9 @@
 const { TriggerProject } = require('./triggerBuild');
 
-function sanitizeBranchName(branchName) {
-  branchName = branchName.toLowerCase();
-
-  if(branchName.startsWith("refs/heads/"))
-  {
-    branchName = branchName.replace("refs/heads/", "");
-  }
-  
-  console.debug("Sanitize Branch Name : " + branchName)
-  return branchName;
-}
-
 exports.apiBranchCreated = function (event, context, callback) {
   var payload = event.body;
-  console.debug(payload);
   var buildParameter = JSON.parse(payload);
+  console.debug(`pay load received ${JSON.stringify(buildParameter, null , 4)}`);
 
   var result = TriggerProject(buildParameter, "create")
   callback(null , ({
@@ -27,9 +15,10 @@ exports.apiBranchCreated = function (event, context, callback) {
 }
 
 exports.apiBranchDeleted = function (event, context, callback) {
-    var payload = event.body;
-  console.debug(payload);
+  var payload = event.body;
   var buildParameter = JSON.parse(payload);
+  console.debug(`pay load received ${JSON.stringify(buildParameter, null , 4)}`);
+ 
   var result = TriggerProject(buildParameter, "destroy")
   callback(null , ({
     'statusCode': 200,
@@ -48,7 +37,7 @@ exports.snsBranchDeleted = function (event) {
   var buildParameter = {
     "repository_name": githubContext.repository.name,
     "repository_owner": githubContext.repository.owner.login,
-    "branch": sanitizeBranchName(githubContext.ref)
+    "branch": githubContext.ref
   };
 
   TriggerProject(buildParameter, "destroy")
@@ -63,7 +52,7 @@ exports.snsBranchCreated = function (event) {
   var buildParameter = {
     "repository_name": githubContext.repository.name,
     "repository_owner": githubContext.repository.owner.login,
-    "branch": sanitizeBranchName(githubContext.ref)
+    "branch": githubContext.ref
   };
 
   TriggerProject(buildParameter, "create")

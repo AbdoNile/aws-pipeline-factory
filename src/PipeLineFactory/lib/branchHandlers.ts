@@ -52,30 +52,5 @@ export default class BranchHandlers extends cdk.Construct {
         }
       );
      
-      this.snsBranchDeleted  = new lambda.Function(
-        this, "Lambda_SNS_BranchDeletion",
-        {
-          runtime: lambda.Runtime.NODEJS_10_X,
-          functionName : `${props.projectName}-SNS-BranchDeletedHandler`,
-          handler: "branchMonitor.snsBranchDeleted",
-          role: props.lambdaRole,
-          code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
-          environment: environmentVariables,
-          timeout : cdk.Duration.seconds(10)
-        }
-      );
-
-      this.snsBranchCreated = new lambda.Function(
-        this, "Lambda_SNS_BranchCreation",
-        {
-          runtime: lambda.Runtime.NODEJS_10_X,
-          functionName : `${props.projectName}-SNS-BranchCreatedHandler`,
-          handler: "branchMonitor.snsBranchCreated",
-          role: props.lambdaRole,
-          code: lambda.Code.fromAsset("schedulingLambdaSrc"), 
-          environment: environmentVariables,
-          timeout : cdk.Duration.seconds(10)
-        }
-      );
   }
 }

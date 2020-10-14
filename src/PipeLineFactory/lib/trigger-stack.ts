@@ -2,7 +2,6 @@ import * as cdk from "@aws-cdk/core";
 import * as iam from "@aws-cdk/aws-iam";
 import FactoryProperties from './factoryProperties'
 import FactoryBuilder from './factoryBuilder'
-import SnsEntryPoint from './snsEntryPoint'
 import ApiEntryPoint from './apiEntryPoint'
 import  PipelineDependencies from './pipelineDependencies'
 import BranchHandlers from './branchHandlers';
@@ -48,9 +47,7 @@ export class TriggerStack extends cdk.Stack {
     }
 
     const handlers = new BranchHandlers(this, "handlers", triggeringLambdaProperties)
-
-    const snsEntryPoint = new SnsEntryPoint(this , "snsEntryPoint", props, handlers )
- 
+  
     const apiEntryPoint = new ApiEntryPoint(this , "apiEntryPoint", props, handlers)
   }
 }

@@ -1,23 +1,40 @@
+function extractBranchName(branchName) {
+  
+  var trimmedBranchName = branchName.toLowerCase();
+
+  if(branchName.startsWith("refs/heads/"))
+  {
+    trimmedBranchName = branchName.replace("refs/heads/", "");
+  }
+  
+  console.debug(`branch name passed from github: [${branchName}] , Trimmed Branch Name : [${trimmedBranchName}] ` )
+  return trimmedBranchName;
+}
+
 
 function mergeRepositorySettings(payLoad) {
   var mergedParameters = payLoad 
-  mergedParameters.settings = null;
 
   const repositorySettings = payLoad.settings;
-  Object.keys(repositorySettings).forEach(function (key) {
-    mergedParameters[key] = repositorySettings[key];
-  });
+  
+  mergedParameters.settings = null;
 
+  if(repositorySettings){
+    Object.keys(repositorySettings).forEach(function (key) {
+      mergedParameters[key] = repositorySettings[key];
+    });
+  }
   return mergedParameters;
 }
 
 exports.TriggerProject = function (payLoad, requestedAction) {
-
-  console.debug(payLoad);
-
+  console.debug(`requested action ${requestedAction}`);
+  
   const buildParameters = mergeRepositorySettings(payLoad);
 
-  console.debug(buildParameters);
+  console.debug(`merged build Parameters ${JSON.stringify(buildParameters, null , 4)}`);
+ 
+  const branchName = extractBranchName(buildParameters.branch);
 
   var buildProjectName = process.env.FactoryCodeBuildProjectName;
 
@@ -37,7 +54,6 @@ exports.TriggerProject = function (payLoad, requestedAction) {
   
   var slackChannelNamePrefix = buildParameters.slackChannelNamePrefix || process.env.SLACK_CHANNEL_NAME_PREFIX;
 
-
   var params =
   {
     projectName: buildProjectName,
@@ -49,7 +65,7 @@ exports.TriggerProject = function (payLoad, requestedAction) {
       },
       {
         name: 'GITHUB_REPOSITORY_BRANCH',
-        value: buildParameters.branch,
+        value: branchName,
         type: "PLAINTEXT"
       },
       {
@@ -100,16 +116,24 @@ exports.TriggerProject = function (payLoad, requestedAction) {
     ]
   };
 
-  console.debug(`requested action ${requestedAction}`);
   if (requestedAction == "destroy") {
     params.buildspecOverride = 'src/PipeLineTemplate/teardown.json';
   }
 
-  console.debug(params);
+  const monitoredBranches = Array.isArray(buildParameters.monitoredBranches) ? buildParameters.monitoredBranches : []
+  monitoredBranches.push('master');
+  if(monitoredBranches.includes(branchName)) {
+    console.debug(`branch name is configured for monitoring`)
+  }
+  else {
+    console.debug(`Skipping , branch name is not configured for monitoring , configured branches are ${JSON.stringify(monitoredBranches)}`)
+    return { message : `This branch is not configured for monitoring  , configured branches are ${JSON.stringify(monitoredBranches)}`      };   
+  }
+
   //return;
   const AWS = require("aws-sdk");
   var codebuild = new AWS.CodeBuild({ apiVersion: '2016-10-06' });
-  var buildresult = codebuild.startBuild(params, function (err, data) {
+  var buildResult = codebuild.startBuild(params, function (err, data) {
     if (err) {
       console.log(err, err.stack);
       
