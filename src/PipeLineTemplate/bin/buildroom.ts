@@ -2,7 +2,7 @@
 require('dotenv').config();
 import * as cdk from '@aws-cdk/core';
 import {Utility}  from './utility';
-import { BuildroomStack } from '../lib/buildroom-stack';
+import { BuildRoomStack } from '../lib/buildroom-stack';
 import { BuildOperationsDetails } from '../lib/buildOperationsDetails';
 const stageDev = { account: '928065939415', region: 'eu-west-1' };
 const app = new cdk.App();
@@ -28,4 +28,4 @@ const  buildOperationsDetails : BuildOperationsDetails = {
 }
 console.log(buildOperationsDetails)
 const stackName = `PLF-${projectName}`
-new BuildroomStack(app, stackName, buildOperationsDetails);
+new BuildRoomStack(app, stackName, buildOperationsDetails);

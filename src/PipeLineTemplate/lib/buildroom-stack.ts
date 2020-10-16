@@ -6,15 +6,19 @@ import {BuildOperationsDetails} from "./buildOperationsDetails"
 import { Notification } from "./notification";
 
 
-export class BuildroomStack extends cdk.Stack {
+export class BuildRoomStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props: BuildOperationsDetails) {
     super(scope, id, props);
+
+    cdk.Tag.add(this , "service" , "pipeline-factory");
+    cdk.Tag.add(this , "repository" , `${props.githubRepositoryOwner}/${props.githubRepositoryName}`);
+    cdk.Tag.add(this , "branch" , `${props.githubRepositoryBranch}`);
+  
     const buildIamROle = iam.Role.fromRoleArn(this , "BuildAsRole", props.buildAsRoleArn);
  
     const builder = new codeBuilder.CodeBuilder(this, "CodeBuilder" , props,buildIamROle )
     const pipLine = new codePiplineer.CodePipeline(this, "CodePipeLine", props, builder.buildProjectArn, buildIamROle)
 
-  //  const notification = new Notification(this, 'notification', props, pipLine.pipeline);
   }
 
 }

@@ -10,4 +10,6 @@ export default class TriggeringLambdaProperties {
   public readonly default_github_token_secret_name: string
   public readonly slackWorkspaceId: string;
   public readonly slackChannelNamePrefix: string;
+  public readonly triggerCodeS3Bucket: string;
+  public readonly triggerCodeS3Key: string;
 }

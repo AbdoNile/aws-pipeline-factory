@@ -13,12 +13,7 @@ export class CodeBuilder extends cdk.Construct {
     const gitHubSource = codebuild.Source.gitHub({
       owner: props.githubRepositoryOwner,
       repo: props.githubRepositoryName,
-      webhook: false/*,
-      webhookFilters: [
-        codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(
-          props.githubRepositoryBranch
-        ),
-      ]*/
+      webhook: false
     });
 
     const artifactsBucket = s3.Bucket.fromBucketName(this, 'CodeBuildArtifactsBucket', props.artifactsBucket);

@@ -25,4 +25,8 @@ export default class FactoryProperties implements cdk.StackProps {
 
   readonly slackChannelNamePrefix: string;
   
+  readonly triggerCodeS3Bucket: string;
+  
+  readonly triggerCodeS3Key: string;
+  
 }

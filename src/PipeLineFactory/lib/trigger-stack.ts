@@ -11,6 +11,7 @@ export class TriggerStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props: FactoryProperties) {
     super(scope, id, props);
     
+    cdk.Tag.add(this , "service" , "pipeline-factory");
     const factoryBuilder = new FactoryBuilder(this, "factoryBuilder", props )
     
     // role to run the lambda function
@@ -44,6 +45,8 @@ export class TriggerStack extends cdk.Stack {
       defaultBuildArtifactsBucketName : props.defaultArtifactsBucket,
       slackWorkspaceId: props.slackWorkspaceId,
       slackChannelNamePrefix: props.slackChannelNamePrefix,
+      triggerCodeS3Bucket : props.triggerCodeS3Bucket,
+      triggerCodeS3Key : props.triggerCodeS3Key
     }
 
     const handlers = new BranchHandlers(this, "handlers", triggeringLambdaProperties)

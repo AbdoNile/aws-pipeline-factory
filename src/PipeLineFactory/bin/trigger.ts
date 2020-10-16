@@ -5,7 +5,11 @@ import { TriggerStack } from '../lib/trigger-stack';
 import FactoryProperties from  '../lib/factoryProperties'
 
 const stageDev = { account: '928065939415', region: 'eu-west-1' };
+const app = new cdk.App();
 
+const s3_lambda_object_key = app.node.tryGetContext('s3_lambda_object_key');
+const s3_bucket_name = app.node.tryGetContext('s3_bucket_name');
+console.log(`s3_lambda_object_key ${s3_lambda_object_key} , s3_bucket_name ${s3_bucket_name} `)
 const projectName : string = "PipeLine-Factory"
 const factoryProperties : FactoryProperties = {
     githubRepositoryBranch : "master",
@@ -18,7 +22,8 @@ const factoryProperties : FactoryProperties = {
     apiDomainCertificateArn : "arn:aws:acm:eu-west-1:928065939415:certificate/257976ea-e9ff-4a05-8dba-a034f2228326",
     apiDomainName : "pipeline-factory.tools.salt-dev.ws",
     slackWorkspaceId: "T5J1W20JV",
-    slackChannelNamePrefix: "sphinx-env-"
+    slackChannelNamePrefix: "sphinx-env-",
+    triggerCodeS3Bucket : s3_bucket_name,
+    triggerCodeS3Key : s3_lambda_object_key
 }
-const app = new cdk.App();
 new TriggerStack(app,projectName , factoryProperties);

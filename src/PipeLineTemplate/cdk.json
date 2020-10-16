@@ -1,14 +1,10 @@
 {
   "app": "npx ts-node bin/buildroom.ts",
   "context" : {
-    "test" : "vrstvalue",
     "buildOperationsDetails":{
-      "githubRepositoryName" : "AngleRunner",
-      "githubRepositoryOwner" : "AbdoNile",
-      "githubRepositoryBranch" : "dev",
-      "projectName" : "AngleRunnerViaCDK",
-      "buildSpecFileRelativeLocation" : "frontend/build/codebuild.spec.yml",
-      "artifactsBucket" : "anglerunner-artifacts",
+      "githubRepositoryName" : "stage-door-cdk",
+      "githubRepositoryOwner" : "stage-tech",
+      "githubRepositoryBranch" : "abdo",
       "defaultSlackWorkspaceId" : "T5J1W20JV",
       "defaultSlackChannelNamePrefix": "sphinx-env-"
     }
