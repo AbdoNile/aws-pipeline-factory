@@ -42,5 +42,7 @@ popd
 
 pushd $PWD
 cd ./src/PipeLineFactory
+yarn install
+yarn build
 cdk deploy --context s3_bucket_name=$s3_bucket_name --context s3_lambda_object_key=$s3_lambda_object_key
 popd
