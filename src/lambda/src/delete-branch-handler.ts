@@ -9,7 +9,7 @@ class DeleteBranchHandler {
     const pipelineProps = new PipeLinePropertiesBuilder().build(payload);
     console.log(JSON.stringify(pipelineProps, null, 4));
     const codeBuildManager = new PipelineManager();
-    const result = await codeBuildManager.createPipeLine(pipelineProps);
+    const result = await codeBuildManager.deletePipeLine(pipelineProps);
 
     return {
       statusCode: 200,
