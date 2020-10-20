@@ -1,27 +1,24 @@
 import * as cdk from "@aws-cdk/core";
-import * as chatbot from '@aws-cdk/aws-chatbot';
+import {SnsTopic} from "@aws-cdk/aws-events-targets";
 import * as ssm from '@aws-cdk/aws-ssm';
+import * as sns from '@aws-cdk/aws-sns'
 import { BuildOperationsDetails } from "./buildOperationsDetails";
 import { IPipeline } from "@aws-cdk/aws-codepipeline";
 
 export class Notification extends cdk.Construct {
-    constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails, pipeline: IPipeline) {
+    constructor(scope: cdk.Construct, id: string, pipeline: IPipeline) {
         super(scope, id);
         
-        let slackChannelName = props.slackChannelNamePrefix;
-        if(props.githubRepositoryBranch === 'master' || props.githubRepositoryBranch.startsWith('bumastemra')){
-            slackChannelName += props.githubRepositoryBranch;
-        } else {
-            slackChannelName += 'other';
-        }
-        let slackChannelId = ssm.StringParameter.valueFromLookup(scope, slackChannelName);
+      
+        let topicArn = ssm.StringParameter.valueFromLookup(scope, `pipeline-factory-events`);
 
-        new chatbot.CfnSlackChannelConfiguration(this, props.projectName + '-slack-configuration', {
-            loggingLevel: 'INFO',
-            configurationName: props.projectName + '-code-pipeline-state-changes-configuration',
-            iamRoleArn: props.buildAsRoleArn,
-            slackChannelId: slackChannelId,
-            slackWorkspaceId: props.slackWorkspaceId,
-          });
+
+        const notificationsTopic = sns.Topic.fromTopicArn(this, "NotificationsTopic", topicArn);
+
+        pipeline.onStateChange('SlackPipelineNotifierRule',{
+             target : new SnsTopic(notificationsTopic)
+        }
+          );
+          
     }
 }
