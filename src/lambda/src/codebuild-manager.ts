@@ -25,9 +25,10 @@ export class PipelineManager {
     const stack = matchingStacks ? matchingStacks[0] : null;
     if (stack) {
       console.log(`deleting stack ${stack.StackName}`);
-      const deletionResult = await cloudFormationClient.deleteStack({ StackName: stack.StackName }).promise();
-      console.log(JSON.stringify(deletionResult.$response.data));
+      //  const deletionResult = await cloudFormationClient.deleteStack({ StackName: stack.StackName }).promise();
+      // console.log(JSON.stringify(deletionResult.$response.data));
 
+      console.log(JSON.stringify('deletion commented out'));
       return {
         message: `deleted pipeline with cloudformation stack name ${stack.StackName}`,
       };
