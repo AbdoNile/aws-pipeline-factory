@@ -11,22 +11,26 @@
     "cdk": "cdk"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "^1.36.0",
-    "@types/jest": "^25.2.1",
-    "@types/node": "^13.13.4",
-    "aws-cdk": "^1.36.0",
-    "jest": "^25.5.1",
-    "ts-jest": "^25.4.0",
-    "ts-node": "^8.1.0",
-    "typescript": "^3.8.3"
+    "@aws-cdk/assert": "^1.69.0",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^14.14.0",
+    "aws-cdk": "^1.69.0",
+    "jest": "^26.6.0",
+    "ts-jest": "^26.4.1",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
   },
   "dependencies": {
-    "@aws-cdk/aws-apigateway": "^1.36.0",
-    "@aws-cdk/aws-codebuild": "^1.36.0",
-    "@aws-cdk/aws-lambda": "^1.36.0",
-    "@aws-cdk/aws-sns": "^1.36.0",
-    "@aws-cdk/aws-sns-subscriptions": "^1.36.0",
-    "@aws-cdk/core": "^1.36.0",
+    "@aws-cdk/aws-apigateway": "^1.69.0",
+    "@aws-cdk/aws-codebuild": "^1.69.0",
+    "@aws-cdk/aws-events-targets": "^1.69.0",
+    "@aws-cdk/aws-lambda": "^1.69.0",
+    "@aws-cdk/aws-lambda-event-sources": "^1.69.0",
+    "@aws-cdk/aws-sns": "^1.69.0",
+    "@aws-cdk/aws-sns-subscriptions": "^1.69.0",
+    "@aws-cdk/aws-ssm": "^1.69.0",
+    "@aws-cdk/core": "^1.69.0",
+    "cdk-constants": "^3.0.3",
     "source-map-support": "^0.5.16"
   }
 }

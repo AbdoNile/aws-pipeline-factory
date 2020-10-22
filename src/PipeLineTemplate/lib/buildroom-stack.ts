@@ -1,9 +1,9 @@
 import * as cdk from "@aws-cdk/core";
 import * as codeBuilder from './codeBuilder';
-import * as codePiplineer from './codePipeline';
+import * as codePipeline from './codePipeline';
+import {Notification} from './notification';
 import * as iam from '@aws-cdk/aws-iam'
 import {BuildOperationsDetails} from "./buildOperationsDetails"
-import { Notification } from "./notification";
 
 
 export class BuildRoomStack extends cdk.Stack {
@@ -17,8 +17,7 @@ export class BuildRoomStack extends cdk.Stack {
     const buildIamROle = iam.Role.fromRoleArn(this , "BuildAsRole", props.buildAsRoleArn);
  
     const builder = new codeBuilder.CodeBuilder(this, "CodeBuilder" , props,buildIamROle )
-    const pipLine = new codePiplineer.CodePipeline(this, "CodePipeLine", props, builder.buildProjectArn, buildIamROle)
-
+    const pipLine = new codePipeline.CodePipeline(this, "CodePipeLine", props, builder.buildProjectArn, buildIamROle)
   }
 
 }
