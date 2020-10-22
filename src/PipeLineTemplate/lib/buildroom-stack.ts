@@ -18,7 +18,6 @@ export class BuildRoomStack extends cdk.Stack {
  
     const builder = new codeBuilder.CodeBuilder(this, "CodeBuilder" , props,buildIamROle )
     const pipLine = new codePipeline.CodePipeline(this, "CodePipeLine", props, builder.buildProjectArn, buildIamROle)
-    const notification = new Notification(this , "Notifications" , pipLine.pipeline, props.projectName)
   }
 
 }

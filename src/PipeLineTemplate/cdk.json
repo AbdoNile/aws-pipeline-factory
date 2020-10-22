@@ -2,11 +2,7 @@
   "app": "npx ts-node bin/buildroom.ts",
   "context" : {
     "buildOperationsDetails":{
-      "githubRepositoryName" : "stage-door-cdk",
-      "githubRepositoryOwner" : "stage-tech",
-      "githubRepositoryBranch" : "abdo",
-      "defaultSlackWorkspaceId" : "T5J1W20JV",
-      "defaultSlackChannelNamePrefix": "sphinx-env-"
+   
     }
   }
 }
