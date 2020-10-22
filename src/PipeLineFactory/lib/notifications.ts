@@ -2,11 +2,18 @@ import * as cdk from "@aws-cdk/core";
 import * as sns from "@aws-cdk/aws-sns";
 import * as ssm from "@aws-cdk/aws-ssm";
 import * as lambda from "@aws-cdk/aws-lambda";
+import * as events from '@aws-cdk/aws-events'
+import * as eventTargets from '@aws-cdk/aws-events-targets'
+import * as logs from '@aws-cdk/aws-logs'
 import * as iam from '@aws-cdk/aws-iam'
 import * as s3 from "@aws-cdk/aws-s3";
 import TriggeringLambdaProperties from "./triggeringLambdaProperties";
 import { SubscriptionProtocol } from "@aws-cdk/aws-sns";
 import { SnsEventSource } from '@aws-cdk/aws-lambda-event-sources';
+import { Aws, RemovalPolicy } from "@aws-cdk/core";
+import { CloudWatchLogsTarget } from "./CloudWatchLogsTarget";
+import { ServicePrincipals } from "cdk-constants";
+
 export default class Notifications extends cdk.Construct {
  
   constructor(
@@ -18,9 +25,28 @@ export default class Notifications extends cdk.Construct {
         topicName : "pipeline-factory-events"
       })
 
-      const topicPolicy = new sns.TopicPolicy(this , "TopicPolicy" , {
-        topics : [pipelineEventsTopic] ,
 
+      const snsEventTarget = new eventTargets.SnsTopic(pipelineEventsTopic);
+
+      const pipelineCloudWatchLogGroup = new logs.LogGroup(this, "PipelineLogs" , {
+        logGroupName : "/aws/events/PipeLineFactory-Pipeline-Events",
+        removalPolicy : RemovalPolicy.DESTROY
+      })
+
+      pipelineCloudWatchLogGroup.grantWrite(new iam.ServicePrincipal(ServicePrincipals.EVENTS))
+
+      const logGroupTarget = new CloudWatchLogsTarget(pipelineCloudWatchLogGroup)
+      
+      const rule = new events.Rule(this , "pipelineEvents" , {
+        description : "Forward code pipeline events to sns topic" ,
+        enabled : true,
+        ruleName : "Pipeline-Factory-SNS" ,
+        targets : [snsEventTarget , logGroupTarget],
+        eventPattern : {
+          source :  [
+            "aws.codepipeline"
+          ]
+        }
       })
 
       new ssm.StringParameter(this , "EventsTopicArn" , {
