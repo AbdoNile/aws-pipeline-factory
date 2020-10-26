@@ -1,7 +1,6 @@
 import * as cdk from "@aws-cdk/core";
 import * as codeBuilder from './codeBuilder';
 import * as codePipeline from './codePipeline';
-import {Notification} from './notification';
 import * as iam from '@aws-cdk/aws-iam'
 import {BuildOperationsDetails} from "./buildOperationsDetails"
 
