@@ -9,7 +9,7 @@ import * as s3 from "@aws-cdk/aws-s3";
 import { SubscriptionProtocol } from "@aws-cdk/aws-sns";
 import { SnsEventSource } from "@aws-cdk/aws-lambda-event-sources";
 import { RemovalPolicy } from "@aws-cdk/core";
-import { CloudWatchLogsTarget } from "./CloudWatchLogsTarget";
+import { CloudWatchLogsTarget } from "./cloudwatch-logs-target";
 import { ServicePrincipals } from "cdk-constants";
 import NotificationsLambdaRole from "./lambda-role";
 export interface NotificationsProps {
