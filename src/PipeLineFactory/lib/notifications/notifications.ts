@@ -6,6 +6,7 @@ import * as eventTargets from "@aws-cdk/aws-events-targets";
 import * as logs from "@aws-cdk/aws-logs";
 import * as iam from "@aws-cdk/aws-iam";
 import * as s3 from "@aws-cdk/aws-s3";
+import * as events from "@aws-cdk/aws-events";
 import { SubscriptionProtocol } from "@aws-cdk/aws-sns";
 import { SnsEventSource } from "@aws-cdk/aws-lambda-event-sources";
 import { RemovalPolicy } from "@aws-cdk/core";
@@ -36,6 +37,18 @@ export default class Notifications extends cdk.Construct {
     );
 
     const logGroupTarget = new CloudWatchLogsTarget(pipelineCloudWatchLogGroup);
+      
+    const rule = new events.Rule(this , "pipelineEvents" , {
+      description : "Forward code pipeline events to sns topic" ,
+      enabled : true,
+      ruleName : "Pipeline-Factory-SNS" ,
+      targets : [snsEventTarget , logGroupTarget],
+      eventPattern : {
+        source :  [
+          "aws.codepipeline"
+        ]
+      }
+    })
 
     new ssm.StringParameter(this, "EventsTopicArn", {
       parameterName: "/pipeline-factory/events-sns-topic",
