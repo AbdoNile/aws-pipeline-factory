@@ -12,9 +12,9 @@ export default class FactoryBuilder extends cdk.Construct {
     
     // this is the source code to get github specs
     const gitHubSource = codebuild.Source.gitHub({
-      owner: props.githubRepositoryOwner,
-      repo: props.githubRepositoryName,
-      branchOrRef : props.githubRepositoryBranch,
+      owner: props.pipelineTemplateGithubOwner,
+      repo: props.pipelineTemplateRepositoryName,
+      branchOrRef : props.pipelineTemplateBranchName,
       webhook: false,
     });
 
@@ -70,7 +70,7 @@ export default class FactoryBuilder extends cdk.Construct {
     ]
     }));
 
-    // asumption about where the buildspec is located
+    // assumption about where the buildspec is located
     const buildSpecFile = "src/PipeLineTemplate/buildspec.json";
     
   

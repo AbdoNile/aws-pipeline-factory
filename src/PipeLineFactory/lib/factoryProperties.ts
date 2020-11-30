@@ -1,11 +1,11 @@
 import * as cdk from "@aws-cdk/core";
 
 export default class FactoryProperties implements cdk.StackProps {
-  readonly githubRepositoryName: string;
+  readonly pipelineTemplateRepositoryName: string;
   
-  readonly githubRepositoryOwner: string;
+  readonly pipelineTemplateGithubOwner: string;
   
-  readonly githubRepositoryBranch: string;
+  readonly pipelineTemplateBranchName: string;
   
   readonly projectName: string;
   
@@ -17,9 +17,9 @@ export default class FactoryProperties implements cdk.StackProps {
 
   readonly default_github_token_secret_name: string
   
-  readonly apiDomainName: string;
+  readonly apiDomainName?: string;
   
-  readonly apiDomainCertificateArn: string;
+  readonly apiDomainCertificateArn?: string;
 
   readonly slackWorkspaceId: string;
 

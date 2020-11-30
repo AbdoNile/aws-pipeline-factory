@@ -10,7 +10,7 @@ export default class PipelineDependencies extends cdk.Construct {
   public readonly ArtifactsBucket: s3.Bucket;
   constructor(scope: cdk.Construct, id: string, props: FactoryProperties) {
     super(scope, id);
-    const bucketName = (`${props.projectName}-${cdk.Stack.of(this).account}-${cdk.Stack.of(this).region}-pipeline-artifacts`).toLowerCase()
+    const bucketName = (`${props.projectName.toLowerCase()}-${cdk.Stack.of(this).account}-${cdk.Stack.of(this).region}-artifacts`)
     this.ArtifactsBucket = new s3.Bucket(this , "transientBucket", {
       bucketName : bucketName,
       removalPolicy: RemovalPolicy.DESTROY

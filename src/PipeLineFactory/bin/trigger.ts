@@ -12,9 +12,9 @@ console.log(
 );
 const projectName: string = "PLF";
 const factoryProperties: FactoryProperties = {
-  githubRepositoryBranch: "master",
-  githubRepositoryName: "pipeline-factory",
-  githubRepositoryOwner: "stage-tech",
+  pipelineTemplateBranchName: "master",
+  pipelineTemplateRepositoryName: "pipeline-factory",
+  pipelineTemplateGithubOwner: "stage-tech",
   projectName: projectName,
   defaultArtifactsBucket: "salt-deployment-packages",
   default_github_token_secret_name: "/global/GitHubToken",

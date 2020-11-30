@@ -16,7 +16,7 @@ export default class BranchHandlers extends cdk.Construct {
   ) {
     super(scope, id);
 
-   const sourceCodeBucket = s3.Bucket.fromBucketAttributes(
+    const sourceCodeBucket = s3.Bucket.fromBucketAttributes(
       this,
       `PackageBucket`,
       {
