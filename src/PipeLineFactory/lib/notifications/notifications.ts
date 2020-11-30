@@ -15,12 +15,12 @@ import { ServicePrincipals } from "cdk-constants";
 import NotificationsLambdaRole from "./lambda-role";
 export interface NotificationsProps {
   triggerCodeS3Key: string;
-  projectName: any;
   triggerCodeS3Bucket: string | undefined;
 }
 export default class Notifications extends cdk.Construct {
   constructor(scope: cdk.Construct, id: string, props: NotificationsProps) {
     super(scope, id);
+    const projectName = cdk.Stack.of(this).stackName
     const pipelineEventsTopic = new sns.Topic(this, "PipelineEventsTopic", {
       topicName: "pipeline-factory-events",
     });
@@ -73,7 +73,7 @@ export default class Notifications extends cdk.Construct {
 
     const handler = new lambda.Function(this, "Lambda_PipelineNotification", {
       runtime: lambda.Runtime.NODEJS_10_X,
-      functionName: `${props.projectName}-PipelineEvent-Notification`,
+      functionName: `${projectName}-PipelineEvent-Notification`,
       handler: "dist/pipeline-notifications-handler.handler",
       role: lambdaRole,
       code: lambdaCode,

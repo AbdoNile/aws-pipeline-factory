@@ -6,13 +6,14 @@ export interface ApiProps {
   triggerCodeS3Key: string;
   triggerCodeS3Bucket: string;
   transientArtifactsBucketName: string;
-  defaultArtifactsBucket: string;
-  default_github_token_secret_name: string;
+  defaultArtifactsBucketName: string;
+  defaultGithubTokenSecretName: string;
   apiDomainName: string | undefined;
   apiDomainCertificateArn: string | undefined;
   PipelineFactoryBuildProjectArn: string;
   buildAsRoleArn: string;
 }
+
 export default class Api extends cdk.Construct {
   public readonly buildProjectArn: string;
   constructor(scope: cdk.Construct, id: string, props: ApiProps) {
@@ -22,8 +23,8 @@ export default class Api extends cdk.Construct {
       factoryBuilderRoleArn: props.buildAsRoleArn,
       factoryBuilderProjectName: props.PipelineFactoryBuildProjectArn,
       transientArtifactsBucketName: props.transientArtifactsBucketName,
-      default_github_token_secret_name: props.default_github_token_secret_name,
-      defaultBuildArtifactsBucketName: props.defaultArtifactsBucket,
+      default_github_token_secret_name: props.defaultGithubTokenSecretName,
+      defaultBuildArtifactsBucketName: props.defaultArtifactsBucketName,
       triggerCodeS3Bucket: props.triggerCodeS3Bucket,
       triggerCodeS3Key: props.triggerCodeS3Key,
     });

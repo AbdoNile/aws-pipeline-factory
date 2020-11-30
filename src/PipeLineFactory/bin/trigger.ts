@@ -10,16 +10,12 @@ const s3_bucket_name = app.node.tryGetContext("s3_bucket_name");
 console.log(
   `s3_lambda_object_key ${s3_lambda_object_key} , s3_bucket_name ${s3_bucket_name} `
 );
-const projectName: string = "PLF";
+const projectName: string = "PipeLine-Factory";
 const factoryProperties: FactoryProperties = {
   pipelineTemplateBranchName: "master",
   pipelineTemplateRepositoryName: "pipeline-factory",
   pipelineTemplateGithubOwner: "stage-tech",
-  projectName: projectName,
   defaultArtifactsBucket: "salt-deployment-packages",
-  default_github_token_secret_name: "/global/GitHubToken",
-  slackWorkspaceId: "T5J1W20JV",
-  slackChannelNamePrefix: "sphinx-env-",
   triggerCodeS3Bucket: s3_bucket_name,
   triggerCodeS3Key: s3_lambda_object_key,
 };
