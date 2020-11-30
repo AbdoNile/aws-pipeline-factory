@@ -21,7 +21,7 @@ export default class BranchHandlers extends cdk.Construct {
   constructor(scope: cdk.Construct, id: string, props: BranchHandlersProps) {
     super(scope, id);
 
-    const lambdaRole = new ApiHandlerLambdaRole(this , "lambdaRole");
+    const lambdaRole = new ApiHandlerLambdaRole(this, "lambdaRole");
     const sourceCodeBucket = s3.Bucket.fromBucketAttributes(
       this,
       `PackageBucket`,
@@ -36,10 +36,8 @@ export default class BranchHandlers extends cdk.Construct {
     );
 
     const environmentVariables: { [key: string]: string } = {
-      FactoryCodeBuildProjectName: props.factoryBuilderProjectName,
+      FACTORY_CODEBUILD_PROJECT_NAME: props.factoryBuilderProjectName,
       BUILD_AS_ROLE_ARN: props.factoryBuilderRoleArn,
-      DEFAULT_TRANSIENT_ARTIFACTS_BUCKET_NAME:
-        props.transientArtifactsBucketName,
       DEFAULT_ARTIFACTS_BUCKET_NAME:
         props.defaultBuildArtifactsBucketName || "",
       DEFAULT_GITHUB_TOKEN_SECRET_NAME: props.default_github_token_secret_name,

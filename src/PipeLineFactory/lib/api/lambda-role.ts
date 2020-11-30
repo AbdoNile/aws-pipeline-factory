@@ -7,7 +7,7 @@ export default class ApiHandlerLambdaRole extends cdk.Construct {
     super(scope, id);
     const stackName = cdk.Stack.of(this).stackName;
     const lambdaRole = new iam.Role(this, "Role_LambdaFunction", {
-      roleName: `${stackName}-Notifications-Lambda`,
+      roleName: `${stackName}-Api-Handler-Lambda`,
       assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
     });
 

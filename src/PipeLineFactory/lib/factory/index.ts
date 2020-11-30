@@ -4,13 +4,13 @@ import FactoryIamRole from "./factory-iam-role";
 import FactoryProps from "./factory-props";
 
 export default class Factory extends cdk.Construct {
-  public readonly buildProjectArn: string;
+  buildProjectName: string;
   constructor(scope: cdk.Construct, id: string, props: FactoryProps) {
     super(scope, id);
 
     const factoryIamRole = new FactoryIamRole(this, "FactoryRole");
 
-    new FactoryCodeBuildProject(
+    this.buildProjectName = new FactoryCodeBuildProject(
       this,
       "FactoryCodeBuildProject",
       {
@@ -19,6 +19,6 @@ export default class Factory extends cdk.Construct {
         pipelineTemplateRepositoryName: props.pipelineTemplateRepositoryName,
       },
       factoryIamRole.role
-    );
+    ).BuildProject.projectName;
   }
 }

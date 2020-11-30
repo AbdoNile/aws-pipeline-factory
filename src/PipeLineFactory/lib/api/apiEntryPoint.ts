@@ -84,7 +84,7 @@ export default class ApiEntryPoint extends cdk.Construct {
 
     new cdk.CfnOutput(this, "APIUrl", {
       value: entryPointApi.url,
-      exportName: "api-url",
+      exportName: `${projectName}-api-url`,
     });
   }
 }

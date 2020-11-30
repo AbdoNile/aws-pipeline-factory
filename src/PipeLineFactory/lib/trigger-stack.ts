@@ -34,7 +34,7 @@ export class TriggerStack extends cdk.Stack {
     const factory = new Factory(this, "factoryBuilder", props);
 
     new Api(this, "Api", {
-      PipelineFactoryBuildProjectArn: factory.buildProjectArn,
+      PipelineFactoryBuildProjectName: factory.buildProjectName,
       buildAsRoleArn: defaultBuildAsRole.role.roleArn,
       apiDomainCertificateArn: props.apiDomainCertificateArn,
       apiDomainName: props.apiDomainName,

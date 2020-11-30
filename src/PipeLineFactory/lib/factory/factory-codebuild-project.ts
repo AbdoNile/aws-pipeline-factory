@@ -4,7 +4,7 @@ import * as codebuild from "@aws-cdk/aws-codebuild";
 import FactoryProps from "./factory-props";
 
 export default class FactoryCodeBuildProject extends cdk.Construct {
-  public readonly BuildProjectArn : string;
+  BuildProject: codebuild.Project;
   constructor(scope: cdk.Construct, id: string, props : FactoryProps , codebuildRole : IRole ) {
     super(scope, id);
 
@@ -28,11 +28,11 @@ export default class FactoryCodeBuildProject extends cdk.Construct {
         buildSpec: codebuild.BuildSpec.fromSourceFilename(buildSpecFile),
         source: gitHubSource,
         role: codebuildRole,
-        projectName : `${projectName}-Factory-CodeBuild`
+        projectName : `${projectName}`
       }
     );
    
-    this.BuildProjectArn = cdkCodeBuilder.projectArn;
+    this.BuildProject = cdkCodeBuilder;
   }
 
 }

@@ -10,7 +10,7 @@ export interface ApiProps {
   defaultGithubTokenSecretName: string;
   apiDomainName: string | undefined;
   apiDomainCertificateArn: string | undefined;
-  PipelineFactoryBuildProjectArn: string;
+  PipelineFactoryBuildProjectName: string;
   buildAsRoleArn: string;
 }
 
@@ -21,7 +21,7 @@ export default class Api extends cdk.Construct {
 
     const handlers = new BranchHandlers(this, "handlers", {
       factoryBuilderRoleArn: props.buildAsRoleArn,
-      factoryBuilderProjectName: props.PipelineFactoryBuildProjectArn,
+      factoryBuilderProjectName: props.PipelineFactoryBuildProjectName,
       transientArtifactsBucketName: props.transientArtifactsBucketName,
       default_github_token_secret_name: props.defaultGithubTokenSecretName,
       defaultBuildArtifactsBucketName: props.defaultArtifactsBucketName,
@@ -29,7 +29,7 @@ export default class Api extends cdk.Construct {
       triggerCodeS3Key: props.triggerCodeS3Key,
     });
 
-    const apiEntryPoint = new ApiEntryPoint(this, "Api", {
+    new ApiEntryPoint(this, "Api", {
       apiBranchCreated: handlers.apiBranchCreated,
       apiBranchDeleted: handlers.apiBranchDeleted,
       apiDomainCertificateArn: props.apiDomainCertificateArn,
