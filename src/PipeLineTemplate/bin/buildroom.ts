@@ -18,8 +18,7 @@ const  buildOperationsDetails : BuildOperationsDetails = {
     "artifactsPrefix" : `${process.env.ARTIFACTS_PREFIX}`,
     "transientArtifactsBucketName" : `${process.env.TRANSIENT_ARTIFACTS_BUCKET_NAME}`,
     "buildAsRoleArn" : `${process.env.BUILD_AS_ROLE_ARN}`,
-    "slackWorkspaceId" : `${process.env.SLACK_WORKSPACE_ID}`,
-    "slackChannelNamePrefix" : `${process.env.SLACK_CHANNEL_NAME_PREFIX}`,
+   
 }
 console.log(buildOperationsDetails)
 const stackName = `PLF-${projectName}`

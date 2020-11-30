@@ -15,8 +15,6 @@ import NotificationsLambdaRole from "./lambda-role";
 export interface NotificationsProps {
   triggerCodeS3Key: string;
   projectName: any;
-  slackChannelNamePrefix: string;
-  slackWorkspaceId: string;
   triggerCodeS3Bucket: string | undefined;
 }
 export default class Notifications extends cdk.Construct {
@@ -56,8 +54,6 @@ export default class Notifications extends cdk.Construct {
     );
 
     const environmentVariables: { [key: string]: string } = {
-      SLACK_WORKSPACE_ID: props.slackWorkspaceId,
-      SLACK_CHANNEL_NAME_PREFIX: props.slackChannelNamePrefix,
     };
 
     const lambdaRole = new NotificationsLambdaRole(this , "LambdaRole" ).lambdaRole

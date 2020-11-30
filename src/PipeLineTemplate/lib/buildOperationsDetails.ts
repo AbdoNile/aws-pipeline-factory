@@ -27,7 +27,5 @@ export class BuildOperationsDetails implements cdk.StackProps {
 
   readonly buildAsRoleArn : string;
 
-  readonly slackWorkspaceId: string;
-
-  readonly slackChannelNamePrefix: string;
+  
 }
