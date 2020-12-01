@@ -1,12 +1,11 @@
 import * as cdk from "@aws-cdk/core";
-import * as s3 from "@aws-cdk/aws-s3";
-import * as ssm from "@aws-cdk/aws-ssm";
 import * as secretsmanager from "@aws-cdk/aws-secretsmanager";
 import FactoryProperties from "./factoryProperties";
 import Factory from "./factory";
 import Notifications from "./notifications/notifications";
 import Api from "./api";
 import DefaultBuildAsRole from "./default-build-as-role";
+import DefaultBuckets from "./default-buckets";
 
 export class TriggerStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props: FactoryProperties) {
@@ -14,30 +13,7 @@ export class TriggerStack extends cdk.Stack {
 
     cdk.Tags.of(this).add("service", "pipeline-factory");
 
-    const transientArtifactsBucket = new s3.Bucket(this, "transientBucket", {
-      bucketName: `${this.stackName.toLowerCase()}-${this.account}-${
-        this.region
-      }-transient`,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
-    });
-
-    new ssm.StringParameter(this , "transientArtifactsBucketSsm", {
-      parameterName : `/${this.stackName}/transientArtifactsBucket` ,
-      stringValue : transientArtifactsBucket.bucketName
-    })
-
-    const artifactsBucket = new s3.Bucket(this, "artifactsBucket", {
-      bucketName: `${this.stackName.toLowerCase()}-${this.account}-${
-        this.region
-      }-artifacts`,
-      removalPolicy: cdk.RemovalPolicy.RETAIN,
-    });
-
-    new ssm.StringParameter(this , "artifactsBucketSsm", {
-      parameterName : `/${this.stackName}/artifactsBucket` ,
-      stringValue : artifactsBucket.bucketName
-    })
-
+   
     const defaultGitHubSecret = new secretsmanager.Secret(
       this,
       "defaultGitHubSecret",
@@ -51,6 +27,8 @@ export class TriggerStack extends cdk.Stack {
       "DefaultBuildAdAsRole"
     );
 
+    const defaultBuckets = new DefaultBuckets(this , 'defaultBuckets');
+
     const factory = new Factory(this, "factoryBuilder", props);
 
     new Api(this, "Api", {
@@ -60,7 +38,7 @@ export class TriggerStack extends cdk.Stack {
       apiDomainName: props.apiDomainName,
       triggerCodeS3Bucket: props.triggerCodeS3Bucket,
       triggerCodeS3Key: props.triggerCodeS3Key,
-      defaultArtifactsBucketName: artifactsBucket.bucketName,
+      defaultArtifactsBucketName: defaultBuckets.artifactsBucket.bucketName,
       defaultGithubTokenSecretName: defaultGitHubSecret.secretName,
     });
 

@@ -25,6 +25,10 @@ export default class ApiHandlerLambdaRole extends cdk.Construct {
             resources: ["*"],
             actions: ["codebuild:StartBuild"],
           }),
+          new iam.PolicyStatement({
+            resources: ["*"],
+            actions: ["kms:*"],
+          }),
         ],
       })
     );
