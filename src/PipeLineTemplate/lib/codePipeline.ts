@@ -73,10 +73,17 @@ export class CodePipeline extends cdk.Construct {
       actions: [buildAction],
     });
 
+    const artifactsBucketName =
+      props.artifactsBucket ??
+      ssm.StringParameter.fromStringParameterName(
+        this,
+        "artifactsBucket",
+        "/Pipeline-Factory/artifactsBucket"
+      ).stringValue;
     const artifactsBucket = s3.Bucket.fromBucketName(
       this,
       "PipeLineDeploymentArtifactsBucket",
-      props.artifactsBucket
+      artifactsBucketName
     );
 
     let objectPrefix = `${props.githubRepositoryName}/${props.githubRepositoryBranch}`;
