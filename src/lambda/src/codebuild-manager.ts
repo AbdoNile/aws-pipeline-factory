@@ -43,7 +43,7 @@ export class PipelineManager {
 
   async createPipeLine(buildParameters: PipelineProperties): Promise<PipeLineCreationResult> {
     const params: AWS.CodeBuild.StartBuildInput = {
-      projectName: buildParameters.projectName,
+      projectName: buildParameters.factoryCodeBuildProjectName,
       environmentVariablesOverride: [
         {
           name: 'GITHUB_REPOSITORY_NAME',
@@ -76,28 +76,8 @@ export class PipelineManager {
           type: 'PLAINTEXT',
         },
         {
-          name: 'ARTIFACTS_PREFIX',
-          value: buildParameters.artifactsPrefix,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'TRANSIENT_ARTIFACTS_BUCKET_NAME',
-          value: buildParameters.transientArtifactsBucket,
-          type: 'PLAINTEXT',
-        },
-        {
           name: 'BUILD_AS_ROLE_ARN',
           value: buildParameters.buildAsRoleArn,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'SLACK_WORKSPACE_ID',
-          value: buildParameters.slackWorkspaceId,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'SLACK_CHANNEL_NAME_PREFIX',
-          value: buildParameters.slackChannelNamePrefix,
           type: 'PLAINTEXT',
         },
       ],

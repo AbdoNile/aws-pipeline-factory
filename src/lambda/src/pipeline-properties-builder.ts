@@ -1,15 +1,11 @@
 export interface PipelineProperties {
+  factoryCodeBuildProjectName: string;
   monitoredBranches?: string[];
-  slackChannelNamePrefix: string;
-  slackWorkspaceId: string;
   buildAsRoleArn: string;
-  transientArtifactsBucket: string;
-  artifactsPrefix: string;
   gitHubTokenSecretName: string;
   artifactsBucketName: string;
   buildSpecLocation: string;
   repository_owner: string;
-  projectName: string;
   repository_name: string;
   branchName: string;
 }
@@ -46,16 +42,11 @@ export class PipeLinePropertiesBuilder {
 
     const props: PipelineProperties = {
       branchName: branchName,
-      projectName: process.env.FactoryCodeBuildProjectName || '',
-      transientArtifactsBucket:
-        flattenedPayLoad.transient_artifacts_bucket || process.env.DEFAULT_TRANSIENT_ARTIFACTS_BUCKET_NAME,
-      gitHubTokenSecretName: flattenedPayLoad.github_token_secret_name || process.env.DEFAULT_GITHUB_TOKEN_SECRET_NAME,
+      gitHubTokenSecretName: flattenedPayLoad.github_token_secret_name,
       buildAsRoleArn: flattenedPayLoad.buildAsRoleArn || process.env.BUILD_AS_ROLE_ARN,
+      artifactsBucketName: flattenedPayLoad.artifactsBucketName,
+      factoryCodeBuildProjectName: process.env.FACTORY_CODEBUILD_PROJECT_NAME || '',
       buildSpecLocation: flattenedPayLoad.buildspecFileLocation || 'buildspec.yml',
-      artifactsPrefix: flattenedPayLoad.artifacts_prefix || '',
-      slackWorkspaceId: flattenedPayLoad.slackWorkspaceId || process.env.SLACK_WORKSPACE_ID,
-      slackChannelNamePrefix: flattenedPayLoad.slackChannelNamePrefix || process.env.SLACK_CHANNEL_NAME_PREFIX,
-      artifactsBucketName: flattenedPayLoad.artifactsBucketName || process.env.DEFAULT_ARTIFACTS_BUCKET_NAME,
       repository_owner: flattenedPayLoad.repository_owner,
       repository_name: flattenedPayLoad.repository_name,
       monitoredBranches: flattenedPayLoad.monitoredBranches,
