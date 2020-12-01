@@ -42,45 +42,66 @@ export class PipelineManager {
   }
 
   async createPipeLine(buildParameters: PipelineProperties): Promise<PipeLineCreationResult> {
+    const environmentOverRides = [
+      {
+        name: 'GITHUB_REPOSITORY_NAME',
+        value: buildParameters.repository_name,
+        type: 'PLAINTEXT',
+      },
+      {
+        name: 'GITHUB_REPOSITORY_BRANCH',
+        value: buildParameters.branchName,
+        type: 'PLAINTEXT',
+      },
+      {
+        name: 'GITHUB_REPOSITORY_OWNER',
+        value: buildParameters.repository_owner,
+        type: 'PLAINTEXT',
+      },
+    ];
+
+    if (buildParameters.gitHubTokenSecretName) {
+      environmentOverRides.push({
+        name: 'GITHUB_TOKEN_SECRETNAME',
+        value: buildParameters.gitHubTokenSecretName,
+        type: 'PLAINTEXT',
+      });
+    }
+    if (buildParameters.buildSpecLocation) {
+      environmentOverRides.push({
+        name: 'BUILD_SPEC_RELATIVE_LOCATION',
+        value: buildParameters.buildSpecLocation,
+        type: 'PLAINTEXT',
+      });
+    }
+
+    if (buildParameters.buildAsRoleArn) {
+      environmentOverRides.push({
+        name: 'BUILD_AS_ROLE_ARN',
+        value: buildParameters.buildAsRoleArn,
+        type: 'PLAINTEXT',
+      });
+    }
+
+    if (buildParameters.artifactsBucketName) {
+      environmentOverRides.push({
+        name: 'ARTIFACTS_BUCKET',
+        value: buildParameters.artifactsBucketName,
+        type: 'PLAINTEXT',
+      });
+    }
+
+    if (buildParameters.buildAsRoleArn) {
+      environmentOverRides.push({
+        name: 'BUILD_AS_ROLE_ARN',
+        value: buildParameters.buildAsRoleArn,
+        type: 'PLAINTEXT',
+      });
+    }
+
     const params: AWS.CodeBuild.StartBuildInput = {
       projectName: buildParameters.factoryCodeBuildProjectName,
-      environmentVariablesOverride: [
-        {
-          name: 'GITHUB_REPOSITORY_NAME',
-          value: buildParameters.repository_name,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'GITHUB_REPOSITORY_BRANCH',
-          value: buildParameters.branchName,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'GITHUB_REPOSITORY_OWNER',
-          value: buildParameters.repository_owner,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'BUILD_SPEC_RELATIVE_LOCATION',
-          value: buildParameters.buildSpecLocation,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'ARTIFACTS_BUCKET',
-          value: buildParameters.artifactsBucketName,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'GITHUB_TOKEN_SECRETNAME',
-          value: buildParameters.gitHubTokenSecretName,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'BUILD_AS_ROLE_ARN',
-          value: buildParameters.buildAsRoleArn,
-          type: 'PLAINTEXT',
-        },
-      ],
+      environmentVariablesOverride: environmentOverRides,
     };
 
     const isMonitoredBranch = this.isMonitoredBranch(buildParameters);
