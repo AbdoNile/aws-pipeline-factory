@@ -24,7 +24,7 @@ export default class DefaultBuckets extends cdk.Construct {
     });
 
     new ssm.StringParameter(this, "transientArtifactsBucketSsm", {
-      parameterName: `/${stack.stackName}/transientArtifactsBucket`,
+      parameterName: `/${stack.stackName.toLowerCase()}/transientArtifactsBucket`,
       stringValue: this.transientArtifactsBucket.bucketName,
     });
 
@@ -38,7 +38,7 @@ export default class DefaultBuckets extends cdk.Construct {
     });
 
     new ssm.StringParameter(this, "artifactsBucketSsm", {
-      parameterName: `/${stack.stackName}/artifactsBucket`,
+      parameterName: `/${stack.stackName.toLowerCase()}/artifactsBucket`,
       stringValue: this.artifactsBucket.bucketName,
     });
   }
