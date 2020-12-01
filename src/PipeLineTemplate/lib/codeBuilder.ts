@@ -34,7 +34,7 @@ export class CodeBuilder extends cdk.Construct {
      
     );
 
-    const codeBuildProject = new codebuild.Project(this, props.projectName, {
+    const codeBuildProject = new codebuild.Project(this, "codebuildProject", {
       buildSpec: codebuild.BuildSpec.fromSourceFilename(buildSpecFile),
       role: buildAsRole,
       source: gitHubSource,

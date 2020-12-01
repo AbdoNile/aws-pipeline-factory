@@ -4,7 +4,6 @@ import * as cdk from "@aws-cdk/core";
 import { Utility } from "./utility";
 import { BuildOperationsDetails, BuildRoomStack } from "../lib/buildroom-stack";
 const app = new cdk.App();
-console.log(app.account)
 const projectName = Utility.sanitizeStackName(
   `${process.env.GITHUB_REPOSITORY_NAME}-${process.env.GITHUB_REPOSITORY_BRANCH}`
 ).toLowerCase();
@@ -25,6 +24,10 @@ const buildOperationsDetails: BuildOperationsDetails = {
   gitHubTokenSecretName: process.env.GITHUB_TOKEN_SECRETNAME,
   artifactsBucket: process.env.ARTIFACTS_BUCKET,
   projectName: projectName,
+  env : {
+    account : process.env.CDK_DEFAULT_ACCOUNT , 
+    region :  process.env.CDK_DEFAULT_REGION
+  }
 };
 const stackName = `PLF-${projectName}`;
 new BuildRoomStack(app, stackName, buildOperationsDetails);

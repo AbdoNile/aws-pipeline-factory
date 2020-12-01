@@ -22,7 +22,7 @@ export class CodePipeline extends cdk.Construct {
     const defaultTransientArtifactsBucketName = ssm.StringParameter.fromStringParameterName(
       this,
       "transientArtifactsBucket",
-      "/Pipeline-Factory/transientArtifactsBucket"
+      "/pipeline-factory/transientArtifactsBucket"
     ).stringValue;
 
     const transientArtifactsBucket = s3.Bucket.fromBucketName(
@@ -39,15 +39,12 @@ export class CodePipeline extends cdk.Construct {
       crossAccountKeys : false
     });
 
-    const defaultGitHubTokenSecretName =
-      "/PipeLine-Factory/default-github-token";
-    let gitHubTokenSecretName = defaultGitHubTokenSecretName;
-
-    if (props.gitHubTokenSecretName) {
-      gitHubTokenSecretName = props.gitHubTokenSecretName;
+    if(!props.gitHubTokenSecretName) {
+      throw new Error(`props.gitHubTokenSecretName is empty`)
     }
 
-    var githubToken = cdk.SecretValue.secretsManager(gitHubTokenSecretName);
+    console.log(props.gitHubTokenSecretName)
+    var githubToken = cdk.SecretValue.secretsManager(props.gitHubTokenSecretName);
     const sourceCodeOutput = new codePipeline.Artifact("SourceCode");
     const fetchSourceAction = new codePipelineActions.GitHubSourceAction({
       actionName: `GitHub-${props.projectName}`,

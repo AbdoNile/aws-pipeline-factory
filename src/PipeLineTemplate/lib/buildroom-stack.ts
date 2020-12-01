@@ -8,7 +8,7 @@ export class BuildOperationsDetails implements cdk.StackProps {
   readonly githubRepositoryName: string;
   readonly githubRepositoryOwner: string;
   readonly githubRepositoryBranch: string;
-  readonly gitHubTokenSecretName?: string;
+  gitHubTokenSecretName?: string;
   readonly projectName: string;
   readonly buildSpecFileRelativeLocation?: string;
   artifactsBucket?: string;
@@ -27,22 +27,23 @@ export class BuildRoomStack extends cdk.Stack {
       `${props.githubRepositoryOwner}/${props.githubRepositoryName}`
     );
     cdk.Tags.of(this).add("branch", `${props.githubRepositoryBranch}`);
- 
 
-    
     const defaultArtifactBucketName = ssm.StringParameter.fromStringParameterName(
       this,
       "artifactsBucket",
-      "/Pipeline-Factory/artifactsBucket"
+      "/pipeline-factory/artifactsBucket" 
     ).stringValue;
 
-    console.log(`defaultArtifactBucketName ${defaultArtifactBucketName}`)
-    console.log(`props.artifactsBucket ${props.artifactsBucket == undefined}`)
     
     if (props.artifactsBucket == undefined) {
       props.artifactsBucket = defaultArtifactBucketName;
     }
 
+    const defaultGitHubTokenSecretName =      "/pipeline-factory/default-github-token";
+    
+    if (!props.gitHubTokenSecretName) {
+      props.gitHubTokenSecretName = defaultGitHubTokenSecretName;
+    }
     console.log(props);
     const buildIamROle = iam.Role.fromRoleArn(
       this,
