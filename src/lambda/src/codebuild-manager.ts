@@ -75,14 +75,6 @@ export class PipelineManager {
       });
     }
 
-    if (buildParameters.buildAsRoleArn) {
-      environmentOverRides.push({
-        name: 'BUILD_AS_ROLE_ARN',
-        value: buildParameters.buildAsRoleArn,
-        type: 'PLAINTEXT',
-      });
-    }
-
     if (buildParameters.artifactsBucketName) {
       environmentOverRides.push({
         name: 'ARTIFACTS_BUCKET',
@@ -104,6 +96,7 @@ export class PipelineManager {
       environmentVariablesOverride: environmentOverRides,
     };
 
+    console.log(JSON.stringify(params));
     const isMonitoredBranch = this.isMonitoredBranch(buildParameters);
 
     if (isMonitoredBranch) {
