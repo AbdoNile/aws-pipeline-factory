@@ -1,5 +1,6 @@
 import * as cdk from "@aws-cdk/core";
 import * as iam from "@aws-cdk/aws-iam";
+import * as cdkConstants from 'cdk-constants'
 
 export default class DefaultBuildAsRole extends cdk.Construct {
   role: iam.Role;
@@ -53,6 +54,12 @@ export default class DefaultBuildAsRole extends cdk.Construct {
       })
     ]
     }));
+
+    codebuildRole.assumeRolePolicy?.addStatements( new iam.PolicyStatement({
+      principals : [new iam.ServicePrincipal(cdkConstants.ServicePrincipals.CODE_PIPELINE)],
+      actions : ["sts:AssumeRole"] ,
+      effect : iam.Effect.ALLOW
+    }))
 
     this.role = codebuildRole;
   }

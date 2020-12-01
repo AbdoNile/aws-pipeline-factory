@@ -13,12 +13,11 @@ export class TriggerStack extends cdk.Stack {
 
     cdk.Tags.of(this).add("service", "pipeline-factory");
 
-   
     const defaultGitHubSecret = new secretsmanager.Secret(
       this,
       "defaultGitHubSecret",
       {
-        secretName: `/${this.stackName}/default-github-token`,
+        secretName: `/${this.stackName.toLowerCase()}/default-github-token`,
       }
     );
 
@@ -27,7 +26,7 @@ export class TriggerStack extends cdk.Stack {
       "DefaultBuildAdAsRole"
     );
 
-    const defaultBuckets = new DefaultBuckets(this , 'defaultBuckets');
+    const defaultBuckets = new DefaultBuckets(this, "defaultBuckets");
 
     const factory = new Factory(this, "factoryBuilder", props);
 
