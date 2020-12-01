@@ -29,7 +29,7 @@ export class CodeBuilder extends cdk.Construct {
         "artifactsBucket",
         "/Pipeline-Factory/artifactsBucket"
       ).stringValue;
-
+    console.log(`Artifacts bucket : ${artifactsBucketName}`)
     const artifactsBucket = s3.Bucket.fromBucketName(
       this,
       "PipeLineDeploymentArtifactsBucket",
