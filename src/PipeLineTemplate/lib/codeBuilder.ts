@@ -2,7 +2,6 @@ import * as cdk from "@aws-cdk/core";
 import * as codebuild from "@aws-cdk/aws-codebuild";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as iam from "@aws-cdk/aws-iam";
-import * as ssm from "@aws-cdk/aws-ssm";
 import { BuildOperationsDetails } from "./buildOperationsDetails";
 
 export class CodeBuilder extends cdk.Construct {
@@ -22,18 +21,15 @@ export class CodeBuilder extends cdk.Construct {
       webhook: false,
     });
 
-    const artifactsBucketName =
-      props.artifactsBucket ??
-      ssm.StringParameter.fromStringParameterName(
-        this,
-        "artifactsBucket",
-        "/Pipeline-Factory/artifactsBucket"
-      ).stringValue;
-    console.log(`Artifacts bucket : ${artifactsBucketName}`)
+    if(!props.artifactsBucket)
+    {
+      throw new Error(`props.artifactsBucket is empty`)
+    } 
+   
     const artifactsBucket = s3.Bucket.fromBucketName(
       this,
       "PipeLineDeploymentArtifactsBucket",
-      artifactsBucketName
+      props.artifactsBucket
     );
 
     const codeBuildProject = new codebuild.Project(this, props.projectName, {
