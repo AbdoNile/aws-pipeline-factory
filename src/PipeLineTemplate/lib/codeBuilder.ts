@@ -2,7 +2,7 @@ import * as cdk from "@aws-cdk/core";
 import * as codebuild from "@aws-cdk/aws-codebuild";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as iam from "@aws-cdk/aws-iam";
-import { BuildOperationsDetails } from "./buildOperationsDetails";
+import { BuildOperationsDetails } from "./buildroom-stack";
 
 export class CodeBuilder extends cdk.Construct {
   public readonly buildProjectArn: string;
@@ -26,10 +26,12 @@ export class CodeBuilder extends cdk.Construct {
       throw new Error(`props.artifactsBucket is empty`)
     } 
    
-    const artifactsBucket = s3.Bucket.fromBucketName(
+    const artifactsBucket = s3.Bucket.fromBucketAttributes(
       this,
-      "PipeLineDeploymentArtifactsBucket",
-      props.artifactsBucket
+      "PipeLineDeploymentArtifactsBucket", {
+        bucketName :  props.artifactsBucket
+      }
+     
     );
 
     const codeBuildProject = new codebuild.Project(this, props.projectName, {
