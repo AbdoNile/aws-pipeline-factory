@@ -29,6 +29,7 @@ export class CodeBuilder extends cdk.Construct {
         "artifactsBucket",
         "/Pipeline-Factory/artifactsBucket"
       ).stringValue;
+
     const artifactsBucket = s3.Bucket.fromBucketName(
       this,
       "PipeLineDeploymentArtifactsBucket",
@@ -51,7 +52,7 @@ export class CodeBuilder extends cdk.Construct {
           type: codebuild.BuildEnvironmentVariableType.PLAINTEXT,
         },
         STAGE_PACKAGE_BUCKET_NAME: {
-          value: props.artifactsBucket,
+          value: artifactsBucket.bucketName,
           type: codebuild.BuildEnvironmentVariableType.PLAINTEXT,
         },
         GITHUB_TOKEN_SECRETNAME: {
