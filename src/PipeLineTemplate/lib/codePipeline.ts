@@ -4,6 +4,7 @@ import * as codePipeline from "@aws-cdk/aws-codepipeline";
 import * as codePipelineActions from "@aws-cdk/aws-codepipeline-actions";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as iam from "@aws-cdk/aws-iam";
+import * as ssm from "@aws-cdk/aws-ssm";
 import { BuildOperationsDetails } from "./buildOperationsDetails";
 import { IPipeline } from "@aws-cdk/aws-codepipeline";
 
@@ -18,13 +19,14 @@ export class CodePipeline extends cdk.Construct {
   ) {
     super(scope, id);
 
+    const transientArtifactsBucketName = ssm.StringParameter.fromStringParameterName(this  , 'transientArtifactsBucket' ,'Pipeline-Factory/transientArtifactsBucket')
     var pipeline = new codePipeline.Pipeline(this, "PipeLine", {
       pipelineName: `${props.projectName}`,
       role: buildAsRole,
       artifactBucket: s3.Bucket.fromBucketName(
         this,
         "TransientBucket",
-        props.transientArtifactsBucketName
+        transientArtifactsBucketName.stringValue
       ),
     });
 
@@ -74,10 +76,6 @@ export class CodePipeline extends cdk.Construct {
     );
 
     let objectPrefix = `${props.githubRepositoryName}/${props.githubRepositoryBranch}`;
-
-    if (props.artifactsPrefix) {
-      objectPrefix = `${props.artifactsPrefix}/${objectPrefix}`;
-    }
 
     const publishAction = new codePipelineActions.S3DeployAction({
       actionName: "S3Deploy",

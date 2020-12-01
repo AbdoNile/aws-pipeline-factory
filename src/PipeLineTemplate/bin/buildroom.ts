@@ -11,13 +11,11 @@ const  buildOperationsDetails : BuildOperationsDetails = {
     "githubRepositoryName" : `${process.env.GITHUB_REPOSITORY_NAME}`,
     "githubRepositoryOwner" :`${process.env.GITHUB_REPOSITORY_OWNER}`,
     "githubRepositoryBranch" :`${process.env.GITHUB_REPOSITORY_BRANCH}`,
-    "projectName" :  projectName,
     "buildSpecFileRelativeLocation" : `${process.env.BUILD_SPEC_RELATIVE_LOCATION}`,
     "artifactsBucket" : `${process.env.ARTIFACTS_BUCKET}` ,
     "gitHubTokenSecretName" :  `${process.env.GITHUB_TOKEN_SECRETNAME}`,
-    "artifactsPrefix" : `${process.env.ARTIFACTS_PREFIX}`,
-    "transientArtifactsBucketName" : `${process.env.TRANSIENT_ARTIFACTS_BUCKET_NAME}`,
     "buildAsRoleArn" : `${process.env.BUILD_AS_ROLE_ARN}`,
+    projectName : projectName
    
 }
 console.log(buildOperationsDetails)

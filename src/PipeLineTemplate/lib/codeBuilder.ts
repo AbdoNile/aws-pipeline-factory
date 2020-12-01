@@ -49,7 +49,6 @@ export class CodeBuilder extends cdk.Construct {
       },
       artifacts: codebuild.Artifacts.s3({
         bucket: artifactsBucket,
-        path: `${props.artifactsPrefix}`,
         includeBuildId: true,
         name: `${props.githubRepositoryName}`,
         packageZip: true
