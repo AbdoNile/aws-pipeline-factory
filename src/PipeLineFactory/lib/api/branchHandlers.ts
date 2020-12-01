@@ -7,7 +7,6 @@ import ApiHandlerLambdaRole from "./lambda-role";
 export interface BranchHandlersProps {
   default_github_token_secret_name: string;
   defaultBuildArtifactsBucketName: string;
-  transientArtifactsBucketName: string;
   factoryBuilderRoleArn: string;
   factoryBuilderProjectName: string;
   triggerCodeS3Key: string;

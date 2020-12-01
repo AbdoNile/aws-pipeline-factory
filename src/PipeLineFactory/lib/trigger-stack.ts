@@ -1,5 +1,6 @@
 import * as cdk from "@aws-cdk/core";
 import * as s3 from "@aws-cdk/aws-s3";
+import * as ssm from "@aws-cdk/aws-ssm";
 import * as secretsmanager from "@aws-cdk/aws-secretsmanager";
 import FactoryProperties from "./factoryProperties";
 import Factory from "./factory";
@@ -14,9 +15,16 @@ export class TriggerStack extends cdk.Stack {
     cdk.Tags.of(this).add("service", "pipeline-factory");
 
     const transientArtifactsBucket = new s3.Bucket(this, "transientBucket", {
-      bucketName: `${this.stackName.toLowerCase()}-${this.account}-${this.region}-artifacts`,
+      bucketName: `${this.stackName.toLowerCase()}-${this.account}-${
+        this.region
+      }-artifacts`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
+
+    new ssm.StringParameter(this , "transientArtifactsBucketSsm", {
+      parameterName : `${this.stackName}/transientArtifactsBucket` ,
+      stringValue : transientArtifactsBucket.bucketName
+    })
 
     const defaultGitHubSecret = new secretsmanager.Secret(
       this,
@@ -38,7 +46,6 @@ export class TriggerStack extends cdk.Stack {
       buildAsRoleArn: defaultBuildAsRole.role.roleArn,
       apiDomainCertificateArn: props.apiDomainCertificateArn,
       apiDomainName: props.apiDomainName,
-      transientArtifactsBucketName: transientArtifactsBucket.bucketName,
       triggerCodeS3Bucket: props.triggerCodeS3Bucket,
       triggerCodeS3Key: props.triggerCodeS3Key,
       defaultArtifactsBucketName: props.defaultArtifactsBucket,
