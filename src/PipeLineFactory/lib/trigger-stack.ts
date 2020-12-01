@@ -22,7 +22,7 @@ export class TriggerStack extends cdk.Stack {
     });
 
     new ssm.StringParameter(this , "transientArtifactsBucketSsm", {
-      parameterName : `${this.stackName}/transientArtifactsBucket` ,
+      parameterName : `/${this.stackName}/transientArtifactsBucket` ,
       stringValue : transientArtifactsBucket.bucketName
     })
 
