@@ -19,7 +19,11 @@ export class CodePipeline extends cdk.Construct {
   ) {
     super(scope, id);
 
-    const transientArtifactsBucketName = ssm.StringParameter.fromStringParameterName(this  , 'transientArtifactsBucket' ,'Pipeline-Factory/transientArtifactsBucket')
+    const transientArtifactsBucketName = ssm.StringParameter.fromStringParameterName(
+      this,
+      "transientArtifactsBucket",
+      "/Pipeline-Factory/transientArtifactsBucket"
+    );
     var pipeline = new codePipeline.Pipeline(this, "PipeLine", {
       pipelineName: `${props.projectName}`,
       role: buildAsRole,
