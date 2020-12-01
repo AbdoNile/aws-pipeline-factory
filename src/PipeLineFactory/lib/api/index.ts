@@ -21,8 +21,6 @@ export default class Api extends cdk.Construct {
     const handlers = new BranchHandlers(this, "handlers", {
       factoryBuilderRoleArn: props.buildAsRoleArn,
       factoryBuilderProjectName: props.PipelineFactoryBuildProjectName,
-      default_github_token_secret_name: props.defaultGithubTokenSecretName,
-      defaultBuildArtifactsBucketName: props.defaultArtifactsBucketName,
       triggerCodeS3Bucket: props.triggerCodeS3Bucket,
       triggerCodeS3Key: props.triggerCodeS3Key,
     });

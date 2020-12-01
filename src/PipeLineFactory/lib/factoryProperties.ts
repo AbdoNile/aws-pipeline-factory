@@ -4,7 +4,6 @@ export default class FactoryProperties implements cdk.StackProps {
   readonly pipelineTemplateRepositoryName: string;
   readonly pipelineTemplateGithubOwner: string;
   readonly pipelineTemplateBranchName: string;
-  readonly defaultArtifactsBucket: string;
   readonly apiDomainName?: string;
   readonly apiDomainCertificateArn?: string;
   readonly triggerCodeS3Bucket: string;

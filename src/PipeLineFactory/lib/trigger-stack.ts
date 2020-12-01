@@ -17,13 +17,25 @@ export class TriggerStack extends cdk.Stack {
     const transientArtifactsBucket = new s3.Bucket(this, "transientBucket", {
       bucketName: `${this.stackName.toLowerCase()}-${this.account}-${
         this.region
-      }-artifacts`,
+      }-transient`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     new ssm.StringParameter(this , "transientArtifactsBucketSsm", {
       parameterName : `/${this.stackName}/transientArtifactsBucket` ,
       stringValue : transientArtifactsBucket.bucketName
+    })
+
+    const artifactsBucket = new s3.Bucket(this, "artifactsBucket", {
+      bucketName: `${this.stackName.toLowerCase()}-${this.account}-${
+        this.region
+      }-artifacts`,
+      removalPolicy: cdk.RemovalPolicy.RETAIN,
+    });
+
+    new ssm.StringParameter(this , "artifactsBucketSsm", {
+      parameterName : `/${this.stackName}/artifactsBucket` ,
+      stringValue : artifactsBucket.bucketName
     })
 
     const defaultGitHubSecret = new secretsmanager.Secret(
@@ -48,7 +60,7 @@ export class TriggerStack extends cdk.Stack {
       apiDomainName: props.apiDomainName,
       triggerCodeS3Bucket: props.triggerCodeS3Bucket,
       triggerCodeS3Key: props.triggerCodeS3Key,
-      defaultArtifactsBucketName: props.defaultArtifactsBucket,
+      defaultArtifactsBucketName: artifactsBucket.bucketName,
       defaultGithubTokenSecretName: defaultGitHubSecret.secretName,
     });
 

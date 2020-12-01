@@ -16,7 +16,6 @@ const factoryProperties: FactoryProperties = {
   pipelineTemplateBranchName: templateBranchName,
   pipelineTemplateRepositoryName: "pipeline-factory",
   pipelineTemplateGithubOwner: "stage-tech",
-  defaultArtifactsBucket: "salt-deployment-packages",
   triggerCodeS3Bucket: s3_bucket_name,
   triggerCodeS3Key: s3_lambda_object_key,
 };

@@ -5,8 +5,6 @@ import { IFunction } from "@aws-cdk/aws-lambda";
 import ApiHandlerLambdaRole from "./lambda-role";
 
 export interface BranchHandlersProps {
-  default_github_token_secret_name: string;
-  defaultBuildArtifactsBucketName: string;
   factoryBuilderRoleArn: string;
   factoryBuilderProjectName: string;
   triggerCodeS3Key: string;
@@ -37,9 +35,6 @@ export default class BranchHandlers extends cdk.Construct {
     const environmentVariables: { [key: string]: string } = {
       FACTORY_CODEBUILD_PROJECT_NAME: props.factoryBuilderProjectName,
       BUILD_AS_ROLE_ARN: props.factoryBuilderRoleArn,
-      DEFAULT_ARTIFACTS_BUCKET_NAME:
-        props.defaultBuildArtifactsBucketName || "",
-      DEFAULT_GITHUB_TOKEN_SECRET_NAME: props.default_github_token_secret_name,
     };
 
     this.apiBranchCreated = new lambda.Function(
