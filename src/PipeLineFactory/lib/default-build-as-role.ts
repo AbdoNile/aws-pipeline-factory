@@ -69,7 +69,11 @@ export default class DefaultBuildAsRole extends cdk.Construct {
           }),
           new iam.PolicyStatement({
             resources: ["*"],
-            actions: ["ssm:GetParameter"],
+            actions: ["acm:*"],
+          }),
+          new iam.PolicyStatement({
+            resources: ["*"],
+            actions: ["route53:*"],
           }),
         ],
       })
