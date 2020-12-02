@@ -21,7 +21,7 @@ const buildOperationsDetails: BuildOperationsDetails = {
   githubRepositoryBranch: ensureEnvironmentVariable("GITHUB_REPOSITORY_BRANCH"),
   buildAsRoleArn: ensureEnvironmentVariable("BUILD_AS_ROLE_ARN"),
   buildSpecFileRelativeLocation: process.env.BUILD_SPEC_RELATIVE_LOCATION,
-  gitHubTokenSecretName: process.env.GITHUB_TOKEN_SECRETNAME,
+  gitHubTokenSecretArn: process.env.GITHUB_TOKEN_SECRETNAME,
   artifactsBucket: process.env.ARTIFACTS_BUCKET,
   projectName: projectName,
   env : {

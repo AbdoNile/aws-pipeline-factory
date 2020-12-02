@@ -1,14 +1,15 @@
 import * as cdk from "@aws-cdk/core";
 import * as iam from "@aws-cdk/aws-iam";
 import * as ssm from "@aws-cdk/aws-ssm";
-import { CodeBuilder } from "./codeBuilder";
+import * as secretManager from "@aws-cdk/aws-secretsmanager";
+import { CodeBuildProject } from "./codebuild-project";
 import { CodePipeline } from "./codePipeline";
 
 export class BuildOperationsDetails implements cdk.StackProps {
   readonly githubRepositoryName: string;
   readonly githubRepositoryOwner: string;
   readonly githubRepositoryBranch: string;
-  gitHubTokenSecretName?: string;
+  gitHubTokenSecretArn?: string;
   readonly projectName: string;
   readonly buildSpecFileRelativeLocation?: string;
   artifactsBucket?: string;
@@ -31,18 +32,22 @@ export class BuildRoomStack extends cdk.Stack {
     const defaultArtifactBucketName = ssm.StringParameter.fromStringParameterName(
       this,
       "artifactsBucket",
-      "/pipeline-factory/artifactsBucket" 
+      "/pipeline-factory/artifactsBucket"
     ).stringValue;
 
-    
     if (props.artifactsBucket == undefined) {
       props.artifactsBucket = defaultArtifactBucketName;
     }
 
-    const defaultGitHubTokenSecretName =      "/pipeline-factory/default-github-token";
-    
-    if (!props.gitHubTokenSecretName) {
-      props.gitHubTokenSecretName = defaultGitHubTokenSecretName;
+    const defaultGitHubSecretName = "/pipeline-factory/default-github-token";
+    const defaultGitHubTokenSecretArn = secretManager.Secret.fromSecretNameV2(
+      this,
+      "DefaultGitHubSecret",
+      defaultGitHubSecretName
+    ).secretArn;
+
+    if (!props.gitHubTokenSecretArn) {
+      props.gitHubTokenSecretArn = defaultGitHubTokenSecretArn;
     }
     console.log(props);
     const buildIamROle = iam.Role.fromRoleArn(
@@ -51,14 +56,26 @@ export class BuildRoomStack extends cdk.Stack {
       props.buildAsRoleArn
     );
 
-    const builder = new CodeBuilder(this, "CodeBuilder", props, buildIamROle);
+    const builder = new CodeBuildProject(this, "CodeBuilder", {
+      artifactsBucketName: props.artifactsBucket,
+      gitHubTokenSecretArn: props.gitHubTokenSecretArn,
+      githubRepositoryBranch: props.githubRepositoryBranch,
+      githubRepositoryName: props.githubRepositoryName,
+      githubRepositoryOwner: props.githubRepositoryOwner,
+      projectName: props.projectName,
+      buildSpecLocationOverride: props.buildSpecFileRelativeLocation,
+      buildAsRoleArn: props.buildAsRoleArn,
+    });
 
-    new CodePipeline(
-      this,
-      "CodePipeLine",
-      props,
-      builder.buildProjectArn,
-      buildIamROle
-    );
+    new CodePipeline(this, "CodePipeLine", {
+      artifactsBucketName: props.artifactsBucket,
+      gitHubTokenSecretArn: props.gitHubTokenSecretArn,
+      githubRepositoryBranch: props.githubRepositoryBranch,
+      githubRepositoryName: props.githubRepositoryName,
+      githubRepositoryOwner: props.githubRepositoryOwner,
+      projectName: props.projectName,
+      buildAsRoleArn: props.buildAsRoleArn,
+      buildProject: builder.buildProject,
+    });
   }
 }

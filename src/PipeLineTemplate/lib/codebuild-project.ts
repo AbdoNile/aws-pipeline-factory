@@ -2,18 +2,22 @@ import * as cdk from "@aws-cdk/core";
 import * as codebuild from "@aws-cdk/aws-codebuild";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as iam from "@aws-cdk/aws-iam";
-import { BuildOperationsDetails } from "./buildroom-stack";
 
-export class CodeBuilder extends cdk.Construct {
-  public readonly buildProjectArn: string;
-  constructor(
-    scope: cdk.Construct,
-    id: string,
-    props: BuildOperationsDetails,
-    buildAsRole: iam.IRole
-  ) {
+export interface CodeBuildProjectProps {
+  buildAsRoleArn: string;
+  gitHubTokenSecretArn: string;
+  githubRepositoryName: string;
+  githubRepositoryOwner: string;
+  githubRepositoryBranch: string;
+  projectName: string;
+  artifactsBucketName: string;
+  buildSpecLocationOverride?: string;
+}
+export class CodeBuildProject extends cdk.Construct {
+  buildProject: codebuild.Project;
+  constructor(scope: cdk.Construct, id: string, props: CodeBuildProjectProps) {
     super(scope, id);
-    var buildSpecFile = props.buildSpecFileRelativeLocation || "buildspec.yml";
+    var buildSpecFile = props.buildSpecLocationOverride ?? "buildspec.yml";
 
     const gitHubSource = codebuild.Source.gitHub({
       owner: props.githubRepositoryOwner,
@@ -21,17 +25,22 @@ export class CodeBuilder extends cdk.Construct {
       webhook: false,
     });
 
-    if(!props.artifactsBucket)
-    {
-      throw new Error(`props.artifactsBucket is empty`)
-    } 
-   
+    if (!props.artifactsBucketName) {
+      throw new Error(`props.artifactsBucketName is empty`);
+    }
+
     const artifactsBucket = s3.Bucket.fromBucketAttributes(
       this,
-      "PipeLineDeploymentArtifactsBucket", {
-        bucketName :  props.artifactsBucket
+      "PipeLineDeploymentArtifactsBucket",
+      {
+        bucketName: props.artifactsBucketName,
       }
-     
+    );
+
+    const buildAsRole = iam.Role.fromRoleArn(
+      this,
+      "BuildAsRole",
+      props.buildAsRoleArn
     );
 
     const codeBuildProject = new codebuild.Project(this, "codebuildProject", {
@@ -53,8 +62,8 @@ export class CodeBuilder extends cdk.Construct {
           value: artifactsBucket.bucketName,
           type: codebuild.BuildEnvironmentVariableType.PLAINTEXT,
         },
-        GITHUB_TOKEN_SECRETNAME: {
-          value: props.gitHubTokenSecretName,
+        GITHUB_TOKEN_SECRET_ARN: {
+          value: props.gitHubTokenSecretArn,
           type: codebuild.BuildEnvironmentVariableType.PLAINTEXT,
         },
         GITHUB_REPOSITORY_BRANCH: {
@@ -70,6 +79,6 @@ export class CodeBuilder extends cdk.Construct {
       }),
     });
 
-    this.buildProjectArn = codeBuildProject.projectArn;
+    this.buildProject = codeBuildProject;
   }
 }
