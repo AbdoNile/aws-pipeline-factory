@@ -2,7 +2,7 @@ export interface PipelineProperties {
   factoryCodeBuildProjectName: string;
   monitoredBranches?: string[];
   buildAsRoleArn?: string;
-  gitHubTokenSecretName?: string;
+  gitHubTokenSecretArn?: string;
   artifactsBucketName?: string;
   buildSpecLocation?: string;
   repository_owner: string;
@@ -46,8 +46,8 @@ export class PipeLinePropertiesBuilder {
 
     const props: PipelineProperties = {
       branchName: branchName,
-      gitHubTokenSecretName: flattenedPayLoad.github_token_secret_name,
-      buildAsRoleArn: flattenedPayLoad.buildAsRoleArn || process.env.BUILD_AS_ROLE_ARN,
+      gitHubTokenSecretArn: flattenedPayLoad.github_token_secret_arn,
+      buildAsRoleArn: flattenedPayLoad.buildAsRoleArn,
       artifactsBucketName: flattenedPayLoad.artifactsBucketName,
       factoryCodeBuildProjectName: process.env.FACTORY_CODEBUILD_PROJECT_NAME,
       buildSpecLocation: flattenedPayLoad.buildspecFileLocation || 'buildspec.yml',

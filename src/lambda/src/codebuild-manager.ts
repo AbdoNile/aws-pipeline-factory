@@ -60,10 +60,10 @@ export class PipelineManager {
       },
     ];
 
-    if (buildParameters.gitHubTokenSecretName) {
+    if (buildParameters.gitHubTokenSecretArn) {
       environmentOverRides.push({
-        name: 'GITHUB_TOKEN_SECRETNAME',
-        value: buildParameters.gitHubTokenSecretName,
+        name: 'GITHUB_TOKEN_SECRET_ARN',
+        value: buildParameters.gitHubTokenSecretArn,
         type: 'PLAINTEXT',
       });
     }
