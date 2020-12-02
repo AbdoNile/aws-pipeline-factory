@@ -1,21 +1,20 @@
 import * as cdk from "@aws-cdk/core";
-import * as iam from "@aws-cdk/aws-iam";
 import * as ssm from "@aws-cdk/aws-ssm";
 import * as secretManager from "@aws-cdk/aws-secretsmanager";
 import { CodeBuildProject } from "./codebuild-project";
 import { CodePipeline } from "./codePipeline";
 
 export class BuildOperationsDetails implements cdk.StackProps {
+  readonly tags?: { [key: string]: string };
+  readonly env?: cdk.Environment;
   readonly githubRepositoryName: string;
   readonly githubRepositoryOwner: string;
   readonly githubRepositoryBranch: string;
-  gitHubTokenSecretArn?: string;
   readonly projectName: string;
   readonly buildSpecFileRelativeLocation?: string;
   artifactsBucket?: string;
-  readonly buildAsRoleArn: string;
-  readonly tags?: { [key: string]: string };
-  readonly env?: cdk.Environment;
+  buildAsRoleArn?: string;
+  gitHubTokenSecretArn?: string;
 }
 
 export class BuildRoomStack extends cdk.Stack {
@@ -49,12 +48,17 @@ export class BuildRoomStack extends cdk.Stack {
     if (!props.gitHubTokenSecretArn) {
       props.gitHubTokenSecretArn = defaultGitHubTokenSecretArn;
     }
-    console.log(props);
-    const buildIamROle = iam.Role.fromRoleArn(
+
+    const defaultBuildAsRoleArn = ssm.StringParameter.fromStringParameterName(
       this,
-      "BuildAsRole",
-      props.buildAsRoleArn
-    );
+      "defaultBuildAsRoleArn",
+      "/pipeline-factory/default-build-as-role"
+    ).stringValue;
+    if (!props.buildAsRoleArn) {
+      props.buildAsRoleArn = defaultBuildAsRoleArn;
+    }
+
+    console.log(props);
 
     const builder = new CodeBuildProject(this, "CodeBuilder", {
       artifactsBucketName: props.artifactsBucket,
