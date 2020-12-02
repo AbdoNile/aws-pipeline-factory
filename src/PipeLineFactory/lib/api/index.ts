@@ -5,12 +5,9 @@ import BranchHandlers from "./branchHandlers";
 export interface ApiProps {
   triggerCodeS3Key: string;
   triggerCodeS3Bucket: string;
-  defaultArtifactsBucketName: string;
-  defaultGithubTokenSecretName: string;
   apiDomainName: string | undefined;
   apiDomainCertificateArn: string | undefined;
   PipelineFactoryBuildProjectName: string;
-  buildAsRoleArn: string;
 }
 
 export default class Api extends cdk.Construct {
@@ -19,7 +16,6 @@ export default class Api extends cdk.Construct {
     super(scope, id);
 
     const handlers = new BranchHandlers(this, "handlers", {
-      factoryBuilderRoleArn: props.buildAsRoleArn,
       factoryBuilderProjectName: props.PipelineFactoryBuildProjectName,
       triggerCodeS3Bucket: props.triggerCodeS3Bucket,
       triggerCodeS3Key: props.triggerCodeS3Key,
