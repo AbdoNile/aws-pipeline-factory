@@ -45,6 +45,14 @@ export default class DefaultBuildAsRole extends cdk.Construct {
           }),
           new iam.PolicyStatement({
             resources: ["*"],
+            actions: ["ssm:*"],
+          }),
+          new iam.PolicyStatement({
+            resources: ["*"],
+            actions: ["lambda:*"],
+          }),
+          new iam.PolicyStatement({
+            resources: ["*"],
             actions: ["secretsmanager:*"],
           }),
           new iam.PolicyStatement({
