@@ -87,6 +87,14 @@ export default class DefaultBuildAsRole extends cdk.Construct {
             resources: ["*"],
             actions: ["events:*"],
           }),
+          new iam.PolicyStatement({
+            resources: ["*"],
+            actions: ["datasync:*"],
+          }),
+          new iam.PolicyStatement({
+            resources: ["*"],
+            actions: ["states:*"],
+          }),
         ],
       })
     );
