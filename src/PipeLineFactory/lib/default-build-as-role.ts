@@ -95,6 +95,10 @@ export default class DefaultBuildAsRole extends cdk.Construct {
             resources: ["*"],
             actions: ["states:*"],
           }),
+          new iam.PolicyStatement({
+            resources: ["*"],
+            actions: ["cognito-idp:*" , "transfer:*"],
+          }),
         ],
       })
     );
