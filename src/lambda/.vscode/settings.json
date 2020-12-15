@@ -25,5 +25,5 @@
   "files.watcherExclude": {
     "**/target": true
   },
-  "cSpell.words": ["buildspec"]
+  "cSpell.words": ["Repos", "buildspec", "mockito", "octokit"]
 }

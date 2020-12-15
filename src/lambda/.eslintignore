@@ -4,8 +4,3 @@ node_modules
 dist
 # don't lint nyc coverage output
 coverage
-
-# don't lint the lint config
-.eslintrc.js
-
-jest.config.js

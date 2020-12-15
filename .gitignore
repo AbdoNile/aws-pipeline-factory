@@ -108,5 +108,5 @@ dist
 
 **/bin/*.js
 **/bin/*.d.ts
-
+**/lib/**/*.js
 **/test/*.test.js

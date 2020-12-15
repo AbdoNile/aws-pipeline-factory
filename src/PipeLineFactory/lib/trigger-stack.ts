@@ -6,6 +6,7 @@ import ApiEntryPoint from './apiEntryPoint'
 import  PipelineDependencies from './pipelineDependencies'
 import BranchHandlers from './branchHandlers';
 import TriggeringLambdaProperties from './triggeringLambdaProperties'
+import { Monitor } from "./monitor/monitor";
 import Notifications from "./notifications";
 
 export class TriggerStack extends cdk.Stack {
@@ -89,6 +90,7 @@ export class TriggerStack extends cdk.Stack {
   
     const apiEntryPoint = new ApiEntryPoint(this , "apiEntryPoint", props, handlers)
 
+    const monitor = new Monitor(this , "Monitor", triggeringLambdaProperties)
     const notifications = new Notifications(this , "PipelineNotifications", triggeringLambdaProperties)
   }
 }

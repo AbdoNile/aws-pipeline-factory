@@ -9,20 +9,11 @@ export interface PipeLineCreationResult {
 
 export class PipelineManager {
   async deletePipeLine(buildParameters: PipelineProperties): Promise<PipeLineCreationResult> {
-    const cloudFormationClient = new AWS.CloudFormation();
-    const result = await cloudFormationClient.describeStacks({}).promise();
-    const matchingStacks = result.Stacks?.filter(
-      (s) =>
-        s.Tags?.find(
-          (t) =>
-            t.Key == 'repository' &&
-            t.Value == `${buildParameters.repository_owner}/${buildParameters.repository_name}`,
-        ) &&
-        s.Tags.find((t) => t.Key == 'service' && t.Value == `pipeline-factory`) &&
-        s.Tags.find((t) => t.Key == 'branch' && t.Value == `${buildParameters.branchName}`),
+    const stack = await this.findPipelineStack(
+      buildParameters.repository_owner,
+      buildParameters.repository_name,
+      buildParameters.branchName,
     );
-
-    const stack = matchingStacks ? matchingStacks[0] : null;
     if (stack) {
       console.log(`deleting stack ${stack.StackName}`);
       //  const deletionResult = await cloudFormationClient.deleteStack({ StackName: stack.StackName }).promise();
@@ -39,6 +30,20 @@ export class PipelineManager {
         and branch ${buildParameters.branchName}`,
       };
     }
+  }
+
+  public async findPipelineStack(repositoryOwner: string, repositoryName: string, branchName: string) {
+    const cloudFormationClient = new AWS.CloudFormation();
+    const result = await cloudFormationClient.describeStacks({}).promise();
+    const matchingStacks = result.Stacks?.filter(
+      (s) =>
+        s.Tags?.find((t) => t.Key == 'repository' && t.Value == `${repositoryOwner}/${repositoryName}`) &&
+        s.Tags.find((t) => t.Key == 'service' && t.Value == `pipeline-factory`) &&
+        s.Tags.find((t) => t.Key == 'branch' && t.Value == `${branchName}`),
+    );
+
+    const stack = matchingStacks ? matchingStacks[0] : null;
+    return stack;
   }
 
   async createPipeLine(buildParameters: PipelineProperties): Promise<PipeLineCreationResult> {
@@ -141,7 +146,9 @@ export class PipelineManager {
   private isMonitoredBranch(buildParameters: PipelineProperties) {
     const monitoredBranches = Array.isArray(buildParameters.monitoredBranches) ? buildParameters.monitoredBranches : [];
     monitoredBranches.push('master');
-    const isMonitoredBranch = monitoredBranches.includes(buildParameters.branchName);
+    const isMonitoredBranch = monitoredBranches
+      .map((b) => b.toLowerCase())
+      .includes(buildParameters.branchName.toLowerCase());
     return isMonitoredBranch;
   }
 }

@@ -46,6 +46,14 @@ export class CodeBuilder extends cdk.Construct {
           value: props.githubRepositoryBranch,
           type: codebuild.BuildEnvironmentVariableType.PLAINTEXT
         },
+        "ACCOUNT": {
+          value: cdk.Stack.of(this).account,
+          type: codebuild.BuildEnvironmentVariableType.PLAINTEXT
+        },
+        "AWS_REGION": {
+          value: cdk.Stack.of(this).region,
+          type: codebuild.BuildEnvironmentVariableType.PLAINTEXT
+        },
       },
       artifacts: codebuild.Artifacts.s3({
         bucket: artifactsBucket,
