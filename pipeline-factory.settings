@@ -2,5 +2,5 @@
   "gitHubTokenSecretArn": "token_name",
   "buildSpecLocation": "build_spec_location",
   "buildAsRoleArn": "build_as_role_arn",
-  "monitoredBranche": ["account_neutral_monitoring" , "neutralize_account"]
+  "monitoredBranches": ["account_neutral_monitoring" , "neutralize_account"]
 }
