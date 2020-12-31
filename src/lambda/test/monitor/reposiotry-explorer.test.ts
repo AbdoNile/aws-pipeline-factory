@@ -1,5 +1,4 @@
 import { GithubClient } from '../../src/monitor/github-client';
-import { MonitorRepositoriesHandler } from '../../src/monitor/handler-monitor-repositories';
 import { OrganizationInfo, OrganizationManager } from '../../src/monitor/organization-manager';
 import { RepositoryExplorer } from '../../src/monitor/repository-explorer';
 import AuthHelper from '../auth-helper';
@@ -31,26 +30,19 @@ afterEach(() => {
 describe('Sample Test', () => {
   xit('list all repos in organization ', async () => {
     const explorer = new RepositoryExplorer(githubClient);
-    const repos = await explorer.findSubscribedRepositories('stage-tech');
+    const repos = await explorer.listRepositories('stage-tech');
 
     console.log(JSON.stringify(repos, null, 2));
   });
 
-  xit('should list branches in a certain repository', async () => {
+  it('find Details about repository', async () => {
     const explorer = new RepositoryExplorer(githubClient);
-    const buildConfiguration = await explorer.findBranchConfigurations({
-      name: 'stage-door-cdk',
-      owner: 'stage-tech',
-    });
-    console.log(JSON.stringify(buildConfiguration, null, 2));
-  });
+    const repo = await explorer.getRepository('stage-tech', 'pipeline-factory');
 
-  xit('Should Create messages in the queue', async () => {
-    const explorer = new MonitorRepositoriesHandler({
-      organizationName: 'stage-tech',
-      queueUrl: 'https://sqs.eu-west-1.amazonaws.com/928065939415/repository_discovery_jobs',
-    });
-    const pipeline = await explorer.handler();
-    console.log(pipeline);
+    expect(repo.repositoryId).toEqual('257418515');
+    expect(repo.defaultBranch).toEqual('master');
+    expect(repo.name).toEqual('pipeline-factory');
+    expect(repo.owner).toEqual('stage-tech');
+    expect(repo.topics).toContain('pipeline-factory');
   });
 });

@@ -32,7 +32,11 @@ export class PipelineManager {
     }
   }
 
-  public async findPipelineStack(repositoryOwner: string, repositoryName: string, branchName: string) {
+  public async findPipelineStack(
+    repositoryOwner: string,
+    repositoryName: string,
+    branchName: string,
+  ): Promise<AWS.CloudFormation.Stack | null> {
     const cloudFormationClient = new AWS.CloudFormation();
     const result = await cloudFormationClient.describeStacks({}).promise();
     const matchingStacks = result.Stacks?.filter(
@@ -47,67 +51,61 @@ export class PipelineManager {
   }
 
   async createPipeLine(buildParameters: PipelineProperties): Promise<PipeLineCreationResult> {
+    const environmentOverRides = [
+      {
+        name: 'GITHUB_REPOSITORY_NAME',
+        value: buildParameters.repository_name,
+        type: 'PLAINTEXT',
+      },
+      {
+        name: 'GITHUB_REPOSITORY_BRANCH',
+        value: buildParameters.branchName,
+        type: 'PLAINTEXT',
+      },
+      {
+        name: 'GITHUB_REPOSITORY_OWNER',
+        value: buildParameters.repository_owner,
+        type: 'PLAINTEXT',
+      },
+    ];
+
+    if (buildParameters.gitHubTokenSecretArn) {
+      environmentOverRides.push({
+        name: 'GITHUB_TOKEN_SECRET_ARN',
+        value: buildParameters.gitHubTokenSecretArn,
+        type: 'PLAINTEXT',
+      });
+    }
+    if (buildParameters.buildSpecLocation) {
+      environmentOverRides.push({
+        name: 'BUILD_SPEC_RELATIVE_LOCATION',
+        value: buildParameters.buildSpecLocation,
+        type: 'PLAINTEXT',
+      });
+    }
+
+    if (buildParameters.artifactsBucketName) {
+      environmentOverRides.push({
+        name: 'ARTIFACTS_BUCKET',
+        value: buildParameters.artifactsBucketName,
+        type: 'PLAINTEXT',
+      });
+    }
+
+    if (buildParameters.buildAsRoleArn) {
+      environmentOverRides.push({
+        name: 'BUILD_AS_ROLE_ARN',
+        value: buildParameters.buildAsRoleArn,
+        type: 'PLAINTEXT',
+      });
+    }
+
     const params: AWS.CodeBuild.StartBuildInput = {
-      projectName: buildParameters.projectName,
-      environmentVariablesOverride: [
-        {
-          name: 'GITHUB_REPOSITORY_NAME',
-          value: buildParameters.repository_name,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'GITHUB_REPOSITORY_BRANCH',
-          value: buildParameters.branchName,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'GITHUB_REPOSITORY_OWNER',
-          value: buildParameters.repository_owner,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'BUILD_SPEC_RELATIVE_LOCATION',
-          value: buildParameters.buildSpecLocation,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'ARTIFACTS_BUCKET',
-          value: buildParameters.artifactsBucketName,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'GITHUB_TOKEN_SECRETNAME',
-          value: buildParameters.gitHubTokenSecretName,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'ARTIFACTS_PREFIX',
-          value: buildParameters.artifactsPrefix,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'TRANSIENT_ARTIFACTS_BUCKET_NAME',
-          value: buildParameters.transientArtifactsBucket,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'BUILD_AS_ROLE_ARN',
-          value: buildParameters.buildAsRoleArn,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'SLACK_WORKSPACE_ID',
-          value: buildParameters.slackWorkspaceId,
-          type: 'PLAINTEXT',
-        },
-        {
-          name: 'SLACK_CHANNEL_NAME_PREFIX',
-          value: buildParameters.slackChannelNamePrefix,
-          type: 'PLAINTEXT',
-        },
-      ],
+      projectName: buildParameters.factoryCodeBuildProjectName,
+      environmentVariablesOverride: environmentOverRides,
     };
 
+    console.log(JSON.stringify(params));
     const isMonitoredBranch = this.isMonitoredBranch(buildParameters);
 
     if (isMonitoredBranch) {

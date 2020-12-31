@@ -1,5 +1,5 @@
-import { PipelineManager } from '../../src/codebuild-manager';
-import { PipeLinePropertiesBuilder } from '../../src/pipeline-properties-builder';
+import { PipelineManager } from '../../src/api/codebuild-manager';
+import { PipeLinePropertiesBuilder } from '../../src/api/pipeline-properties-builder';
 import AuthHelper from '../auth-helper';
 const OLD_ENV = process.env;
 
@@ -34,6 +34,6 @@ xdescribe('Sample Test', () => {
     };
     const props = new PipeLinePropertiesBuilder().build(payload);
     const manager = new PipelineManager();
-    const result = await manager.deletePipeLine(props);
+    await manager.deletePipeLine(props);
   });
 });

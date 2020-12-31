@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk';
-import { ResourceLimits } from 'worker_threads';
+
+import { RepositoryBuildConfiguration } from './models';
 
 export interface PipeLineOperationResult {
   message: string;
@@ -22,18 +23,74 @@ export class StackInformation {
 
 export class CloudFormationManager {
   cloudFormationClient: AWS.CloudFormation;
-  constructor() {
+  constructor(public factoryCodeBuildProjectName: string) {
     this.cloudFormationClient = new AWS.CloudFormation();
   }
 
-  async createPipeline(
-    repositoryOwner: string,
-    repositoryName: string,
-    branchName: string,
-  ): Promise<PipeLineOperationResult> {
-    console.log(`creating pipeline stack from ${repositoryOwner}/${repositoryName}@${branchName}`);
+  async createPipeline(configs: RepositoryBuildConfiguration, branchName: string): Promise<PipeLineOperationResult> {
+    console.log(`creating pipeline stack from ${configs.repository.owner}/${configs.repository}@${branchName}`);
+    const repo = configs.repository;
+    const environmentOverRides = [
+      {
+        name: 'GITHUB_REPOSITORY_NAME',
+        value: repo.name,
+        type: 'PLAINTEXT',
+      },
+      {
+        name: 'GITHUB_REPOSITORY_BRANCH',
+        value: branchName,
+        type: 'PLAINTEXT',
+      },
+      {
+        name: 'GITHUB_REPOSITORY_OWNER',
+        value: repo.owner,
+        type: 'PLAINTEXT',
+      },
+    ];
+
+    if (repo.settings?.gitHubTokenSecretArn) {
+      environmentOverRides.push({
+        name: 'GITHUB_TOKEN_SECRET_ARN',
+        value: repo.settings.gitHubTokenSecretArn,
+        type: 'PLAINTEXT',
+      });
+    }
+
+    if (repo.settings?.buildSpecLocation) {
+      environmentOverRides.push({
+        name: 'BUILD_SPEC_RELATIVE_LOCATION',
+        value: repo.settings.buildSpecLocation,
+        type: 'PLAINTEXT',
+      });
+    }
+
+    if (repo.settings?.buildAsRoleArn) {
+      environmentOverRides.push({
+        name: 'BUILD_AS_ROLE_ARN',
+        value: repo.settings.buildAsRoleArn,
+        type: 'PLAINTEXT',
+      });
+    }
+
+    const params: AWS.CodeBuild.StartBuildInput = {
+      projectName: this.factoryCodeBuildProjectName,
+      environmentVariablesOverride: environmentOverRides,
+    };
+
+    console.log(JSON.stringify(params));
+
+    const codebuild = new AWS.CodeBuild({ apiVersion: '2016-10-06' });
+    const buildResult = await codebuild.startBuild(params).promise();
+
+    if (buildResult.$response.error) {
+      return {
+        message: buildResult.$response.error.message,
+      };
+    }
+
     return {
-      message: `creating pipeline stack from ${repositoryOwner}/${repositoryName}@${branchName}`,
+      message: `creating pipeline stack from ${configs.repository.owner}/${configs.repository}@${branchName}`,
+      buildArn: buildResult.build?.arn,
     };
   }
 
@@ -89,7 +146,13 @@ export class CloudFormationManager {
     );
   }
 
-  public async findPipelineStacksForRepository(
+  public async getBranchesWithStacks(repositoryOwner: string, repositoryName: string): Promise<string[]> {
+    return this.findPipelineStacksForRepository(repositoryOwner, repositoryName).then((result) => {
+      return result.map((s) => s.branchName);
+    });
+  }
+
+  private async findPipelineStacksForRepository(
     repositoryOwner: string,
     repositoryName: string,
   ): Promise<StackInformation[]> {

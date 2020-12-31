@@ -1,40 +1,37 @@
-import { CloudFormationManager, StackInformation } from './cloudformation-manager';
-import { JobScheduler } from './JobScheduler';
-import { Branch, Repository, RepositoryBuildConfiguration } from './models';
-import { RepositoryExplorer } from './repository-explorer';
+import { CloudFormationManager } from './cloudformation-manager';
+import { RepositoryBuildConfiguration } from './models';
 
 export class PipelineCoordinator {
-  constructor(
-    private repositoryExplorer: RepositoryExplorer,
-    private cloudFormationManager: CloudFormationManager,
-    private jobScheduler?: JobScheduler,
-  ) {}
+  constructor(private cloudFormationManager: CloudFormationManager) {}
 
-  async scheduleDiscoveryJobs(organizationName: string) {
-    const repos = await this.repositoryExplorer.findSubscribedRepositories(organizationName);
-    const result = await this.jobScheduler?.queueRepositoryDiscoveryJobs(repos);
-    return result;
+  async createNewPipelines(buildConfigurations: RepositoryBuildConfiguration): Promise<void> {
+    if (!buildConfigurations.shouldBeMonitored()) {
+      console.log('repository is not configured for monitoring , skipping');
+      return;
+    }
+
+    const newBranches = buildConfigurations.branchesToAdd();
+    await Promise.all(
+      newBranches.map(async (branch) => {
+        console.log(`creating ${JSON.stringify(branch, null, 4)}`);
+
+        return await this.cloudFormationManager.createPipeline(buildConfigurations, branch.branchName);
+      }),
+    );
   }
 
-  async createNewPipelines(buildConfigurations: RepositoryBuildConfiguration) {
+  async cleanObsoletePipelines(buildConfigurations: RepositoryBuildConfiguration): Promise<void> {
+    const obsoleteBranches = buildConfigurations.obsoletePipelines();
+
     await Promise.all(
-      buildConfigurations.newMonitoredBranches().map(async (branch) => {
-        return await this.cloudFormationManager.createPipeline(
+      obsoleteBranches.map((branch) => {
+        console.log(`deleting ${JSON.stringify(branch, null, 4)}`);
+        return this.cloudFormationManager.deletePipeLineStack(
           buildConfigurations.repository.owner,
           buildConfigurations.repository.name,
           branch.branchName,
         );
       }),
     );
-  }
-
-  async cleanObsoletePipelines(buildConfigurations: RepositoryBuildConfiguration) {
-    buildConfigurations.obsoletePipelines().map((branch) => {
-      return this.cloudFormationManager.deletePipeLineStack(
-        buildConfigurations.repository.owner,
-        buildConfigurations.repository.name,
-        branch,
-      );
-    });
   }
 }

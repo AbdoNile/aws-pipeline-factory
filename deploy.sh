@@ -18,7 +18,7 @@ die()
 aws_account_id=$(aws sts get-caller-identity --query 'Account' --output text)
 aws_region="eu-west-1"
 echo "aws account id $aws_account_id"
-s3_bucket_name="salt-deployment-packages-${aws_account_id}"
+s3_bucket_name="plf-code-${aws_account_id}"
 if aws s3 ls "s3://$s3_bucket_name" 2>&1 | grep -q 'NoSuchBucket'
 then
   aws s3api create-bucket --bucket $s3_bucket_name --create-bucket-configuration LocationConstraint=$aws_region
@@ -44,5 +44,5 @@ pushd $PWD
 cd ./src/PipeLineFactory
 yarn install
 yarn build
-cdk deploy --context s3_bucket_name=$s3_bucket_name --context s3_lambda_object_key=$s3_lambda_object_key
+cdk deploy --context s3_bucket_name=$s3_bucket_name --context s3_lambda_object_key=$s3_lambda_object_key --context template_branch_name=$branch_name
 popd

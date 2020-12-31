@@ -1,23 +1,14 @@
 import * as cdk from "@aws-cdk/core";
 import * as iam from "@aws-cdk/aws-iam";
-import * as s3 from '@aws-cdk/aws-s3'
-import FactoryProperties from "./factoryProperties"
 import { Effect } from "@aws-cdk/aws-iam";
-import { RemovalPolicy } from "@aws-cdk/core";
 
-export default class PipelineDependencies extends cdk.Construct {
-  public readonly role : iam.IRole  ;
-  public readonly ArtifactsBucket: s3.Bucket;
-  constructor(scope: cdk.Construct, id: string, props: FactoryProperties) {
+export default class FactoryIamRole extends cdk.Construct {
+  role: iam.Role;
+  constructor(scope: cdk.Construct, id: string) {
     super(scope, id);
-    const bucketName = (`${props.projectName}-pipeline-artifacts`).toLowerCase()
-    this.ArtifactsBucket = new s3.Bucket(this , "transientBucket", {
-      bucketName : bucketName,
-      removalPolicy: RemovalPolicy.DESTROY
-    })
-
-     const codebuildRole = new iam.Role(this, "Role_Codebuild", {
-      roleName: `PLF-${props.projectName}`,
+    const projectName = cdk.Stack.of(this).stackName
+    const codebuildRole = new iam.Role(this, "Role_Codebuild", {
+      roleName: `PLF-${projectName}-Role`,
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
 
@@ -35,7 +26,7 @@ export default class PipelineDependencies extends cdk.Construct {
     codebuildRole.grant(new iam.ServicePrincipal("codepipeline.amazonaws.com"))
 
     codebuildRole.attachInlinePolicy(new iam.Policy(this, "CodeBuildCloudFormationAccess" , {
-      policyName :`PLF-${props.projectName}`,
+      policyName :`PLF-${projectName}`,
       statements : [ 
         new iam.PolicyStatement({
         resources: ['*'],
@@ -62,5 +53,5 @@ export default class PipelineDependencies extends cdk.Construct {
  
     this.role = codebuildRole;
   }
-}
 
+}
