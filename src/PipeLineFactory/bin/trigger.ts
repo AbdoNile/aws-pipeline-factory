@@ -14,8 +14,8 @@ console.log(
 const projectName: string = "PipeLine-Factory";
 const factoryProperties: FactoryProperties = {
   pipelineTemplateBranchName: templateBranchName,
-  pipelineTemplateRepositoryName: "pipeline-factory",
-  pipelineTemplateGithubOwner: "stage-tech",
+  pipelineTemplateRepositoryName: "aws-pipeline-factory",
+  pipelineTemplateGithubOwner: "AbdoNile",
   triggerCodeS3Bucket: s3_bucket_name,
   triggerCodeS3Key: s3_lambda_object_key,
   apiDomainCertificateArn : app.node.tryGetContext("apiDomainCertificateArn"),
