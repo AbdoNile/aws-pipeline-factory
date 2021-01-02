@@ -1,0 +1,6 @@
+{
+  "XgitHubTokenSecretArn": "token_name",
+  "XbuildSpecLocation": "build_spec_location",
+  "XbuildAsRoleArn": "build_as_role_arn",
+  "monitoredBranches": ["account_neutral_monitoring" , "neutralize_account"]
+}

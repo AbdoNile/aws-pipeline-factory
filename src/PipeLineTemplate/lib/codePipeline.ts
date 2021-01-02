@@ -1,78 +1,117 @@
 import * as cdk from "@aws-cdk/core";
-import * as codebuild from "@aws-cdk/aws-codebuild";
 import * as codePipeline from "@aws-cdk/aws-codepipeline";
 import * as codePipelineActions from "@aws-cdk/aws-codepipeline-actions";
 import * as s3 from "@aws-cdk/aws-s3";
 import * as iam from "@aws-cdk/aws-iam";
-import {BuildOperationsDetails} from "./buildOperationsDetails"
+import * as ssm from "@aws-cdk/aws-ssm";
+import { IPipeline } from "@aws-cdk/aws-codepipeline";
+import { IProject } from "@aws-cdk/aws-codebuild";
+
+export interface CodePipelineProps {
+  artifactsBucketName: string;
+  githubRepositoryBranch: string;
+  githubRepositoryOwner: string;
+  githubRepositoryName: string;
+  gitHubTokenSecretArn: string;
+  buildAsRoleArn: string;
+  projectName: string;
+  buildProject: IProject;
+}
 
 export class CodePipeline extends cdk.Construct {
-  constructor(scope: cdk.Construct, id: string, props: BuildOperationsDetails,
-            buildProjectArn: string, buildAsRole : iam.IRole  ) {
+  public readonly pipeline: IPipeline;
+  constructor(scope: cdk.Construct, id: string, props: CodePipelineProps) {
     super(scope, id);
 
-    
-    var pipeline = new codePipeline.Pipeline(this, "PipeLine" ,  {
-      pipelineName : `${props.projectName}`,
-      role : buildAsRole,
-      artifactBucket : s3.Bucket.fromBucketName(this, "TransientBucket" , props.transientArtifactsBucketName)
+    const buildAsRole = iam.Role.fromRoleArn(
+      this,
+      "BuildAsRole",
+      props.buildAsRoleArn
+    );
+
+    const defaultTransientArtifactsBucketName = ssm.StringParameter.fromStringParameterName(
+      this,
+      "transientArtifactsBucket",
+      "/pipeline-factory/transientArtifactsBucket"
+    ).stringValue;
+
+    const transientArtifactsBucket = s3.Bucket.fromBucketName(
+      this,
+      "TransientBucket",
+      defaultTransientArtifactsBucketName
+    );
+
+    var pipeline = new codePipeline.Pipeline(this, "PipeLine", {
+      pipelineName: `${props.projectName}`,
+      role: buildAsRole,
+      artifactBucket: transientArtifactsBucket,
+      crossAccountKeys: false,
     });
 
-
-    var githubToken = cdk.SecretValue.secretsManager(props.gitHubTokenSecretName)
-    const sourceCodeOutput = new codePipeline.Artifact("SourceCode",)
-    const fetchSourceAction = new codePipelineActions.GitHubSourceAction( {
-     actionName : `GitHub-${props.projectName}`,
-     repo : props.githubRepositoryName,
-     owner : props.githubRepositoryOwner,
-     branch : props.githubRepositoryBranch,
-     output  : sourceCodeOutput,
-     oauthToken : githubToken,
-     trigger : codePipelineActions.GitHubTrigger.WEBHOOK
-    })
-
-    pipeline.addStage({
-      stageName : "Fetch" ,
-      actions : [  fetchSourceAction ]
-    })
-
-    var buildProject = codebuild.Project.fromProjectArn(this, "BuildProject", buildProjectArn)
-    const buildOutput = new codePipeline.Artifact("BuildOutput")
-  
-    var buildAction = new codePipelineActions.CodeBuildAction({
-     actionName : "RunBuildSpec" ,
-     input : sourceCodeOutput,
-     role: buildAsRole,
-     project : buildProject,
-     outputs : [buildOutput],
-    });
-
-    pipeline.addStage({
-      stageName : "Build" ,
-      actions : [  buildAction ]
-    });
-     
-    const artifactsBucket = s3.Bucket.fromBucketName(this, 'PipeLineDeploymentArtifactsBucket', props.artifactsBucket);
-
-    let objectPrefix = `${props.githubRepositoryName}/${props.githubRepositoryBranch}`
-    
-    if(props.artifactsPrefix){
-      objectPrefix = `${props.artifactsPrefix}/${objectPrefix}`
+    if (!props.gitHubTokenSecretArn) {
+      throw new Error(`props.gitHubTokenSecretName is empty`);
     }
 
-    const publishAction = new codePipelineActions.S3DeployAction({
-      actionName: 'S3Deploy',
-      role : buildAsRole,
-       bucket: artifactsBucket,
-      input: buildOutput,
-      objectKey: objectPrefix
-     
+    console.log(props.gitHubTokenSecretArn);
+    var githubToken = cdk.SecretValue.secretsManager(
+      props.gitHubTokenSecretArn
+    );
+    const sourceCodeOutput = new codePipeline.Artifact("SourceCode");
+    const fetchSourceAction = new codePipelineActions.GitHubSourceAction({
+      actionName: `GitHub-${props.projectName}`,
+      repo: props.githubRepositoryName,
+      owner: props.githubRepositoryOwner,
+      branch: props.githubRepositoryBranch,
+      output: sourceCodeOutput,
+      oauthToken: githubToken,
+      trigger: codePipelineActions.GitHubTrigger.WEBHOOK,
     });
 
-      pipeline.addStage({
-      stageName: 'Deploy',
+    pipeline.addStage({
+      stageName: "Fetch",
+      actions: [fetchSourceAction],
+    });
+
+    const buildOutput = new codePipeline.Artifact("BuildOutput");
+
+    var buildAction = new codePipelineActions.CodeBuildAction({
+      actionName: "RunBuildSpec",
+      input: sourceCodeOutput,
+      role: buildAsRole,
+      project: props.buildProject,
+      outputs: [buildOutput],
+    });
+
+    pipeline.addStage({
+      stageName: "Build",
+      actions: [buildAction],
+    });
+
+    if (!props.artifactsBucketName) {
+      throw new Error(`props.artifactsBucket is empty`);
+    }
+
+    const artifactsBucket = s3.Bucket.fromBucketName(
+      this,
+      "PipeLineDeploymentArtifactsBucket",
+      props.artifactsBucketName
+    );
+
+    let objectPrefix = `${props.githubRepositoryName}/${props.githubRepositoryBranch}`;
+
+    const publishAction = new codePipelineActions.S3DeployAction({
+      actionName: "S3Deploy",
+      role: buildAsRole,
+      bucket: artifactsBucket,
+      input: buildOutput,
+      objectKey: objectPrefix,
+    });
+
+    pipeline.addStage({
+      stageName: "Deploy",
       actions: [publishAction],
     });
 
+    this.pipeline = pipeline;
   }
 }
