@@ -29,7 +29,7 @@ const buildConfigs = new RepositoryBuildConfiguration(repo, alreadyMonitoredBran
 beforeAll(() => {
   cloudFormationManagerMock = mock(CloudFormationManager);
 
-  coordinator = new PipelineCoordinator(instance(cloudFormationManagerMock));
+  coordinator = new PipelineCoordinator(instance(cloudFormationManagerMock), 'pipeline-factory');
 });
 
 describe('pipeline coordinator', () => {

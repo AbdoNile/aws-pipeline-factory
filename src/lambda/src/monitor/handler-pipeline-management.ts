@@ -8,7 +8,7 @@ import { PipelineCoordinator } from './pipeline-coordinator';
 import { RepositoryExplorer } from './repository-explorer';
 
 export class PipelineManagementHandler {
-  constructor(private factoryCodeBuildProjectName: string) {}
+  constructor(private factoryCodeBuildProjectName: string, private repositorySelector: string) {}
   public handler = async (event: lambda.SQSEvent): Promise<void> => {
     try {
       await Promise.all(
@@ -26,7 +26,7 @@ export class PipelineManagementHandler {
           const githubClient = new GithubClient(organizationInfo.githubToken);
           const cloudFormationManager = new CloudFormationManager(this.factoryCodeBuildProjectName);
           const repositoryExplorer = new RepositoryExplorer(githubClient);
-          const coordinator = new PipelineCoordinator(cloudFormationManager);
+          const coordinator = new PipelineCoordinator(cloudFormationManager, this.repositorySelector);
           const repository = await repositoryExplorer.getRepository(job.owner, job.name);
           console.debug(JSON.stringify(repository, null, 4));
           const existingBranches = await cloudFormationManager.getBranchesWithStacks(repository.owner, repository.name);
@@ -46,4 +46,11 @@ if (!process.env.FACTORY_CODEBUILD_PROJECT_NAME) {
   throw new Error(`process.env.FACTORY_CODEBUILD_PROJECT_NAME is not provided`);
 }
 
-export const handler = new PipelineManagementHandler(process.env.FACTORY_CODEBUILD_PROJECT_NAME).handler;
+if (!process.env.REPOSITORY_SELECTOR) {
+  throw new Error(`process.env.REPOSITORY_SELECTOR is not provided`);
+}
+
+export const handler = new PipelineManagementHandler(
+  process.env.FACTORY_CODEBUILD_PROJECT_NAME,
+  process.env.REPOSITORY_SELECTOR,
+).handler;

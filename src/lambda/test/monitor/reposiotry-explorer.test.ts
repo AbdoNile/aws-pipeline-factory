@@ -43,6 +43,6 @@ describe('Sample Test', () => {
     expect(repo.defaultBranch).toEqual('master');
     expect(repo.name).toEqual('pipeline-factory');
     expect(repo.owner).toEqual('stage-tech');
-    expect(repo.topics).toContain('pipeline-factory');
+    expect(repo.topics).toContain('test-topic');
   });
 });
