@@ -2,10 +2,10 @@ import { CloudFormationManager } from './cloudformation-manager';
 import { RepositoryBuildConfiguration } from './models';
 
 export class PipelineCoordinator {
-  constructor(private cloudFormationManager: CloudFormationManager) {}
+  constructor(private cloudFormationManager: CloudFormationManager, private repositorySelector: string) {}
 
   async createNewPipelines(buildConfigurations: RepositoryBuildConfiguration): Promise<void> {
-    if (!buildConfigurations.shouldBeMonitored()) {
+    if (!buildConfigurations.shouldBeMonitored(this.repositorySelector)) {
       console.log('repository is not configured for monitoring , skipping');
       return;
     }

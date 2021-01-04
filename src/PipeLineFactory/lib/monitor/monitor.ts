@@ -92,7 +92,6 @@ export class Monitor extends cdk.Construct {
         environment: {
           SQS_QUEUE_URL: queue.queueUrl,
           ORGANIZATION_NAME: props.organizationName,
-          REPOSITORY_SELECTOR : props.repositorySelector
         },
         timeout: cdk.Duration.seconds(10),
       }
