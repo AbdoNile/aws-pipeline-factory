@@ -45,9 +45,8 @@ export class TriggerStack extends cdk.Stack {
       triggerCodeS3Bucket : props.triggerCodeS3Bucket,
       triggerCodeS3Key: props.triggerCodeS3Key,
       PipelineFactoryBuildProjectName : factory.buildProjectName,
-      organizationName : props.organizationName
-      
-
+      organizationName : props.organizationName,
+      repositorySelector : props.repositorySelector
     })
   }
 }
