@@ -19,15 +19,15 @@ export default class DefaultBuildAsRole extends cdk.Construct {
       new iam.Policy(this, "CodeBuildCloudFormationAccess", {
         policyName: `PLF-${projectName}-CloudFormationAccess`,
         statements: [
-           new iam.PolicyStatement({
-             sid : "deployment",
+          new iam.PolicyStatement({
+            sid: "deployment",
             resources: ["*"],
-            actions: ["codebuild:*", "codepipeline:*" , "cloudformation:*"],
+            actions: ["codebuild:*", "codepipeline:*", "cloudformation:*"],
           }),
           new iam.PolicyStatement({
-            sid : "compute",
+            sid: "compute",
             resources: ["*"],
-            actions: ["ec2:*", "ecs:*", "lambda:*", "states:*" , "logs:*"],
+            actions: ["ec2:*", "ecs:*", "lambda:*", "states:*", "logs:*"],
           }),
           new iam.PolicyStatement({
             sid: "parameters",
@@ -49,24 +49,30 @@ export default class DefaultBuildAsRole extends cdk.Construct {
             actions: ["es:*"],
           }),
           new iam.PolicyStatement({
-            sid : "messaging",
+            sid: "messaging",
             resources: ["*"],
             actions: ["sqs:*", "events:*", "sns:*", "schemas:*"],
           }),
           new iam.PolicyStatement({
-            sid : "storage",
+            sid: "storage",
             resources: ["*"],
-            actions: ["datasync:*", "transfer:*" , "s3:*" , "ecr:*"],
+            actions: ["datasync:*", "transfer:*", "s3:*", "ecr:*"],
           }),
           new iam.PolicyStatement({
-            sid : "cognito",
+            sid: "cognito",
             resources: ["*"],
             actions: ["cognito-idp:*", "cognito-identity:*"],
           }),
           new iam.PolicyStatement({
-            sid : "monitoring",
+            sid: "monitoring",
             resources: ["*"],
             actions: ["cloudwatch:*"],
+          }),
+          new iam.PolicyStatement({
+            sid: "InvokeApiPolicy",
+            effect: iam.Effect.ALLOW,
+            actions: ["execute-api:Invoke", "execute-api:ManageConnections"],
+            resources: ["*"],
           }),
         ],
       })
