@@ -2,6 +2,6 @@
   "app": "npx ts-node bin/trigger.ts",
   "context" : {
   
-    "organizationName" : "stage-tech"
+    "organizationName" : "axetay"
   }
 }
