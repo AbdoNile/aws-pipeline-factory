@@ -1,9 +1,7 @@
 {
   "app": "npx ts-node bin/trigger.ts",
   "context" : {
-    "apiDomainCertificateArn" : "arn:aws:acm:eu-west-1:928065939415:certificate/257976ea-e9ff-4a05-8dba-a034f2228326",
-    "apiDomainName" : "pipeline-factory.tools.salt-dev.ws" ,
-    "existingBucketName" : "salt-deployment-packages",
+  
     "organizationName" : "stage-tech"
   }
 }
