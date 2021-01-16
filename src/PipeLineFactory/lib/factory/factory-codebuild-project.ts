@@ -34,7 +34,7 @@ export default class FactoryCodeBuildProject extends cdk.Construct {
         role: codebuildRole,
         projectName: `${projectName}`,
         environment: {
-          buildImage: codebuild.LinuxBuildImage.STANDARD_4_0,
+          buildImage: codebuild.LinuxBuildImage.AMAZON_LINUX_2_3
         },
       }
     );
