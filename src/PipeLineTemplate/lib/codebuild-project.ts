@@ -48,7 +48,7 @@ export class CodeBuildProject extends cdk.Construct {
       role: buildAsRole,
       source: gitHubSource,
       environment: {
-        buildImage: codebuild.LinuxBuildImage.STANDARD_3_0,
+        buildImage: codebuild.LinuxBuildImage.STANDARD_4_0,
         privileged: true,
       },
 
