@@ -5,6 +5,10 @@ import { TriggerStack } from "../lib/trigger-stack";
 import FactoryProperties from "../lib/factoryProperties";
 const app = new cdk.App();
 
+const env = {
+  account: process.env.CDK_DEFAULT_ACCOUNT,
+  region: process.env.CDK_DEFAULT_REGION,
+};
 const s3_lambda_object_key = app.node.tryGetContext("s3_lambda_object_key");
 const s3_bucket_name = app.node.tryGetContext("s3_bucket_name");
 const templateBranchName = app.node.tryGetContext("template_branch_name") ?? 'master';
@@ -21,6 +25,7 @@ const factoryProperties: FactoryProperties = {
   apiDomainCertificateArn : app.node.tryGetContext("apiDomainCertificateArn"),
   apiDomainName : app.node.tryGetContext("apiDomainName"),
   existingBucketName :  app.node.tryGetContext("existingBucketName"),
-  organizationName : app.node.tryGetContext("organizationName")
+  organizationName : app.node.tryGetContext("organizationName"),
+  repositorySelector : `pipeline-factory-${env.account}`
 };
 new TriggerStack(app, projectName, factoryProperties);

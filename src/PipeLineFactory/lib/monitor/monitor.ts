@@ -13,6 +13,7 @@ export interface MonitorProps {
   triggerCodeS3Key: string;
   triggerCodeS3Bucket: string;
   PipelineFactoryBuildProjectName: string;
+  repositorySelector : string
 }
 
 export class Monitor extends cdk.Construct {
@@ -113,6 +114,7 @@ export class Monitor extends cdk.Construct {
         code: lambdaCode,
         environment: {
           FACTORY_CODEBUILD_PROJECT_NAME: props.PipelineFactoryBuildProjectName,
+          REPOSITORY_SELECTOR : props.repositorySelector
         },
         timeout: cdk.Duration.seconds(10),
       }
