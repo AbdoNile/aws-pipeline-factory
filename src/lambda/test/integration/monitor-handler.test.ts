@@ -56,7 +56,7 @@ xdescribe('lambda Harness', () => {
         },
       ],
     };
-    const handler = new PipelineManagementHandler('PipeLine-Factory', 'pipeline-factory');
+    const handler = new PipelineManagementHandler('Pipeline-Factory', 'pipeline-factory');
     await handler.handler(sqsMessage);
   });
 });

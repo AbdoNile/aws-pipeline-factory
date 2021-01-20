@@ -1,8 +1,0 @@
-{
-  "app": "npx ts-node bin/buildroom.ts",
-  "context" : {
-    "buildOperationsDetails":{
-   
-    }
-  }
-}
