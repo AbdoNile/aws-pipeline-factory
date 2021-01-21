@@ -12,8 +12,6 @@ export default class FactoryIamRole extends cdk.Construct {
       assumedBy: new iam.ServicePrincipal("codebuild.amazonaws.com"),
     });
 
-    
-    
     if ( codebuildRole.assumeRolePolicy ) {
       codebuildRole.assumeRolePolicy.addStatements(
           new iam.PolicyStatement({
@@ -27,7 +25,7 @@ export default class FactoryIamRole extends cdk.Construct {
 
     codebuildRole.attachInlinePolicy(new iam.Policy(this, "CodeBuildCloudFormationAccess" , {
       policyName :`PLF-${projectName}`,
-      statements : [ 
+      statements : [
         new iam.PolicyStatement({
         resources: ['*'],
         actions: ['*']
@@ -50,8 +48,7 @@ export default class FactoryIamRole extends cdk.Construct {
       })
     ]
     }));
- 
+
     this.role = codebuildRole;
   }
-
 }

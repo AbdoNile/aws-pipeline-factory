@@ -13,7 +13,7 @@
             "-r", "./node_modules/ts-node/register/transpile-only"
         ],
         "args": [
-            "${workspaceFolder}/bin/buildroom.ts"
+            "${workspaceFolder}/bin/code-pipeline-app.ts"
         ]
         }
     ]

@@ -3,6 +3,5 @@ export class Utility {
         return rawName.replace(new RegExp('_', 'g'), '-')
         .replace(new RegExp('/', 'g'), '-')
         .replace(new RegExp('\\.', 'g'), '-');
-
     }
 }

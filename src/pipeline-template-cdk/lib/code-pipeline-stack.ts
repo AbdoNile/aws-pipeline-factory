@@ -1,10 +1,10 @@
 import * as cdk from "@aws-cdk/core";
 import * as ssm from "@aws-cdk/aws-ssm";
 import * as secretManager from "@aws-cdk/aws-secretsmanager";
-import { CodeBuildProject } from "./codebuild-project";
-import { CodePipeline } from "./codePipeline";
+import { CodeBuildProject } from "./code-build-project";
+import { CodePipeline } from "./code-pipeline";
 
-export class BuildOperationsDetails implements cdk.StackProps {
+export class CodePipelineStackProps implements cdk.StackProps {
   readonly tags?: { [key: string]: string };
   readonly env?: cdk.Environment;
   readonly githubRepositoryName: string;
@@ -17,8 +17,8 @@ export class BuildOperationsDetails implements cdk.StackProps {
   gitHubTokenSecretArn?: string;
 }
 
-export class BuildRoomStack extends cdk.Stack {
-  constructor(scope: cdk.App, id: string, props: BuildOperationsDetails) {
+export class CodePipelineStack extends cdk.Stack {
+  constructor(scope: cdk.App, id: string, props: CodePipelineStackProps) {
     super(scope, id, props);
 
     cdk.Tags.of(this).add("service", "pipeline-factory");
@@ -71,7 +71,7 @@ export class BuildRoomStack extends cdk.Stack {
       buildAsRoleArn: props.buildAsRoleArn,
     });
 
-    new CodePipeline(this, "CodePipeLine", {
+    new CodePipeline(this, "CodePipeline", {
       artifactsBucketName: props.artifactsBucket,
       gitHubTokenSecretArn: props.gitHubTokenSecretArn,
       githubRepositoryBranch: props.githubRepositoryBranch,

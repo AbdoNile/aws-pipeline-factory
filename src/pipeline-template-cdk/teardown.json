@@ -7,13 +7,13 @@
         }
       },
       "pre_build": {
-        "commands": ["cd src/PipeLineTemplate", "npm install"],
+        "commands": ["cd src/pipeline-template-cdk", "npm install"],
       },
       "build": {
         "commands": [
-          "npm run build", 
-        
-          "npm run cdk-confirmed"
+          "npm run build",
+
+          "yes | npm run cdk destroy"
         ]
       }
     },
@@ -21,4 +21,3 @@
       "paths": ["node_modules/**/*"]
   }
 }
-  

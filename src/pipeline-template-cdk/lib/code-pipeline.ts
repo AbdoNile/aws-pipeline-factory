@@ -41,7 +41,7 @@ export class CodePipeline extends cdk.Construct {
       defaultTransientArtifactsBucketName
     );
 
-    var pipeline = new codePipeline.Pipeline(this, "PipeLine", {
+    var pipeline = new codePipeline.Pipeline(this, "Pipeline", {
       pipelineName: `${props.projectName}`,
       role: buildAsRole,
       artifactBucket: transientArtifactsBucket,

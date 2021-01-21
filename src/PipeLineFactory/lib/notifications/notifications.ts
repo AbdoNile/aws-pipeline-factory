@@ -13,10 +13,12 @@ import { RemovalPolicy } from "@aws-cdk/core";
 import { CloudWatchLogsTarget } from "./cloudwatch-logs-target";
 import { ServicePrincipals } from "cdk-constants";
 import NotificationsLambdaRole from "./lambda-role";
+
 export interface NotificationsProps {
   triggerCodeS3Key: string;
   triggerCodeS3Bucket: string | undefined;
 }
+
 export default class Notifications extends cdk.Construct {
   constructor(scope: cdk.Construct, id: string, props: NotificationsProps) {
     super(scope, id);
@@ -37,7 +39,7 @@ export default class Notifications extends cdk.Construct {
     );
 
     const logGroupTarget = new CloudWatchLogsTarget(pipelineCloudWatchLogGroup);
-      
+
     const rule = new events.Rule(this , "pipelineEvents" , {
       description : "Forward code pipeline events to sns topic" ,
       enabled : true,

@@ -1,8 +1,8 @@
 {
-  "app": "npx ts-node bin/buildroom.ts",
+  "app": "npx ts-node bin/code-pipeline-app.ts",
   "context" : {
     "buildOperationsDetails":{
-   
+
     }
   }
 }

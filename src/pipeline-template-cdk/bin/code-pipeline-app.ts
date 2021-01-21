@@ -2,7 +2,8 @@
 require("dotenv").config();
 import * as cdk from "@aws-cdk/core";
 import { Utility } from "./utility";
-import { BuildOperationsDetails, BuildRoomStack } from "../lib/buildroom-stack";
+import { CodePipelineStack } from "../lib/code-pipeline-stack";
+
 const app = new cdk.App();
 const projectName = Utility.sanitizeStackName(
   `${process.env.GITHUB_REPOSITORY_NAME}-${process.env.GITHUB_REPOSITORY_BRANCH}`
@@ -15,7 +16,7 @@ function ensureEnvironmentVariable(variableName: string): string {
   return process.env[variableName] || "";
 }
 
-const buildOperationsDetails: BuildOperationsDetails = {
+new CodePipelineStack(app, `PLF-${projectName}`, {
   githubRepositoryName: ensureEnvironmentVariable(`GITHUB_REPOSITORY_NAME`),
   githubRepositoryOwner: ensureEnvironmentVariable("GITHUB_REPOSITORY_OWNER"),
   githubRepositoryBranch: ensureEnvironmentVariable("GITHUB_REPOSITORY_BRANCH"),
@@ -25,9 +26,7 @@ const buildOperationsDetails: BuildOperationsDetails = {
   artifactsBucket: process.env.ARTIFACTS_BUCKET,
   projectName: projectName,
   env : {
-    account : process.env.CDK_DEFAULT_ACCOUNT , 
+    account : process.env.CDK_DEFAULT_ACCOUNT ,
     region :  process.env.CDK_DEFAULT_REGION
   }
-};
-const stackName = `PLF-${projectName}`;
-new BuildRoomStack(app, stackName, buildOperationsDetails);
+});
