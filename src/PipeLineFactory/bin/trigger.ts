@@ -15,7 +15,7 @@ const templateBranchName = app.node.tryGetContext("template_branch_name") ?? 'ma
 console.log(
   `s3_lambda_object_key ${s3_lambda_object_key} , s3_bucket_name ${s3_bucket_name} `
 );
-const projectName: string = "Pipeline-Factory";
+const projectName: string = "PipeLine-Factory";
 const factoryProperties: FactoryProperties = {
   pipelineTemplateBranchName: templateBranchName,
   pipelineTemplateRepositoryName: "pipeline-factory",
