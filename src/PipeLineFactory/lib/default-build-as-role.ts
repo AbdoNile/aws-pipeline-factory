@@ -71,7 +71,7 @@ export default class DefaultBuildAsRole extends cdk.Construct {
           new iam.PolicyStatement({
             sid: "InvokeApiPolicy",
             effect: iam.Effect.ALLOW,
-            actions: ["execute-api:Invoke", "execute-api:ManageConnections"],
+            actions: ["execute-api:Invoke", "execute-api:ManageConnections" ,"apigateway:POST"],
             resources: ["*"],
           }),
         ],
