@@ -11,7 +11,7 @@
       },
       "build": {
         "commands": [
-          "pip install --upgrade awscli",
+          "npm -i --force -g aws-cdk",
           "npm run build",
           "npm run cdk-confirmed"
         ]
