@@ -66,7 +66,7 @@ export default class DefaultBuildAsRole extends cdk.Construct {
           new iam.PolicyStatement({
             sid: "monitoring",
             resources: ["*"],
-            actions: ["cloudwatch:*"],
+            actions: ["cloudwatch:*", "config:*"],
           }),
           new iam.PolicyStatement({
             sid: "InvokeApiPolicy",
