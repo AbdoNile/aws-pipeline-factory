@@ -7,10 +7,11 @@
         }
       },
       "pre_build": {
-        "commands": ["cd src/pipeline-template-cdk", "npm install" , "npm install -g aws-cdk@latest "]
+        "commands": ["cd src/pipeline-template-cdk", "npm install" ]
       },
       "build": {
         "commands": [
+          "npm install -g aws-cdk@latest",
           "npm run build",
           "npm run cdk-confirmed"
         ]
