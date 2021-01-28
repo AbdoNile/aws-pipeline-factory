@@ -27,7 +27,11 @@ export default class FactoryCodeBuildProject extends cdk.Construct {
         buildSpec: codebuild.BuildSpec.fromSourceFilename(buildSpecFile),
         source: gitHubSource,
         role: codebuildRole,
-        projectName : `${projectName}`
+        projectName : `${projectName}`,
+        environment :  {
+            buildImage : codebuild.LinuxBuildImage.STANDARD_4_0,
+            privileged : true
+        }
       }
     );
 
