@@ -37,6 +37,7 @@ export default class DefaultBuildAsRole extends cdk.Construct {
           new iam.PolicyStatement({
             sid: "AuthEncrypt",
             resources: ["*"],
+            effect : iam.Effect.ALLOW,
             actions: ["iam:*", "kms:*", "acm:*"],
           }),
           new iam.PolicyStatement({

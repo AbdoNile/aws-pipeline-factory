@@ -18,10 +18,11 @@ export class TriggerStack extends cdk.Stack {
       secretName: `/${this.stackName.toLowerCase()}/default-github-token`,
     });
 
-    new DefaultBuildAsRole(this, "DefaultBuildAdAsRole").role;
+    const buildRole = new DefaultBuildAsRole(this, "DefaultBuildAdAsRole").role;
 
     new DefaultBuckets(this, "defaultBuckets" , {
-      existingBucketName : props.existingBucketName
+      existingBucketName : props.existingBucketName,
+      buildRole
     });
 
     const factory = new Factory(this, "factoryBuilder", props);
