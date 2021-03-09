@@ -57,7 +57,7 @@ export default class DefaultBuildAsRole extends cdk.Construct {
           new iam.PolicyStatement({
             sid: "storage",
             resources: ["*"],
-            actions: ["datasync:*", "transfer:*" , "s3:*" , "ecr:*", "elasticfilesystem:*"],
+            actions: ["datasync:*", "transfer:*" , "s3:*" , "ecr:*", "elasticfilesystem:*", "glue:*"],
           }),
           new iam.PolicyStatement({
             sid: "cognito",
