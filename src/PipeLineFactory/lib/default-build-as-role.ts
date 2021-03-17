@@ -22,7 +22,7 @@ export default class DefaultBuildAsRole extends cdk.Construct {
           new iam.PolicyStatement({
             sid: "deployment",
             resources: ["*"],
-            actions: ["codebuild:*", "codepipeline:*", "cloudformation:*"],
+            actions: ["codebuild:*", "codepipeline:*", "cloudformation:*", "codeartifact:*"],
           }),
           new iam.PolicyStatement({
             sid: "compute",
@@ -38,7 +38,7 @@ export default class DefaultBuildAsRole extends cdk.Construct {
             sid: "AuthEncrypt",
             resources: ["*"],
             effect : iam.Effect.ALLOW,
-            actions: ["iam:*", "kms:*", "acm:*"],
+            actions: ["iam:*", "kms:*", "acm:*", "sts:*"],
           }),
           new iam.PolicyStatement({
             sid: "delivery",
