@@ -50,18 +50,17 @@ export class PipelineManager {
     return stack;
   }
 
-  async getDefaultBuildRole() :  Promise<string|undefined> {
-    const ssm = new AWS.SSM()
-    const parameterReadResponse = await ssm.getParameter({
-      Name : "/pipeline-factory/default-build-as-role"
-    }).promise()
-    return parameterReadResponse.Parameter?.Value
+  async getDefaultBuildRole(): Promise<string | undefined> {
+    const ssm = new AWS.SSM();
+    const parameterReadResponse = await ssm
+      .getParameter({
+        Name: '/pipeline-factory/default-build-as-role',
+      })
+      .promise();
+    return parameterReadResponse.Parameter?.Value;
   }
 
   async createPipeLine(buildParameters: PipelineProperties): Promise<PipeLineCreationResult> {
-    if(!buildParameters.buildAsRoleArn) {
-      buildParameters.buildAsRoleArn = await this.getDefaultBuildRole()
-    }
     const environmentOverRides = [
       {
         name: 'GITHUB_REPOSITORY_NAME',
@@ -76,11 +75,6 @@ export class PipelineManager {
       {
         name: 'GITHUB_REPOSITORY_OWNER',
         value: buildParameters.repository_owner,
-        type: 'PLAINTEXT',
-      },
-      {
-        name: 'BUILD_AS_ROLE_ARN',
-        value: buildParameters.buildAsRoleArn,
         type: 'PLAINTEXT',
       },
     ];
@@ -108,6 +102,7 @@ export class PipelineManager {
       });
     }
 
+    buildParameters.buildAsRoleArn = buildParameters.buildAsRoleArn ?? (await this.getDefaultBuildRole());
     if (buildParameters.buildAsRoleArn) {
       environmentOverRides.push({
         name: 'BUILD_AS_ROLE_ARN',
