@@ -14,6 +14,7 @@ export class SettingsOverrides {
   buildSpecLocation?: string;
   buildAsRoleArn?: string;
   monitoredBranches?: string[];
+  notification?: string;
 }
 
 export class Repository {

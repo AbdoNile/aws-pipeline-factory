@@ -65,17 +65,6 @@ export class GithubClient implements ISourceControlClient {
       });
   }
 
-  private async getPipelineFactorySettings(
-    owner: string,
-    repositoryName: string,
-    branchName: string,
-  ): Promise<SettingsOverrides> {
-    const settingsFileContent = await this.fetchFile(owner, repositoryName, branchName, 'pipeline-factory.settings');
-
-    const settingsFileJSON: SettingsOverrides = settingsFileContent ? JSON.parse(settingsFileContent) : {};
-    return settingsFileJSON;
-  }
-
   public async fetchFile(owner: string, repo: string, branchName: string, filePath: string): Promise<string | null> {
     let settingsFileContent;
     return await this.octokit.repos
@@ -99,5 +88,16 @@ export class GithubClient implements ISourceControlClient {
         }
         return null;
       });
+  }
+
+  private async getPipelineFactorySettings(
+    owner: string,
+    repositoryName: string,
+    branchName: string,
+  ): Promise<SettingsOverrides> {
+    const settingsFileContent = await this.fetchFile(owner, repositoryName, branchName, 'pipeline-factory.settings');
+
+    const settingsFileJSON: SettingsOverrides = settingsFileContent ? JSON.parse(settingsFileContent) : {};
+    return settingsFileJSON;
   }
 }
