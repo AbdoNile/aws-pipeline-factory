@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import { decode } from 'js-base64';
 
-import { Branch, Repository, SettingsOverrides } from './models';
+import { Branch, Repository, SettingsOverrides } from '../models';
 
 export interface ISourceControlClient {
   getRepository(owner: string, repositoryName: string): Promise<Repository>;

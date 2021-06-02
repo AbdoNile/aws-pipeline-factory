@@ -1,25 +1,7 @@
 import AWS from 'aws-sdk';
+import { PipeLineOperationResult, StackInformation } from '../models';
+import { RepositoryBuildConfiguration } from './repository-build-configuration';
 
-import { RepositoryBuildConfiguration } from './models';
-
-export interface PipeLineOperationResult {
-  message: string;
-  buildArn?: string;
-}
-
-export class StackInformation {
-  constructor(stack: AWS.CloudFormation.Stack) {
-    this.stackName = stack.StackName;
-    this.repository = stack.Tags?.find((t) => t.Key == 'repository')?.Value || '';
-    this.owner = stack.Tags?.find((t) => t.Key == 'owner')?.Value || '';
-    this.branchName = stack.Tags?.find((t) => t.Key == 'branch')?.Value || '';
-  }
-
-  stackName: string;
-  repository: string;
-  owner: string;
-  branchName: string;
-}
 
 export class CloudFormationManager {
   cloudFormationClient: AWS.CloudFormation;

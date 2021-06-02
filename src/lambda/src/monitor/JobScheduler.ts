@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 
-import { DiscoveryJob } from './models';
+import { DiscoveryJob } from '../models';
 
 export class JobScheduler {
   constructor(private queueUrl: string, private sqsClient: AWS.SQS) {}

@@ -11,30 +11,6 @@ export interface PipelineProperties {
 }
 
 export class PipeLinePropertiesBuilder {
-  private extractBranchName(branchName: string) {
-    let trimmedBranchName = branchName.toLowerCase();
-
-    if (branchName.startsWith('refs/heads/')) {
-      trimmedBranchName = branchName.replace('refs/heads/', '');
-    }
-
-    console.debug(`branch name passed from github: [${branchName}] , Trimmed Branch Name : [${trimmedBranchName}] `);
-    return trimmedBranchName;
-  }
-
-  private flattenRequest(payLoad: any, repositorySettings: any): any {
-    const mergedParameters = payLoad;
-
-    mergedParameters.settings = null;
-
-    if (repositorySettings) {
-      Object.keys(repositorySettings).forEach(function (key) {
-        mergedParameters[key] = repositorySettings[key];
-      });
-    }
-    return mergedParameters;
-  }
-
   public build(payLoad: any): PipelineProperties {
     const flattenedPayLoad = this.flattenRequest(payLoad, payLoad.settings);
 
@@ -57,5 +33,25 @@ export class PipeLinePropertiesBuilder {
     };
 
     return props;
+  }
+
+  private extractBranchName(branchName: string) {
+    let trimmedBranchName = branchName.toLowerCase();
+    if (branchName.startsWith('refs/heads/')) {
+      trimmedBranchName = branchName.replace('refs/heads/', '');
+    }
+    console.debug(`branch name passed from github: [${branchName}] , Trimmed Branch Name : [${trimmedBranchName}] `);
+    return trimmedBranchName;
+  }
+
+  private flattenRequest(payLoad: any, repositorySettings: any): any {
+    const mergedParameters = payLoad;
+    mergedParameters.settings = null;
+    if (repositorySettings) {
+      Object.keys(repositorySettings).forEach((key) => {
+        mergedParameters[key] = repositorySettings[key];
+      });
+    }
+    return mergedParameters;
   }
 }

@@ -1,8 +1,9 @@
 import lambda from 'aws-lambda';
 
 import { CloudFormationManager } from './cloudformation-manager';
-import { GithubClient } from './github-client';
-import { DiscoveryJob, RepositoryBuildConfiguration } from './models';
+import { GithubClient } from '../clients/github-client';
+import { DiscoveryJob } from '../models';
+import { RepositoryBuildConfiguration } from './repository-build-configuration';
 import { OrganizationManager } from './organization-manager';
 import { PipelineCoordinator } from './pipeline-coordinator';
 import { RepositoryExplorer } from './repository-explorer';

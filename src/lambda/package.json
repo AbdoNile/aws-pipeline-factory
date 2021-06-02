@@ -23,6 +23,8 @@
     "lambda:pack": "mkdir packages; hash=$(git rev-parse --short HEAD); zip -r \"./packages/pipeline-factory-lambda-${hash}.zip\" . -x '*.ENV' '*.eslintrc*' './packages/*' './src/*' './test/*' './coverage/*' '*.git*' '*.n*rc' '*.DS_Store' 'yarn.lock' '.prettierrc.js' 'tsconfig.json' '.eslintignore' '.vscode/*' 'jest.config.js'"
   },
   "dependencies": {
+    "@aws-sdk/client-codebuild": "^3.17.0",
+    "@aws-sdk/client-codepipeline": "^3.17.0",
     "@octokit/rest": "^18.0.6",
     "@types/aws-lambda": "^8.10.76",
     "@types/uuid": "^8.3.0",

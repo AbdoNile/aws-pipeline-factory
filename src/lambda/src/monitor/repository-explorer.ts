@@ -1,5 +1,5 @@
-import { ISourceControlClient } from './github-client';
-import { Repository } from './models';
+import { ISourceControlClient } from '../clients/github-client';
+import { Repository } from '../models';
 export class RepositoryExplorer {
   constructor(private client: ISourceControlClient) {}
 

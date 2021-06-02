@@ -10,7 +10,7 @@ export class OrganizationManager {
     const githubSecretName = `/pipeline-factory/organization/${organizationName}/githubToken`;
     console.log(`loading secret value for ${githubSecretName}`);
     try {
-      const secretManagerClient = new AWS.SecretsManager();
+      const secretManagerClient = new AWS.SecretsManager({region: 'eu-west-1'});
       const githubTokenSecret = await secretManagerClient
         .getSecretValue({
           SecretId: githubSecretName,

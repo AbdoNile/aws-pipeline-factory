@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 
-import { GithubClient } from './github-client';
+import { GithubClient } from '../clients/github-client';
 import { JobScheduler } from './JobScheduler';
 import { OrganizationManager } from './organization-manager';
 import { RepositoryExplorer } from './repository-explorer';

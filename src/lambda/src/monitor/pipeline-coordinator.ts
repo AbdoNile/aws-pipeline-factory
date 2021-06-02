@@ -1,11 +1,8 @@
 import { CloudFormationManager } from './cloudformation-manager';
-import { RepositoryBuildConfiguration } from './models';
+import { RepositoryBuildConfiguration } from './repository-build-configuration';
 
 export class PipelineCoordinator {
-  constructor(
-    private cloudFormationManager: CloudFormationManager, 
-    private repositorySelector: string
-    ) {}
+  constructor(private cloudFormationManager: CloudFormationManager, private repositorySelector: string) {}
 
   async createNewPipelines(buildConfigurations: RepositoryBuildConfiguration): Promise<void> {
     if (!buildConfigurations.shouldBeMonitored(this.repositorySelector)) {
