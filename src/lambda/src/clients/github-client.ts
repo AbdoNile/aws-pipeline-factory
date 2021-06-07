@@ -90,6 +90,21 @@ export class GithubClient implements ISourceControlClient {
       });
   }
 
+  public async getCommitAuthor(owner: string, repo: string, commit_sha: string) {
+    return await this.octokit.git
+      .getCommit({
+        owner: owner,
+        repo: repo,
+        commit_sha: commit_sha,
+      })
+      .then((commitData) => {
+        return commitData.data.author.name;
+      })
+      .catch((e) => {
+        console.error(`Error while fetching commit data: ${e}`);
+      });
+  }
+
   private async getPipelineFactorySettings(
     owner: string,
     repositoryName: string,

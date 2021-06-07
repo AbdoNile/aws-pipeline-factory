@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    // "typeRoots": ["node_modules/@types"],
+    // "types": ["node", "jest"],
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
@@ -19,11 +21,11 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "test_dist",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "*": ["node_modules/*", "src/types/*"]
+      "*": ["node_modules/*"]
     }
   },
-  "include": ["test/**/*"],
+  "include": ["test/**/*", "*.js"],
   "exclude": ["node_modules"]
 }

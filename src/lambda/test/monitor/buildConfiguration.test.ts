@@ -1,4 +1,5 @@
-import { Branch, Repository, RepositoryBuildConfiguration } from '../../src/monitor/models';
+import { Branch, Repository } from '../../src/models';
+import { RepositoryBuildConfiguration } from '../../src/monitor/repository-build-configuration';
 
 describe('Build Configurations', () => {
   const repo: Repository = {
@@ -37,7 +38,7 @@ describe('Build Configurations', () => {
   });
 
   it('should decide if repository should be monitored new branches ', () => {
-    expect(repositoryBuildConfiguration.shouldBeMonitored()).toBeFalsy();
+    expect(repositoryBuildConfiguration.shouldBeMonitored('topic2')).toBeFalsy();
   });
 
   it('should detect obsolete branches ', () => {

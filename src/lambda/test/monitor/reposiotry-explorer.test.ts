@@ -1,10 +1,11 @@
-import { GithubClient } from '../../src/monitor/github-client';
+import { GithubClient } from '../../src/clients/github-client';
 import { OrganizationInfo, OrganizationManager } from '../../src/monitor/organization-manager';
 import { RepositoryExplorer } from '../../src/monitor/repository-explorer';
 import AuthHelper from '../auth-helper';
 const OLD_ENV = process.env;
 let organizationInfo: OrganizationInfo;
 let githubClient: GithubClient;
+
 beforeAll(async () => {
   jest.resetModules(); // this is important - it clears the cache
   process.env = {
@@ -35,7 +36,7 @@ describe('Sample Test', () => {
     console.log(JSON.stringify(repos, null, 2));
   });
 
-  it('find Details about repository', async () => {
+  xit('find Details about repository', async () => {
     const explorer = new RepositoryExplorer(githubClient);
     const repo = await explorer.getRepository('stage-tech', 'pipeline-factory');
 

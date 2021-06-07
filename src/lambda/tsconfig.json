@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    // "typeRoots": ["node_modules/@types"],
+    // "types": ["node", "jest"],
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
@@ -19,13 +21,13 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
-      "*": ["node_modules/*", "src/types/*"]
+      "*": ["node_modules/*"]
     },
     "resolveJsonModule": true,
     "lib": ["es2016", "dom"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "*.js"],
   "exclude": ["node_modules"]
 }

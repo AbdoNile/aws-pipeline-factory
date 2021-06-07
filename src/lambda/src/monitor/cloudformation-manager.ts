@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
+
 import { PipeLineOperationResult, StackInformation } from '../models';
 import { RepositoryBuildConfiguration } from './repository-build-configuration';
-
 
 export class CloudFormationManager {
   cloudFormationClient: AWS.CloudFormation;

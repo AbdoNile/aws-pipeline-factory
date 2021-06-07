@@ -24,7 +24,7 @@ afterEach(() => {
 });
 
 describe('Sample Test', () => {
-  it('Should Create messages in the queue', async () => {
+  xit('Should Create messages in the queue', async () => {
     const queueUrl = 'https://sqs.eu-west-1.amazonaws.com/928065939415/repository_discovery_jobs';
     const owner = 'stage-tech';
     const scheduler = new JobScheduler(queueUrl, new AWS.SQS());
@@ -38,6 +38,6 @@ describe('Sample Test', () => {
         owner,
       },
     ]);
-    expect(result).toHaveLength(2);
+    expect(result.length).toBe(2);
   });
 });

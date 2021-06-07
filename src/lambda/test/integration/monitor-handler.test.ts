@@ -1,8 +1,10 @@
 import dotenv from 'dotenv';
-dotenv.config();
+
 import { MonitorRepositoriesHandler } from '../../src/monitor/handler-monitor-repositories';
 import { PipelineManagementHandler } from '../../src/monitor/handler-pipeline-management';
 import AuthHelper from '../auth-helper';
+
+dotenv.config();
 const OLD_ENV = process.env;
 const queueUrl = 'https://sqs.eu-west-1.amazonaws.com/928065939415/repository_discovery_jobs';
 

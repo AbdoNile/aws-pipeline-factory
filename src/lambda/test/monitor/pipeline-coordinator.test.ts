@@ -1,8 +1,9 @@
 import { anyOfClass, anyString, instance, mock, verify } from 'ts-mockito';
 
+import { Branch, Repository } from '../../src/models';
 import { CloudFormationManager } from '../../src/monitor/cloudformation-manager';
-import { Branch, Repository, RepositoryBuildConfiguration } from '../../src/monitor/models';
 import { PipelineCoordinator } from '../../src/monitor/pipeline-coordinator';
+import { RepositoryBuildConfiguration } from '../../src/monitor/repository-build-configuration';
 
 let cloudFormationManagerMock: CloudFormationManager, coordinator: PipelineCoordinator;
 
