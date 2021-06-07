@@ -125,9 +125,9 @@ import * as lambda from 'aws-lambda';
 
 import { AWSClient } from '../clients/aws-client';
 new AWSClient()
-  .getActionExecutions(
-    'stage-door-datasync-execution-lambda-master',
-  '42bb849b-c35c-4548-b0b7-767921c4e6c9')
+  .getPipelineExecution(
+    'stage-door-xsd-integrity-check-lambda-master',
+  '7c7a0e7c-9044-40e4-9431-879a4170cd69')
   .then((data) => {
     //@ts-ignore
     console.log(data);

@@ -103,4 +103,24 @@ export const mockData = {
       statusSummary: undefined,
     },
   },
+  successPipelineData: {
+    pipelineExecution: {
+      artifactRevisions: [
+        {
+          created: undefined,
+          name: 'SourceCode',
+          revisionChangeIdentifier: undefined,
+          revisionId: '4821350e17367a593b9ee660151c9f3631e2ce92',
+          revisionSummary: 'Merge pull request #177 from stage-tech/SPX-973',
+          revisionUrl:
+            'https://github.com/stage-tech/stage-door-datasync-execution-lambda/commit/4821350e17367a593b9ee660151c9f3631e2ce92',
+        },
+      ],
+      pipelineExecutionId: '42bb849b-c35c-4548-b0b7-767921c4e6c9',
+      pipelineName: 'stage-door-datasync-execution-lambda-master',
+      pipelineVersion: 1,
+      status: 'Succeeded',
+      statusSummary: undefined,
+    },
+  },
 };

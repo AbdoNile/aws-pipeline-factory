@@ -36,7 +36,7 @@ describe('NotificationsManager tests', () => {
     const gitHubMock = mock(GithubClient);
     when(gitHubMock.getCommitAuthor(anything(), anything(), anything())).thenResolve('testAuthor');
     const notificationsManager = new NotificationsManager(instance(gitHubMock), awsClientMock);
-    await notificationsManager.getAuthor(mockData.pipelineData.pipelineExecution.artifactRevisions);
+    await notificationsManager.getAuthor(mockData.pipelineData.pipelineExecution.artifactRevisions[0]);
     verify(
       gitHubMock.getCommitAuthor(
         'stage-tech',
@@ -55,7 +55,7 @@ describe('NotificationsManager tests', () => {
     expect(buildInfo.failedPhase).toBe('POST_BUILD');
   });
 
-  it('getPipelineFailiorData return corect data from failed build', async () => {
+  it('createEventNotification data for failed pipeline build event', async () => {
     const localGitHubMock = mock(GithubClient);
     const awsClientMock = mock(AWSClient);
     when(awsClientMock.getActionExecutions(anything(), anything())).thenResolve(mockData.actionExecutionData);
@@ -64,10 +64,20 @@ describe('NotificationsManager tests', () => {
     when(localGitHubMock.getCommitAuthor(anything(), anything(), anything())).thenResolve('testAuthor');
 
     const notificationsManager = new NotificationsManager(instance(localGitHubMock), instance(awsClientMock));
-    const failedPipelineData = await notificationsManager.getPipelineFailiorData('test', 'test');
+    const failedPipelineData = await notificationsManager.createEventNotification(
+      {
+        'detail-type': 'CodePipeline Pipeline Execution State Change',
+        detail: {
+          pipeline: 'testPipeline',
+          'execution-id': 'testExecutionId',
+          state: PipelineState.FAILED,
+        },
+      },
+      PipelineState.FAILED,
+    );
 
-    verify(awsClientMock.getActionExecutions('test', 'test'));
-    verify(awsClientMock.getPipelineExecution('test', 'test'));
+    verify(awsClientMock.getActionExecutions('testPipeline', 'testExecutionId')).once();
+    verify(awsClientMock.getPipelineExecution('testPipeline', 'testExecutionId')).once();
     verify(awsClientMock.getBuild('testExecutionId')).once();
     verify(
       localGitHubMock.getCommitAuthor(
@@ -76,15 +86,56 @@ describe('NotificationsManager tests', () => {
         '4821350e17367a593b9ee660151c9f3631e2ce92',
       ),
     ).once();
-    expect(failedPipelineData.pipelineName).toBe('test');
-    expect(failedPipelineData.pipelineState).toBe(PipelineState.FAILED);
-    expect(failedPipelineData.commitUrl).toBe(
-      'https://github.com/stage-tech/stage-door-datasync-execution-lambda/commit/4821350e17367a593b9ee660151c9f3631e2ce92',
+    if (failedPipelineData) {
+      expect(failedPipelineData.pipelineName).toBe('testPipeline');
+      expect(failedPipelineData.pipelineState).toBe(PipelineState.FAILED);
+      expect(failedPipelineData.commitUrl).toBe(
+        'https://github.com/stage-tech/stage-door-datasync-execution-lambda/commit/4821350e17367a593b9ee660151c9f3631e2ce92',
+      );
+      expect(failedPipelineData.commitMessage).toBe('Merge pull request #177 from stage-tech/SPX-973');
+      expect(failedPipelineData.commitAuthor).toBe('testAuthor');
+      expect(failedPipelineData.failiorStage).toBe(StageName.BUILD);
+      expect(failedPipelineData.buildLink).toBe('https://test-link.co.uk/');
+      expect(failedPipelineData.buildFailiorPhase).toBe('POST_BUILD');
+    } else {
+      throw Error('No required pipeline data can be found');
+    }
+  });
+
+  it('createEventNotification data for failed pipeline build event', async () => {
+    const localGitHubMock = mock(GithubClient);
+    const awsClientMock = mock(AWSClient);
+    when(awsClientMock.getPipelineExecution(anything(), anything())).thenResolve(mockData.successPipelineData);
+    when(localGitHubMock.getCommitAuthor(anything(), anything(), anything())).thenResolve('testAuthor');
+
+    const notificationsManager = new NotificationsManager(instance(localGitHubMock), instance(awsClientMock));
+    const succeededPipelineData = await notificationsManager.createEventNotification(
+      {
+        'detail-type': 'CodePipeline Pipeline Execution State Change',
+        detail: {
+          pipeline: 'testPipeline',
+          'execution-id': 'testExecutionId',
+          state: PipelineState.SUCCEEDED,
+        },
+      },
+      PipelineState.SUCCEEDED,
     );
-    expect(failedPipelineData.commitMessage).toBe('Merge pull request #177 from stage-tech/SPX-973');
-    expect(failedPipelineData.commitAuthor).toBe('testAuthor');
-    expect(failedPipelineData.failiorStage).toBe(StageName.BUILD);
-    expect(failedPipelineData.buildLink).toBe('https://test-link.co.uk/');
-    expect(failedPipelineData.buildFailiorPhase).toBe('POST_BUILD');
+    verify(awsClientMock.getPipelineExecution('testPipeline', 'testExecutionId')).once();
+    verify(
+      localGitHubMock.getCommitAuthor(
+        'stage-tech',
+        'stage-door-datasync-execution-lambda',
+        '4821350e17367a593b9ee660151c9f3631e2ce92',
+      ),
+    ).once();
+    if (succeededPipelineData) {
+      expect(succeededPipelineData.pipelineName).toBe('testPipeline');
+      expect(succeededPipelineData.pipelineState).toBe(PipelineState.SUCCEEDED);
+      expect(succeededPipelineData.commitUrl).toBe(
+        'https://github.com/stage-tech/stage-door-datasync-execution-lambda/commit/4821350e17367a593b9ee660151c9f3631e2ce92',
+      );
+      expect(succeededPipelineData.commitMessage).toBe('Merge pull request #177 from stage-tech/SPX-973');
+      expect(succeededPipelineData.commitAuthor).toBe('testAuthor');
+    }
   });
 });

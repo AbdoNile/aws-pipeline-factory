@@ -46,7 +46,7 @@ export class StackInformation {
 
 export interface PipelineExecutionEvent {
   'detail-type': string;
-  detail: PipelineEventDetail;
+  detail: any;
 }
 
 export interface PipelineEventDetail {

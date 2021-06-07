@@ -1,5 +1,5 @@
 import { CodeBuild } from '@aws-sdk/client-codebuild';
-import { CodePipeline, GetPipelineCommandOutput } from '@aws-sdk/client-codepipeline';
+import { CodePipeline } from '@aws-sdk/client-codepipeline';
 
 export class AWSClient {
   private codepipeline: CodePipeline;
@@ -9,7 +9,7 @@ export class AWSClient {
     this.codebuild = new CodeBuild({ region: 'eu-west-1' });
   }
 
-  public async getPipelineExecution(executionId: string, pipelineName: string): Promise<any> {
+  public async getPipelineExecution(pipelineName: string, executionId: string): Promise<any> {
     return this.codepipeline.getPipelineExecution({
       pipelineExecutionId: executionId,
       pipelineName: pipelineName,
@@ -27,20 +27,6 @@ export class AWSClient {
     } catch (e) {
       throw new Error(`Error while fetching pipeline action executions: ${e}`);
     }
-  }
-
-  async getBuildProjectName(pipelineName: string): Promise<GetPipelineCommandOutput> {
-    return this.codepipeline.getPipeline({
-      name: pipelineName,
-    });
-  }
-
-  async getBuildIds(buildProjectName: string): Promise<string[] | undefined> {
-    return (
-      await this.codebuild.listBuildsForProject({
-        projectName: buildProjectName,
-      })
-    ).ids;
   }
 
   async getBuild(buildId: string): Promise<any> {

@@ -41,12 +41,12 @@ export class NotificationsManager {
   }
 
   async getPipelineStartOrSuccessData(pipeline: string, executionId: string): Promise<PipelineData> {
-    const pipelineExecution = (await this.awsClient.getPipelineExecution(executionId, pipeline)).pipelineExecution;
+    const pipelineExecution = (await this.awsClient.getPipelineExecution(pipeline, executionId)).pipelineExecution;
     //@ts-ignore
     const artifactRevision = pipelineExecution?.artifactRevisions[0];
     return {
       pipelineName: pipeline,
-      pipelineState: this.getPipelineState(this.required(pipelineExecution?.status)),
+      pipelineState: this.getPipelineState(this.required(pipelineExecution?.status.toUpperCase())),
       commitUrl: this.required(artifactRevision?.revisionUrl),
       commitMessage: this.required(artifactRevision?.revisionSummary),
       commitAuthor: this.required(await this.getAuthor(artifactRevision)),
@@ -55,9 +55,9 @@ export class NotificationsManager {
 
   async getPipelineFailiorData(pipeline: string, executionId: string): Promise<PipelineData> {
     const executionDetails = this.required(await this.getFailedStageActionExecution(pipeline, executionId));
-    const artifactRevisions = (await this.awsClient.getPipelineExecution(executionId, pipeline)).pipelineExecution
-      ?.artifactRevisions;
-    const commitAuthor = await this.getAuthor(artifactRevisions);
+    const artifactRevision = (await this.awsClient.getPipelineExecution(pipeline, executionId)).pipelineExecution
+      ?.artifactRevisions[0];
+    const commitAuthor = await this.getAuthor(artifactRevision);
 
     if (executionDetails.stageName === StageName.UNKNOWN) {
       throw Error('Retrieved unknown stage name');
@@ -67,8 +67,8 @@ export class NotificationsManager {
       return {
         pipelineName: pipeline,
         pipelineState: PipelineState.FAILED,
-        commitUrl: this.required(artifactRevisions)[0].revisionUrl || '',
-        commitMessage: this.required(artifactRevisions)[0].revisionSummary || '',
+        commitUrl: artifactRevision.revisionUrl || '',
+        commitMessage: artifactRevision.revisionSummary || '',
         commitAuthor: this.required(commitAuthor),
         failiorStage: executionDetails.stageName,
         buildLink: buildInfo.buildLogs,
@@ -78,8 +78,8 @@ export class NotificationsManager {
       return {
         pipelineName: pipeline,
         pipelineState: PipelineState.FAILED,
-        commitUrl: this.required(artifactRevisions)[0].revisionUrl || '',
-        commitMessage: this.required(artifactRevisions)[0].revisionSummary || '',
+        commitUrl: artifactRevision.revisionUrl || '',
+        commitMessage: artifactRevision.revisionSummary || '',
         commitAuthor: this.required(commitAuthor),
         failiorStage: this.getStageName(this.required(executionDetails.stageName)),
       };
@@ -96,18 +96,14 @@ export class NotificationsManager {
     };
   }
 
-  async getAuthor(artifactRevisions: any): Promise<string | void> {
-    const commitUrl = this.required(artifactRevisions)[0].revisionUrl?.split('/');
+  async getAuthor(artifactRevision: any): Promise<string | void> {
+    const commitUrl = artifactRevision.revisionUrl?.split('/');
     const repo = commitUrl[commitUrl.length - 3];
 
-    return await this.githubClient.getCommitAuthor(
-      'stage-tech',
-      repo,
-      this.required(artifactRevisions)[0].revisionId || '',
-    );
+    return await this.githubClient.getCommitAuthor('stage-tech', repo, artifactRevision.revisionId || '');
   }
 
-  getEventDetails(event: any): PipelineEventDetail {
+  getEventDetails(event: PipelineExecutionEvent): PipelineEventDetail {
     const DETAIL_TYPE = 'CodePipeline Pipeline Execution State Change';
     if (event['detail-type'] == DETAIL_TYPE) {
       return {
@@ -121,7 +117,7 @@ export class NotificationsManager {
 
   async getFailedStageActionExecution(pipeline: string, executionId: string): Promise<any> {
     const actionExecutions = this.required(
-      (await this.awsClient.getActionExecutions(executionId, pipeline)).actionExecutionDetails,
+      (await this.awsClient.getActionExecutions(pipeline, executionId)).actionExecutionDetails,
     );
     return actionExecutions.find((actionExecution) => actionExecution.status === 'Failed');
   }
