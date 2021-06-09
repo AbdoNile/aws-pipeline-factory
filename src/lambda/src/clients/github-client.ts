@@ -90,7 +90,7 @@ export class GithubClient implements ISourceControlClient {
       });
   }
 
-  public async getCommitAuthor(owner: string, repo: string, commit_sha: string) {
+  public async getCommitAuthor(owner: string, repo: string, commit_sha: string): Promise<string | void> {
     return await this.octokit.git
       .getCommit({
         owner: owner,
@@ -105,13 +105,27 @@ export class GithubClient implements ISourceControlClient {
       });
   }
 
-  private async getPipelineFactorySettings(
+  public async getCommitBranch(owner: string, repo: string, commit_sha: string): Promise<any> {
+    /**This is experimental endpoint that will change it's form in time,
+     *  more info can be found at:
+     *  https://docs.github.com/en/rest/reference/repos#list-branches-for-head-commit
+     */
+    return await this.octokit.request(`GET /repos/${owner}/${repo}/commits/${commit_sha}/branches-where-head`, {
+      owner: owner,
+      repo: repo,
+      commit_sha: commit_sha,
+      headers: {
+        accept: 'application/vnd.github.groot-preview+json',
+      },
+    });
+  }
+
+  public async getPipelineFactorySettings(
     owner: string,
     repositoryName: string,
     branchName: string,
   ): Promise<SettingsOverrides> {
     const settingsFileContent = await this.fetchFile(owner, repositoryName, branchName, 'pipeline-factory.settings');
-
     const settingsFileJSON: SettingsOverrides = settingsFileContent ? JSON.parse(settingsFileContent) : {};
     return settingsFileJSON;
   }

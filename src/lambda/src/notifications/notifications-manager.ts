@@ -5,24 +5,21 @@ import { PipelineData, PipelineEventDetail, PipelineExecutionEvent, PipelineStat
 export class NotificationsManager {
   private awsClient: AWSClient;
   private githubClient: GithubClient;
-  constructor(gitHubClient: GithubClient, awsClient: AWSClient) {
+  constructor(awsClient: AWSClient, gitHubClient: GithubClient) {
     this.awsClient = awsClient;
     this.githubClient = gitHubClient;
   }
-  async createEventNotification(
-    event: PipelineExecutionEvent,
-    configNotificationState: PipelineState,
-  ): Promise<PipelineData | undefined> {
+  async createEventNotification(event: PipelineExecutionEvent): Promise<PipelineData | undefined> {
     const { pipeline, executionId, state } = this.getEventDetails(event);
-
-    if (state !== configNotificationState) {
-      console.warn('Event state does not match configured notification state. No notifications will be emmited.');
-      return;
-    }
-    return this.getStatusData(state, pipeline, executionId);
+    const pipelineData = this.getPipelineData(state, pipeline, executionId);
+    return pipelineData;
   }
 
-  async getStatusData(state: PipelineState, pipeline: string, executionId: string): Promise<PipelineData | undefined> {
+  async getPipelineData(
+    state: PipelineState,
+    pipeline: string,
+    executionId: string,
+  ): Promise<PipelineData | undefined> {
     try {
       switch (state) {
         case PipelineState.STARTED:
@@ -35,7 +32,7 @@ export class NotificationsManager {
           return undefined;
       }
     } catch (error) {
-      console.error(`Error while retrieving status data: ${error}`);
+      console.error(`Error while retrieving pipeline data: ${error}`);
       return undefined;
     }
   }
@@ -46,7 +43,8 @@ export class NotificationsManager {
     const artifactRevision = pipelineExecution?.artifactRevisions[0];
     return {
       pipelineName: pipeline,
-      pipelineState: this.getPipelineState(this.required(pipelineExecution?.status.toUpperCase())),
+      pipelineState: this.getState(this.required(pipelineExecution?.status.toUpperCase())),
+      pipelineExecutionId: executionId,
       commitUrl: this.required(artifactRevision?.revisionUrl),
       commitMessage: this.required(artifactRevision?.revisionSummary),
       commitAuthor: this.required(await this.getAuthor(artifactRevision)),
@@ -67,21 +65,23 @@ export class NotificationsManager {
       return {
         pipelineName: pipeline,
         pipelineState: PipelineState.FAILED,
+        pipelineExecutionId: executionId,
         commitUrl: artifactRevision.revisionUrl || '',
         commitMessage: artifactRevision.revisionSummary || '',
         commitAuthor: this.required(commitAuthor),
-        failiorStage: executionDetails.stageName,
-        buildLink: buildInfo.buildLogs,
+        pipelineFailiorStage: executionDetails.stageName,
+        buildLogs: buildInfo.buildLogs,
         buildFailiorPhase: buildInfo.failedPhase,
       };
     } else {
       return {
         pipelineName: pipeline,
         pipelineState: PipelineState.FAILED,
+        pipelineExecutionId: executionId,
         commitUrl: artifactRevision.revisionUrl || '',
         commitMessage: artifactRevision.revisionSummary || '',
         commitAuthor: this.required(commitAuthor),
-        failiorStage: this.getStageName(this.required(executionDetails.stageName)),
+        pipelineFailiorStage: this.getStageName(this.required(executionDetails.stageName)),
       };
     }
   }
@@ -97,10 +97,13 @@ export class NotificationsManager {
   }
 
   async getAuthor(artifactRevision: any): Promise<string | void> {
-    const commitUrl = artifactRevision.revisionUrl?.split('/');
-    const repo = commitUrl[commitUrl.length - 3];
+    const repo = NotificationsManager.getRepoFromArtifactRevision(artifactRevision);
+    return (await this.githubClient.getCommitAuthor('stage-tech', repo, artifactRevision.revisionId)) || '';
+  }
 
-    return await this.githubClient.getCommitAuthor('stage-tech', repo, artifactRevision.revisionId || '');
+  static getRepoFromArtifactRevision(artifactRevision: any): string {
+    const commitUrl = artifactRevision.revisionUrl?.split('/');
+    return commitUrl[commitUrl.length - 3];
   }
 
   getEventDetails(event: PipelineExecutionEvent): PipelineEventDetail {
@@ -109,7 +112,7 @@ export class NotificationsManager {
       return {
         pipeline: event.detail.pipeline,
         executionId: event.detail['execution-id'],
-        state: this.getPipelineState(event.detail.state),
+        state: this.getState(event.detail.state),
       } as PipelineEventDetail;
     }
     throw new Error('Recieved event is not Pipeine Execution event and will be ignored');
@@ -122,7 +125,7 @@ export class NotificationsManager {
     return actionExecutions.find((actionExecution) => actionExecution.status === 'Failed');
   }
 
-  getPipelineState(state: string): PipelineState {
+  getState(state: string): PipelineState {
     switch (state) {
       case 'STARTED':
         return PipelineState.STARTED;

@@ -3,7 +3,7 @@ export class SettingsOverrides {
   buildSpecLocation?: string;
   buildAsRoleArn?: string;
   monitoredBranches?: string[];
-  notification?: string;
+  notifications?: NotificationSettings[];
 }
 
 export class Repository {
@@ -58,11 +58,12 @@ export interface PipelineEventDetail {
 export interface PipelineData {
   pipelineName: string;
   pipelineState: PipelineState;
+  pipelineExecutionId: string;
   commitUrl: string;
   commitMessage: string;
   commitAuthor: string;
-  failiorStage?: StageName;
-  buildLink?: string;
+  pipelineFailiorStage?: StageName;
+  buildLogs?: string;
   buildFailiorPhase?: string;
 }
 
@@ -78,4 +79,11 @@ export enum StageName {
   BUILD = 'Build',
   DEPLOY = 'Deploy',
   UNKNOWN = 'UNKNOWN',
+}
+
+export interface NotificationSettings {
+  branches: string[];
+  event: PipelineState;
+  channelId: string;
+  channelType: string;
 }
